@@ -26,7 +26,7 @@ public class Carte {
 	public String getNomCarte() {
 		return nomCarte;
 	}
-	protected Carte(TypeCarte type, String nomCarte, String description) {
+	public Carte(TypeCarte type, String nomCarte, String description) {
 		super();
 		this.type = type;
 		this.nomCarte = nomCarte;
