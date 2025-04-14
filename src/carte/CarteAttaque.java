@@ -20,5 +20,8 @@ public class CarteAttaque extends Carte {
 	public void setVie(Integer vie) {
 		this.vie = vie;
 	}
-	
+	public String toString() {
+		return super.toString()+"\n"+this.degats+" "+this.vie;
+		
+	}
 }

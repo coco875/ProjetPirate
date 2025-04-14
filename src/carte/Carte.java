@@ -10,15 +10,12 @@ public class Carte {
 	private String Description;
 	@Override
 	public String toString() {
-		return super.toString();
+		return this.nomCarte+"\n"+this.Description;
 	}public void setDescription(String description) {
 		Description = description;
 	}
 	public String getDescription() {
 		return Description;
-	}
-	public void setType(TypeCarte type) {
-		this.type = type;
 	}
 	public TypeCarte getType() {
 		return type;

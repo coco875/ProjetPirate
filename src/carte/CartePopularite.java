@@ -21,6 +21,10 @@ public class CartePopularite extends Carte {
 		this.vie = vie;
 	}
 	
-	
+
+	public String toString() {
+		return super.toString()+"\n"+this.popularite+" "+this.vie;
+		
+	}
 
 }
