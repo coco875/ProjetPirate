@@ -1,4 +1,6 @@
-package entities;
+package joueur;
+
+import carte.CarteCoupSpecial;
 
 public class Pirate {
 	private String nom;

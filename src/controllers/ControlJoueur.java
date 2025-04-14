@@ -1,7 +1,7 @@
 package controllers;
 
 import carte.Carte;
-import entities.Joueur;
+import joueur.Joueur;
 
 public class ControlJoueur {
 	private Joueur joueur;
