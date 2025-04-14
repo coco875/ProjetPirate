@@ -1,6 +1,6 @@
 package controllers;
 
-import entities.Carte;
+import carte.Carte;
 
 public class ControlPioche {
 	//private Pioche pioche
@@ -9,6 +9,6 @@ public class ControlPioche {
 	public Carte piocher() {
 		//Prendre une nouvelle carte du stream de Pioche
 		
-		return new Carte(); //PLACEHOLDER remplacer par la carte piochee
+		//return new Carte(); //PLACEHOLDER remplacer par la carte piochee
 	}
 }

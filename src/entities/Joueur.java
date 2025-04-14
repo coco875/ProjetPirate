@@ -2,6 +2,7 @@ package entities;
 
 import java.util.ArrayList;
 import java.util.List;
+import carte.Carte;
 
 public class Joueur {
 
@@ -78,7 +79,7 @@ public class Joueur {
 	public void ajouterCarte(Carte carte) {
 		//verifier nombre de cartes en main
 		if (main.size() >= 4) {
-			//défausser? ne pas ajouter? exception?
+			//dï¿½fausser? ne pas ajouter? exception?
 		}
 		
 		main.add(carte);
@@ -109,5 +110,8 @@ public class Joueur {
 		//on laisse le controller piocher pour nous
 	}
 
+	public void recevoirEffets(int vie, int pop) {
+		
+	}
 	
 }
