@@ -16,6 +16,10 @@ public class ControlJoueur {
 	this.cCartePlateau = cCartePlateau;
 	this.cPioche = cPioche;
 }
+	
+	public void setJoueur(Joueur joueur) {
+		this.joueur = joueur;
+	}
 
 	public Carte piocher() {
 		Carte c = cPioche.piocher();

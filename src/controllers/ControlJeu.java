@@ -1,14 +1,12 @@
 package controllers;
 
 import joueur.*;
+import jeu.Jeu;
+
 
 public class ControlJeu {
 
-import pirate.Pirate;
-
-public class ControlJeu {
-
-	//private Jeu jeu;
+	private Jeu jeu;
 	
 	private ControlJoueur cJ1;
 	private ControlJoueur cJ2;
@@ -34,11 +32,14 @@ public class ControlJeu {
 	
 }
 	public void setJoueur1(String nom, Pirate pirate) {
+		Joueur j1 = new Joueur(nom, pirate);
+		cJ1.setJoueur(j1);
 		
 	}
 	
 	public void setJoueur2(String nom, Pirate pirate) {
-
+		Joueur j2 = new Joueur(nom, pirate);
+		cJ2.setJoueur(j2);
 		
 	}
 }
