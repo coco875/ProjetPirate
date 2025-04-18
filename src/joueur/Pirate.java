@@ -5,13 +5,14 @@ import carte.CarteCoupSpecial;
 public class Pirate {
 	private String nom;
 	private String description;
-	
+	private int popularite, vie;
 	private CarteCoupSpecial carteCoupSpeciale;
 
-	public Pirate(String nom, String description, CarteCoupSpecial carteCoupSpeciale) {
+	public Pirate(String nom, String description, int popularite, int vie) {
 		this.nom = nom;
 		this.description = description;
-		this.carteCoupSpeciale = carteCoupSpeciale;
+		this.popularite = popularite;
+		this.vie = vie;
 	}
 
 	public String getDescription() {
