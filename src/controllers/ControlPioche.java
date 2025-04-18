@@ -28,4 +28,6 @@ public class ControlPioche {
 		return pioche.piocher();
 
 	}
+	
+	
 }

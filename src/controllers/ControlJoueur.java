@@ -1,5 +1,8 @@
 package controllers;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import carte.Carte;
 import joueur.Joueur;
 
@@ -25,6 +28,24 @@ public class ControlJoueur {
 		Carte c = cPioche.piocher();
 		joueur.ajouterCarte(c);
 		return c;
+	}
+	
+	public void initialiserMain() {
+		for (int i=0; i<4; i++) {
+			piocher();
+		}
+	}
+	
+	public List<Carte> afficherMain() {
+		List<Carte> main = joueur.getMain();
+		for (int i=0; i<main.size(); i++) {
+			System.out.println(main.get(i));
+		}
+		return main;
+	}
+	
+	public void retirerCarte(Carte carte) {
+		joueur.retirerCarte(carte);
 	}
 	
 	public void jouerCarte(Carte carte) {

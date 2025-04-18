@@ -10,5 +10,7 @@ public class ControlCartePlateau {
 	public ControlCartePlateau(ControlJoueur cJ1, ControlJoueur cJ2) {
 		this.cJ1 = cJ1;
 		this.cJ2 = cJ2;
+		
+		
 	}
 }
