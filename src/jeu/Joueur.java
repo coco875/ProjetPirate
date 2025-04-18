@@ -1,4 +1,5 @@
 package jeu;
+import pirate.*;
 
 public class Joueur {
 	private String nom;
