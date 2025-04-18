@@ -2,7 +2,7 @@ package boundary;
 import java.util.Scanner;
 
 import controllers.ControlJeu;
-import pirate.Pirate;
+import joueur.Pirate;
 
 public class BoundaryJeu {
 	public static void main(String[] args) {

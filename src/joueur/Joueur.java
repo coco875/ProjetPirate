@@ -3,6 +3,7 @@ package joueur;
 import java.util.ArrayList;
 import java.util.List;
 import carte.Carte;
+import controllers.ControlJoueur;
 
 public class Joueur {
 
@@ -14,6 +15,8 @@ public class Joueur {
 	private Integer nbCartes;
 	private List<Carte> main;
 	
+	private ControlJoueur cJ;
+	
 	
 	public Joueur(String  nom, Pirate pirate) {
 		this.nom = nom;
@@ -23,7 +26,7 @@ public class Joueur {
 		this.popularite = 0;
 		this.or = 0;
 		this.nbCartes = 0;
-		initialiserMain();
+		this.main = new ArrayList<Carte>(4);
 	}
 
 
@@ -78,10 +81,6 @@ public class Joueur {
 	
 	public void ajouterCarte(Carte carte) {
 		//verifier nombre de cartes en main
-		if (main.size() >= 4) {
-			//d�fausser? ne pas ajouter? exception?
-		}
-		
 		main.add(carte);
 	}
 	
@@ -98,20 +97,33 @@ public class Joueur {
 		//verifier que carte est bien dans la main
 		if (main.contains(carte)) {
 			//jouer sur plateau (controlPlateau)
-			//utiliser retirerCarte
+			retirerCarte(carte);
 		} else {
 			throw new IllegalStateException("Carte absente dans la main");
 		}
 		
 	}
 	
-	public void initialiserMain() {
-		this.main = new ArrayList<Carte>(4);
-		//on laisse le controller piocher pour nous
+	
+	
+	public ControlJoueur getcJ() {
+		return cJ;
+	}
+
+
+	public void setcJ(ControlJoueur cJ) {
+		this.cJ = cJ;
+	}
+
+
+	public List<Carte> getMain() {
+		return main;
 	}
 
 	public void recevoirEffets(int vie, int pop) {
 		
 	}
+	
+	
 	
 }
