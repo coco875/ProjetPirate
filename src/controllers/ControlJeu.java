@@ -1,5 +1,7 @@
 package controllers;
 
+import joueur.*;
+
 public class ControlJeu {
 
 	//private Jeu jeu;
@@ -15,13 +17,22 @@ public class ControlJeu {
 		
 	}
 	
-	public void initJeu() {
+	public void initControllers() {
+		this.cCartePlateau = new ControlCartePlateau();
+		this.cPioche = new ControlPioche();
 		
-		initJoueurs();
+		
+		this.cJ1 = new ControlJoueur(null, cCartePlateau, cPioche);
+		this.cJ2 = new ControlJoueur(null, cCartePlateau, cPioche);
+
 		
 	}
 	
-	public void initJoueurs() {
+	public Joueur setJoueur1(String nomPirate, Pirate pirate) {
+		
+	}
+	
+	public Joueur setJoueur2(String nomPirate, Pirate pirate) {
 		
 	}
 }

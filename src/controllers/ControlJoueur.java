@@ -26,4 +26,8 @@ public class ControlJoueur {
 	public void jouerCarte(Carte carte) {
 		
 	}
+	
+	public void setJoueur(Joueur joueur) {
+		this.joueur = joueur;
+	}
 }
