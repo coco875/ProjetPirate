@@ -29,7 +29,7 @@ public class BoundaryJeu {
         while((idPirate2 < 1 || idPirate2 > 10) && idPirate2 == idPirate2) {
         	if(idPirate2 < 1 || idPirate2 > 10) {
         		System.out.println("Entrez à nouveau le numéro de votre pirate");
-        	}else if(idPirate2 == idPirate2) {
+        	}else if(idPirate1 == idPirate2) {
         		System.out.println("Veuilez choisir un pirate différent");
         	}
         	
