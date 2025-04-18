@@ -44,6 +44,10 @@ public class ControlJoueur {
 		return main;
 	}
 	
+	public void retirerCarte(Carte carte) {
+		joueur.retirerCarte(carte);
+	}
+	
 	public void jouerCarte(Carte carte) {
 		
 	}
