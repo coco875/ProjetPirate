@@ -1,4 +1,6 @@
-package carte;
+package test;
+
+import carte.*;
 
 public class TestCarte {
 

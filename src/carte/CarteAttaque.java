@@ -1,27 +1,59 @@
 package carte;
 
+/**
+ * @brief Classe représentant une carte d'attaque
+ * 
+ * Cette classe étend la classe Carte pour représenter spécifiquement
+ * les cartes d'attaque (entité uniquement - pas de logique métier).
+ */
 public class CarteAttaque extends Carte {
-	private Integer degats; //Degats infligés à l'adversaire
-	private Integer vie; //Degats auto-infligés
-	public CarteAttaque(String nomCarte, String description, Integer degats, Integer vie) {
-		super(TypeCarte.ATTAQUE, nomCarte, description);
-		this.degats = degats;
-		this.vie = vie;
-	}
-	public Integer getDegats() {
-		return degats;
-	}
-	public void setDegats(Integer degats) {
-		this.degats = degats;
-	}
-	public Integer getVie() {
-		return vie;
-	}
-	public void setVie(Integer vie) {
-		this.vie = vie;
-	}
-	public String toString() {
-		return super.toString()+"\n"+this.degats+" "+this.vie;
-		
-	}
+    /** Points de dégâts infligés par la carte */
+    private int degats;
+
+    /**
+     * @brief Constructeur standard pour une carte d'attaque
+     */
+    public CarteAttaque(String nomCarte, String description, int degats, int idCarte) {
+        super(TypeCarte.ATTAQUE, nomCarte, description, degats);
+        this.degats = degats;
+    }
+    
+    /**
+     * @brief Constructeur standard pour une carte d'attaque sans ID
+     */
+    public CarteAttaque(String nomCarte, String description, int degats) {
+        super(TypeCarte.ATTAQUE, nomCarte, description, degats);
+        this.degats = degats;
+    }
+    
+    /**
+     * @brief Constructeur complet pour une carte d'attaque
+     */
+    public CarteAttaque(String nomCarte, String description, int degats, int idCarte, int cout) {
+        super(TypeCarte.ATTAQUE, nomCarte, description, degats, cout);
+        this.degats = degats;
+    }
+    
+    /**
+     * @brief Constructeur complet pour une carte d'attaque sans ID
+     */
+    public CarteAttaque(String nomCarte, String description, int degats, int cout) {
+        super(TypeCarte.ATTAQUE, nomCarte, description, degats, cout);
+        this.degats = degats;
+    }
+    
+    /**
+     * @brief Récupère les points de dégâts de la carte
+     */
+    public int getDegats() {
+        return degats;
+    }
+    
+    /**
+     * @brief Définit les points de dégâts de la carte
+     */
+    public void setDegats(int degats) {
+        this.degats = degats;
+        setValeur(degats); // Synchroniser avec la valeur générique
+    }
 }
