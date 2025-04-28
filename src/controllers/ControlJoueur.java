@@ -20,6 +20,10 @@ public class ControlJoueur {
 	this.cPioche = cPioche;
 }
 	
+	public Joueur getJoueur() {
+		return joueur;
+	}
+	
 	public void setJoueur(Joueur joueur) {
 		this.joueur = joueur;
 	}
@@ -50,5 +54,73 @@ public class ControlJoueur {
 	
 	public void jouerCarte(Carte carte) {
 		
+	}
+	
+	
+	public void perdrePointsDeVie(int vie) {
+		int newVie = joueur.getVie() - vie;
+		if (newVie <= 0) {
+			newVie = 0;
+			//mourir? ou alors controlJeu regarde à chaque fin de tour la vie des joueurs
+			//joueur.setVie(newVie);
+		}
+		joueur.setVie(newVie);
+	}
+	
+	public void gagnerPopularité(int pop) {
+		int newPop = joueur.getPopularite() + pop;
+		if (newPop >= 5) {
+			newPop = 5;
+			//gagner? ou alors ControlJeu regarde à chaque fin de tour la pop des joueurs
+			//joueur.setPopularite(newPop);
+		}
+		joueur.setPopularite(newPop);
+	}
+	
+	public void perdrePopularité(int pop) {
+		int newPop = joueur.getPopularite() - pop;
+		if (newPop <= 0) {
+			newPop = 0;
+		}
+		joueur.setPopularite(newPop);
+	}
+	
+	public void recevoirEffets(int vie, int pop) {
+		if (vie < 0) {
+			perdrePointsDeVie(Math.abs(vie));
+		} else {
+			//gagnerPointDeVie ?
+		}
+		
+		if (pop < 0) {
+			perdrePopularité(Math.abs(pop));
+		} else {
+			gagnerPopularité(pop);
+		}
+	}
+	
+	public void jouerTour() {
+		
+	}
+	
+	public Carte defausser(int idCarte) {
+		List<Carte> main = joueur.getMain();
+		Carte c = main.get(idCarte);
+		joueur.retirerCarte(c);
+		return c;
+	}
+	
+	public void gagnerOr(int or) {
+		int newOr = joueur.getOr() - or;
+		joueur.setOr(newOr);
+	}
+	
+	public void perdreOr(int or) {
+		int newOr = joueur.getOr() - or;
+		if (newOr < 0) {
+			joueur.setOr(0);
+		} else {
+			joueur.setOr(newOr);
+		}
 	}
 }

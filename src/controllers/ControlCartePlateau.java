@@ -13,4 +13,17 @@ public class ControlCartePlateau {
 		
 		
 	}
+
+
+	public void setcJ1(ControlJoueur cJ1) {
+		this.cJ1 = cJ1;
+	}
+
+
+	public void setcJ2(ControlJoueur cJ2) {
+		this.cJ2 = cJ2;
+	}
+
+	
+	
 }
