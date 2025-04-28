@@ -20,7 +20,7 @@ public class ControlJeu {
 	}
 	
 	public void initControllers() {
-		this.cCartePlateau = new ControlCartePlateau();
+		this.cCartePlateau = new ControlCartePlateau(cJ1, cJ1);
 		this.cPioche = new ControlPioche();
 		
 		
@@ -30,7 +30,7 @@ public class ControlJeu {
 		
 	}
 	
-}
+
 	public void setJoueur1(String nom, Pirate pirate) {
 		Joueur j1 = new Joueur(nom, pirate);
 		cJ1.setJoueur(j1);
