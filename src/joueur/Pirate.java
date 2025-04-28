@@ -14,6 +14,13 @@ public class Pirate {
 		this.popularite = popularite;
 		this.vie = vie;
 	}
+	
+	public Pirate(String nom) {
+		this.nom = nom;
+		this.description = ""; // Description par défaut
+		this.popularite = 0; // Popularité initiale
+		this.vie = 5; // Points de vie initiaux
+	}
 
 	public String getDescription() {
 		return description;
@@ -31,5 +38,23 @@ public class Pirate {
 		return carteCoupSpeciale;
 	}
 	
+	public void setCarteCoupSpeciale(CarteCoupSpecial carteCoupSpeciale) {
+		this.carteCoupSpeciale = carteCoupSpeciale;
+	}
 	
+	public int getPopularite() {
+		return popularite;
+	}
+	
+	public void setPopularite(int popularite) {
+		this.popularite = popularite;
+	}
+	
+	public int getVie() {
+		return vie;
+	}
+	
+	public void setVie(int vie) {
+		this.vie = vie;
+	}
 }
