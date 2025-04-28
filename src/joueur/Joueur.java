@@ -47,7 +47,7 @@ public class Joueur {
 	 * @brief Récupère les points de vie du joueur
 	 * @return Points de vie
 	 */
-	public Integer getPointsDeVie() {
+	public int getPointsDeVie() {
 		return vie;
 	}
 
@@ -63,7 +63,7 @@ public class Joueur {
 	 * @brief Récupère les points de popularité du joueur
 	 * @return Points de popularité
 	 */
-	public Integer getPopularite() {
+	public int getPopularite() {
 		return popularite;
 	}
 

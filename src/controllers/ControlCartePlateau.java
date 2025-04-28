@@ -3,7 +3,10 @@ package controllers;
 import carte.Carte;
 import carte.CarteAttaque;
 import carte.CartePassive;
+import carte.CartePopularite;
 import carte.CarteSpeciale;
+import jeu.ZoneAttaque;
+import jeu.ZonePop;
 import joueur.Joueur;
 
 /**
@@ -15,10 +18,74 @@ import joueur.Joueur;
 public class ControlCartePlateau {
 	private ControlJoueur cJ1;
 	private ControlJoueur cJ2;
+	private ZoneAttaque zoneAttaque;
+	private ZonePop zonePop;
 	
 	public ControlCartePlateau(ControlJoueur cJ1, ControlJoueur cJ2) {
 		this.cJ1 = cJ1;
 		this.cJ2 = cJ2;
+		this.zoneAttaque = new ZoneAttaque();
+		this.zonePop = new ZonePop();
+	}
+	
+	/**
+	 * @brief Retourne la zone d'attaque
+	 * @return La zone d'attaque
+	 */
+	public ZoneAttaque getZoneAttaque() {
+		return zoneAttaque;
+	}
+	
+	/**
+	 * @brief Retourne la zone de popularité
+	 * @return La zone de popularité
+	 */
+	public ZonePop getZonePop() {
+		return zonePop;
+	}
+	
+	/**
+	 * @brief Ajoute une carte d'attaque dans la zone d'attaque
+	 * @param carte La carte à ajouter
+	 */
+	public void ajouterCarteAttaque(CarteAttaque carte) {
+		zoneAttaque.ajouterCarte(carte);
+	}
+	
+	/**
+	 * @brief Ajoute une carte de popularité dans la zone de popularité
+	 * @param carte La carte à ajouter
+	 */
+	public void ajouterCartePopularite(CartePopularite carte) {
+		zonePop.ajouterCarte(carte);
+	}
+	
+	/**
+	 * @brief Applique les effets de toutes les cartes d'attaque sur le plateau
+	 */
+	public void appliquerEffetsCartesAttaque() {
+		// On applique les dégâts au joueur 2 (dans les tests)
+		for (CarteAttaque carte : zoneAttaque.getCartesAttaque()) {
+			cJ2.perdrePointsDeVie(carte.getDegats());
+		}
+	}
+	
+	/**
+	 * @brief Applique les effets de toutes les cartes de popularité sur le plateau
+	 */
+	public void appliquerEffetsCartesPopularite() {
+		// On applique les bonus au joueur 1 (dans les tests)
+		for (CartePopularite carte : zonePop.getCartesPopularite()) {
+			cJ1.gagnerPopularite(carte.getValeur());
+		}
+	}
+	
+	/**
+	 * @brief Vide les zones d'attaque et de popularité
+	 */
+	public void defausserCartesPlateau() {
+		zoneAttaque.viderZone();
+		zonePop.viderZone();
 	}
 	
 	/**
@@ -74,8 +141,6 @@ public class ControlCartePlateau {
 	 * @brief Gère le jeu d'une carte passive
 	 */
 	public void jouerCartePassive(Carte carte, Joueur joueurActif) {
-		ControlJoueur joueurControl = (cJ1.getJoueur() == joueurActif) ? cJ1 : cJ2;
-		
 		if (carte instanceof CartePassive) {
 			CartePassive cartePassive = (CartePassive) carte;
 			String typeEffet = cartePassive.getTypeEffet();

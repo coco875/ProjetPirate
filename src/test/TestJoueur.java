@@ -2,8 +2,6 @@ package test;
 
 import joueur.Joueur;
 import joueur.Pirate;
-import carte.Carte;
-import java.util.ArrayList;
 
 public class TestJoueur {
 

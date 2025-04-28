@@ -35,14 +35,6 @@ public class CartePopularite extends Carte {
     }
     
     /**
-     * @brief Constructeur complet pour une carte de popularité sans ID
-     */
-    public CartePopularite(String nomCarte, String description, int popularite, int cout) {
-        super(TypeCarte.POPULAIRE, nomCarte, description, popularite, cout);
-        this.popularite = popularite;
-    }
-    
-    /**
      * @brief Récupère les points de popularité de la carte
      */
     public int getPopularite() {

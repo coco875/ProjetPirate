@@ -20,13 +20,11 @@ public class ControlMarche {
     private List<Carte> cartesDisponibles;
     private ControlJoueur controlJoueur1;
     private ControlJoueur controlJoueur2;
-    private ControlPioche controlPioche;
     private Random random;
     
     public ControlMarche(ControlJoueur controlJoueur1, ControlJoueur controlJoueur2, ControlPioche controlPioche) {
         this.controlJoueur1 = controlJoueur1;
         this.controlJoueur2 = controlJoueur2;
-        this.controlPioche = controlPioche;
         this.cartesDisponibles = new ArrayList<>();
         this.random = new Random();
         

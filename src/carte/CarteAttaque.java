@@ -35,14 +35,6 @@ public class CarteAttaque extends Carte {
     }
     
     /**
-     * @brief Constructeur complet pour une carte d'attaque sans ID
-     */
-    public CarteAttaque(String nomCarte, String description, int degats, int cout) {
-        super(TypeCarte.ATTAQUE, nomCarte, description, degats, cout);
-        this.degats = degats;
-    }
-    
-    /**
      * @brief Récupère les points de dégâts de la carte
      */
     public int getDegats() {

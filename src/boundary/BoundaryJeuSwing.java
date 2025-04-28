@@ -1,7 +1,6 @@
 package boundary;
 
 import java.awt.*;
-import java.awt.event.*;
 import java.util.List;
 
 import javax.swing.*;
@@ -136,15 +135,6 @@ public class BoundaryJeuSwing extends JFrame {
         JMenuItem menuItemNouveau = new JMenuItem("Nouvelle partie");
         menuItemNouveau.addActionListener(e -> demarrerPartie());
         menuJeu.add(menuItemNouveau);
-        
-        // Ajouter les options de sauvegarde et chargement
-        JMenuItem menuItemSave = new JMenuItem("Sauvegarder la partie");
-        menuItemSave.addActionListener(e -> sauvegarderPartie());
-        menuJeu.add(menuItemSave);
-        
-        JMenuItem menuItemLoad = new JMenuItem("Charger une partie");
-        menuItemLoad.addActionListener(e -> chargerPartie());
-        menuJeu.add(menuItemLoad);
         
         menuJeu.addSeparator();
         
@@ -663,101 +653,6 @@ public class BoundaryJeuSwing extends JFrame {
             "Le gagnant est : " + gagnant + " qui " + raisonVictoire + " !\nFélicitations !",
             "Fin de la partie",
             JOptionPane.INFORMATION_MESSAGE);
-    }
-    
-    /**
-     * @brief Sauvegarde la partie en cours
-     */
-    private void sauvegarderPartie() {
-        if (!partieEnCours) {
-            JOptionPane.showMessageDialog(this,
-                "Aucune partie en cours à sauvegarder.",
-                "Sauvegarde impossible",
-                JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-        
-        // Utiliser la classe SaveManager pour sauvegarder l'état du jeu
-        String nomFichier = jeu.SaveManager.saveGame(controlJeu);
-        
-        if (nomFichier != null) {
-            logArea.append("Partie sauvegardée dans le fichier : " + nomFichier + "\n");
-            JOptionPane.showMessageDialog(this,
-                "Partie sauvegardée avec succès dans le fichier :\n" + nomFichier,
-                "Sauvegarde réussie",
-                JOptionPane.INFORMATION_MESSAGE);
-        } else {
-            logArea.append("Échec de la sauvegarde de la partie.\n");
-            JOptionPane.showMessageDialog(this,
-                "Impossible de sauvegarder la partie. Vérifiez les permissions d'écriture.",
-                "Erreur de sauvegarde",
-                JOptionPane.ERROR_MESSAGE);
-        }
-    }
-    
-    /**
-     * @brief Charge une partie sauvegardée
-     */
-    private void chargerPartie() {
-        // Vérifier s'il y a une partie en cours
-        if (partieEnCours) {
-            int reponse = JOptionPane.showConfirmDialog(this,
-                "Une partie est déjà en cours. Voulez-vous l'abandonner pour charger une partie sauvegardée ?",
-                "Charger une partie",
-                JOptionPane.YES_NO_OPTION);
-                
-            if (reponse != JOptionPane.YES_OPTION) {
-                return;
-            }
-        }
-        
-        // Récupérer la liste des sauvegardes disponibles
-        String[] sauvegardes = jeu.SaveManager.listSaveFiles();
-        
-        if (sauvegardes.length == 0) {
-            JOptionPane.showMessageDialog(this,
-                "Aucune sauvegarde disponible.",
-                "Aucune sauvegarde",
-                JOptionPane.INFORMATION_MESSAGE);
-            return;
-        }
-        
-        // Afficher la liste des sauvegardes et demander à l'utilisateur d'en choisir une
-        String sauvegarde = (String) JOptionPane.showInputDialog(this,
-            "Choisissez une sauvegarde à charger :",
-            "Charger une partie",
-            JOptionPane.QUESTION_MESSAGE,
-            null,
-            sauvegardes,
-            sauvegardes[0]);
-            
-        if (sauvegarde == null) {
-            return; // L'utilisateur a annulé
-        }
-        
-        // Charger la sauvegarde sélectionnée
-        boolean succes = jeu.SaveManager.loadGame(sauvegarde, controlJeu);
-        
-        if (succes) {
-            logArea.setText("Partie chargée : " + sauvegarde + "\n");
-            partieEnCours = true;
-            joueurActuel = 1; // Par défaut, on commence avec le joueur 1
-            
-            // Mettre à jour l'interface
-            updatePlayerPanels();
-            updateCardDisplay();
-            
-            // Activer les boutons pour le joueur actuel
-            activerBoutonsTour(true);
-            
-            logArea.append("C'est au tour de " + controlJeu.getJoueur(joueurActuel).getNom() + ".\n");
-        } else {
-            logArea.append("Échec du chargement de la partie depuis " + sauvegarde + ".\n");
-            JOptionPane.showMessageDialog(this,
-                "Impossible de charger la partie sélectionnée. Le fichier pourrait être corrompu.",
-                "Erreur de chargement",
-                JOptionPane.ERROR_MESSAGE);
-        }
     }
     
     /**
