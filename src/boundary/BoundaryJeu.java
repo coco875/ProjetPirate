@@ -156,7 +156,7 @@ public class BoundaryJeu {
 	 */
 	public void afficherMain(int joueurId) {
 		System.out.println("\n=== Main du joueur " + joueurId + " ===");
-		List<Carte> main = controlJeu.afficherMain(joueurId);
+		List<Carte> main = controlJeu.getJoueur(joueurId).getMain();
 		
 		if (main.isEmpty()) {
 			System.out.println("La main est vide!");
@@ -165,8 +165,56 @@ public class BoundaryJeu {
 		
 		for (int i = 0; i < main.size(); i++) {
 			Carte carte = main.get(i);
-			System.out.println(i + ": " + carte.getNomCarte() + " (" + carte.getType() + ", valeur: " + carte.getValeur() + ")");
+			System.out.println(i + ": " + carte.getNomCarte() + " (" + carte.getType() + ")");
 			System.out.println("   Description: " + carte.getDescription());
+			
+			// Affichage détaillé des effets selon le type de carte
+			switch(carte.getType()) {
+				case ATTAQUE:
+					System.out.println("   Effet: Inflige " + carte.getDegats() + " points de dégâts à l'adversaire");
+					if (carte.getDegatsSubis() > 0) {
+						System.out.println("   Inconvénient: Vous subissez " + carte.getDegatsSubis() + " points de dégâts");
+					}
+					break;
+					
+				case POPULAIRE:
+					System.out.println("   Effet: Gagnez " + carte.getPopularite() + " points de popularité");
+					if (carte.getDegatsSubisPopularite() > 0) {
+						System.out.println("   Inconvénient: Vous subissez " + carte.getDegatsSubisPopularite() + " points de dégâts");
+					}
+					break;
+					
+				case TRESOR:
+					if (carte.getOrGagne() > 0) {
+						System.out.println("   Effet: Gagnez " + carte.getOrGagne() + " pièces d'or");
+					}
+					if (carte.getOrPerdu() > 0) {
+						System.out.println("   Inconvénient: Vous perdez " + carte.getOrPerdu() + " pièces d'or");
+					}
+					if (carte.getOrVole() > 0) {
+						System.out.println("   Effet: Volez " + carte.getOrVole() + " pièces d'or à l'adversaire");
+					}
+					break;
+					
+				case SOIN:
+					System.out.println("   Effet: Récupérez " + carte.getVieGagne() + " points de vie");
+					break;
+					
+				case SPECIALE:
+					System.out.println("   Effet spécial: Valeur " + carte.getValeur());
+					break;
+					
+				case PASSIVE:
+					System.out.println("   Effet passif: Valeur " + carte.getValeur() + " (dure plusieurs tours)");
+					break;
+			}
+			
+			// Afficher le coût s'il est pertinent
+			if (carte.getCout() > 0) {
+				System.out.println("   Coût: " + carte.getCout() + " pièces d'or");
+			}
+			
+			System.out.println(); // Ligne vide pour séparer les cartes
 		}
 	}
 
@@ -256,37 +304,32 @@ public class BoundaryJeu {
 			}
 		}
 		
-		// Permettre de jouer jusqu'à 2 cartes
-		int cartesJouees = 0;
-		boolean continuerAJouer = true;
-		
-		while (cartesJouees < 2 && continuerAJouer && !controlJeu.getJoueur(joueurId).getMain().isEmpty()) {
-			System.out.println("\nVoulez-vous jouer une carte ? (" + (cartesJouees + 1) + "/2) (o/n)");
+		// Permettre de jouer une seule carte
+		if (!controlJeu.getJoueur(joueurId).getMain().isEmpty()) {
+			System.out.println("\nEntrez le numéro de la carte que vous souhaitez jouer, ou 'n' pour ne pas jouer de carte :");
 			String reponse = scanner.nextLine();
 			
-			if (reponse.equalsIgnoreCase("o")) {
-				System.out.print("Choisissez une carte à jouer (index) : ");
-				int indexCarte = scanner.nextInt();
-				scanner.nextLine(); // Consommer le saut de ligne
-				
-				// Vérifier que l'index est valide
-				while (indexCarte < 0 || indexCarte >= controlJeu.getJoueur(joueurId).getMain().size()) {
-					System.out.print("Index invalide. Choisissez une carte à jouer (0-" + 
-							(controlJeu.getJoueur(joueurId).getMain().size() - 1) + ") : ");
-					indexCarte = scanner.nextInt();
-					scanner.nextLine(); // Consommer le saut de ligne
+			if (!reponse.equalsIgnoreCase("n")) {
+				try {
+					int indexCarte = Integer.parseInt(reponse);
+					
+					// Vérifier que l'index est valide
+					if (indexCarte >= 0 && indexCarte < controlJeu.getJoueur(joueurId).getMain().size()) {
+						// Jouer la carte
+						controlJeu.jouerCarte(joueurId, indexCarte);
+						System.out.println("Carte jouée avec succès!");
+						
+						// Afficher l'état du joueur et sa main après avoir joué la carte
+						afficherEtatJoueur(joueurId);
+						afficherMain(joueurId);
+					} else {
+						System.out.println("Index invalide. Aucune carte jouée.");
+					}
+				} catch (NumberFormatException e) {
+					System.out.println("Entrée non valide. Aucune carte jouée.");
 				}
-				
-				// Jouer la carte
-				controlJeu.jouerCarte(joueurId, indexCarte);
-				System.out.println("Carte jouée avec succès!");
-				cartesJouees++;
-				
-				// Afficher l'état du joueur et sa main après avoir joué la carte
-				afficherEtatJoueur(joueurId);
-				afficherMain(joueurId);
 			} else {
-				continuerAJouer = false;
+				System.out.println("Vous avez choisi de ne pas jouer de carte.");
 			}
 		}
 		

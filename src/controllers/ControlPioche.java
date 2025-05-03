@@ -7,7 +7,9 @@ import java.util.List;
 import carte.Carte;
 import carte.CarteAttaque;
 import carte.CartePopularite;
+import carte.CarteSoin;
 import carte.CarteSpeciale;
+import carte.CarteTresor;
 import carte.ParserCarte;
 import jeu.Pioche;
 
@@ -20,15 +22,29 @@ public class ControlPioche {
 		// Vérifier si le répertoire existe
 		File resourceDir = new File("src/carte/resource");
 		if (resourceDir.exists() && resourceDir.isDirectory()) {
-			File[] files = resourceDir.listFiles();
-			if (files != null) {
-				for (File f : files) {
-					try {
-						list.add(ParserCarte.lireCarte(f.toString()));
-					} catch (Exception e) {
-						System.out.println("Erreur lors de la lecture du fichier " + f.getName() + ": " + e.getMessage());
-					}
+			// Charger les cartes du répertoire principal
+			chargerCartesDepuisRepertoire(resourceDir, list);
+			
+			// Charger les cartes des sous-répertoires
+			File attaqueDir = new File("src/carte/resource/attaque");
+			if (attaqueDir.exists() && attaqueDir.isDirectory()) {
+				chargerCartesDepuisRepertoire(attaqueDir, list);
+			}
+			
+			File populariteDir = new File("src/carte/resource/popularite");
+			if (populariteDir.exists() && populariteDir.isDirectory()) {
+				chargerCartesDepuisRepertoire(populariteDir, list);
 				}
+			
+			// Ajout des nouveaux sous-répertoires pour les cartes de trésor et de soin
+			File tresorDir = new File("src/carte/resource/tresor");
+			if (tresorDir.exists() && tresorDir.isDirectory()) {
+				chargerCartesDepuisRepertoire(tresorDir, list);
+			}
+			
+			File soinDir = new File("src/carte/resource/soin");
+			if (soinDir.exists() && soinDir.isDirectory()) {
+				chargerCartesDepuisRepertoire(soinDir, list);
 			}
 		}
 		
@@ -48,9 +64,38 @@ public class ControlPioche {
 			// Ajouter quelques cartes spéciales par défaut
 			list.add(new CarteSpeciale("Perroquet", "Un perroquet qui distrait l'adversaire", "Réduit les dégâts", 2));
 			list.add(new CarteSpeciale("Carte au trésor", "Une carte au trésor mystérieuse", "Augmente l'or", 3));
+			
+			// Ajouter quelques cartes de trésor par défaut
+			list.add(new CarteTresor("Coffre au trésor", "Un coffre rempli d'or", 10, 0, 0));
+			list.add(new CarteTresor("Taxes portuaires", "Vous devez payer des taxes", 0, 5, 0));
+			list.add(new CarteTresor("Pillage", "Volez de l'or à votre adversaire", 0, 0, 8));
+			
+			// Ajouter quelques cartes de soin par défaut
+			list.add(new CarteSoin("Remède", "Un remède efficace contre les blessures", 2));
+			list.add(new CarteSoin("Bandages", "Des bandages pour stopper l'hémorragie", 1));
 		}
 		
 		this.pioche = new Pioche(list);
+	}
+	
+	// Méthode pour charger les cartes depuis un répertoire
+	private void chargerCartesDepuisRepertoire(File repertoire, List<Carte> listCartes) {
+		File[] files = repertoire.listFiles();
+		if (files != null) {
+			for (File f : files) {
+				if (f.isFile()) {
+					try {
+						Carte carte = ParserCarte.lireCarte(f.toString());
+						if (carte != null) {
+							listCartes.add(carte);
+							System.out.println("Carte chargée: " + f.getName());
+						}
+					} catch (Exception e) {
+						System.out.println("Erreur lors de la lecture du fichier " + f.getName() + ": " + e.getMessage());
+					}
+				}
+			}
+		}
 	}
 
 	public Carte piocher() {

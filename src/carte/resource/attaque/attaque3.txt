@@ -1,0 +1,5 @@
+attaque
+Bordée de Mousquets
+Tirez une salve de mousquets sur votre ennemi.
+1
+2

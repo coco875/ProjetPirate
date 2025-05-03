@@ -1,0 +1,5 @@
+attaque
+Lame Empoisonnée
+Votre lame enduite de poison inflige des dégâts prolongés.
+1
+1

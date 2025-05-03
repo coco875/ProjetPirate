@@ -4,48 +4,32 @@ package carte;
  * @brief Classe représentant une carte d'attaque
  * 
  * Cette classe étend la classe Carte pour représenter spécifiquement
- * les cartes d'attaque (entité uniquement - pas de logique métier).
+ * les cartes d'attaque. Elle utilise:
+ * - La valeur principale (valeur) pour stocker les points de dégâts infligés à l'adversaire
+ * - La valeur secondaire (valeurSecondaire) pour stocker les points de dégâts subis par l'attaquant
  */
 public class CarteAttaque extends Carte {
-    /** Points de dégâts infligés par la carte */
-    private int degats;
-
-    /**
-     * @brief Constructeur standard pour une carte d'attaque
-     */
-    public CarteAttaque(String nomCarte, String description, int degats, int idCarte) {
-        super(TypeCarte.ATTAQUE, nomCarte, description, degats);
-        this.degats = degats;
-    }
     
     /**
-     * @brief Constructeur standard pour une carte d'attaque sans ID
+     * @brief Constructeur standard pour une carte d'attaque
+     * @param nomCarte Nom de la carte
+     * @param description Description de la carte
+     * @param degatsInfliges Points de dégâts infligés à l'adversaire (valeur principale)
+     * @param degatsSubis Points de dégâts subis par l'attaquant (valeur secondaire)
      */
-    public CarteAttaque(String nomCarte, String description, int degats) {
-        super(TypeCarte.ATTAQUE, nomCarte, description, degats);
-        this.degats = degats;
+    public CarteAttaque(String nomCarte, String description, int degatsInfliges, int degatsSubis) {
+        super(TypeCarte.ATTAQUE, nomCarte, description, degatsInfliges, degatsSubis);
     }
     
     /**
      * @brief Constructeur complet pour une carte d'attaque
+     * @param nomCarte Nom de la carte
+     * @param description Description de la carte
+     * @param degatsInfliges Points de dégâts infligés à l'adversaire (valeur principale)
+     * @param degatsSubis Points de dégâts subis par l'attaquant (valeur secondaire)
+     * @param cout Coût d'achat de la carte
      */
-    public CarteAttaque(String nomCarte, String description, int degats, int idCarte, int cout) {
-        super(TypeCarte.ATTAQUE, nomCarte, description, degats, cout);
-        this.degats = degats;
-    }
-    
-    /**
-     * @brief Récupère les points de dégâts de la carte
-     */
-    public int getDegats() {
-        return degats;
-    }
-    
-    /**
-     * @brief Définit les points de dégâts de la carte
-     */
-    public void setDegats(int degats) {
-        this.degats = degats;
-        setValeur(degats); // Synchroniser avec la valeur générique
+    public CarteAttaque(String nomCarte, String description, int degatsInfliges, int degatsSubis, int cout) {
+        super(TypeCarte.ATTAQUE, nomCarte, description, degatsInfliges, degatsSubis, cout);
     }
 }

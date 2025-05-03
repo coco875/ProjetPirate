@@ -1,0 +1,6 @@
+tresor
+Trésor Modèle
+Un modèle de carte de trésor
+5
+2
+3

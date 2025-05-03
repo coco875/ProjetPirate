@@ -16,7 +16,7 @@ public class CartePassive extends Carte {
      * @brief Constructeur standard pour une carte passive
      */
     public CartePassive(String nomCarte, String description, int valeur, int duree, String typeEffet) {
-        super(TypeCarte.PASSIVE, nomCarte, description, valeur);
+        super(TypeCarte.PASSIVE, nomCarte, description, valeur, 0); // valeurSecondaire = 0 par défaut
         this.duree = duree;
         this.typeEffet = typeEffet;
     }
@@ -25,7 +25,7 @@ public class CartePassive extends Carte {
      * @brief Constructeur complet pour une carte passive
      */
     public CartePassive(String nomCarte, String description, int valeur, int duree, String typeEffet, int cout) {
-        super(TypeCarte.PASSIVE, nomCarte, description, valeur, cout);
+        super(TypeCarte.PASSIVE, nomCarte, description, valeur, 0, cout); // valeurSecondaire = 0 par défaut
         this.duree = duree;
         this.typeEffet = typeEffet;
     }

@@ -1,0 +1,6 @@
+tresor
+Coffre au Trésor
+Vous découvrez un coffre rempli d'or sur une île abandonnée.
+10
+0
+0

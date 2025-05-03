@@ -16,7 +16,7 @@ public class CarteSpeciale extends Carte {
      * @brief Constructeur standard pour une carte spéciale
      */
     public CarteSpeciale(String nomCarte, String description, String effetSpecial, int valeur) {
-        super(TypeCarte.SPECIALE, nomCarte, description, valeur);
+        super(TypeCarte.SPECIALE, nomCarte, description, valeur, 0); // valeurSecondaire = 0 par défaut
         this.effetSpecial = effetSpecial;
         this.estReutilisable = false;
     }
@@ -25,7 +25,7 @@ public class CarteSpeciale extends Carte {
      * @brief Constructeur complet pour une carte spéciale
      */
     public CarteSpeciale(String nomCarte, String description, String effetSpecial, int valeur, int cout) {
-        super(TypeCarte.SPECIALE, nomCarte, description, valeur, cout);
+        super(TypeCarte.SPECIALE, nomCarte, description, valeur, 0, cout); // valeurSecondaire = 0 par défaut
         this.effetSpecial = effetSpecial;
         this.estReutilisable = false;
     }

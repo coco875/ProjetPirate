@@ -1,5 +1,5 @@
 attaque
-templateA
-sunt in culpa qui officia deserunt mollit anim id est laborum.
-1
+Coup de Sabre
+Un puissant coup de sabre qui blesse votre adversaire.
 2
+1
