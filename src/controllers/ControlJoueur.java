@@ -23,9 +23,6 @@ public class ControlJoueur {
 		this.cPioche = cPioche;
 	}
 	
-	public Joueur getJoueur() {
-		return joueur;
-	}
 	
 	public void setJoueur(Joueur joueur) {
 		this.joueur = joueur;
@@ -74,11 +71,11 @@ public class ControlJoueur {
 	 * @param points Points de popularité à gagner
 	 */
 	public void gagnerPopularite(int points) {
-		Integer popularite = joueur.getPopularite() + points;
-		if (popularite > 5) {
-			popularite = 5;
+		Integer newPop = joueur.getPopularite() + points;
+		if (newPop > 5) {
+			newPop = 5;
 		}
-		joueur.setPopularite(popularite);
+		joueur.setPopularite(newPop);
 	}
 	
 	/**
@@ -97,11 +94,7 @@ public class ControlJoueur {
 		if (pop > 0) {
 			gagnerPopularite(pop);
 		} else {
-			Integer popularite = joueur.getPopularite() + pop;
-			if (popularite < 0) {
-				popularite = 0;
-			}
-			joueur.setPopularite(popularite);
+			perdrePopularite(-pop);
 		}
 	}
 	
@@ -139,34 +132,19 @@ public class ControlJoueur {
 		while (joueur.getMain().size() > 4) {
 			joueur.retirerCarte(joueur.getMain().get(0));
 		}
+		
+		// Gagner de l'or 
+		gagnerOr(10);
 	}
-
+	
+	
 	public void setControlCartePlateau(ControlCartePlateau controlCartePlateau) {
 		this.cCartePlateau = controlCartePlateau;
 	}
 	
 	
-	public void perdrePointsDeVie(int vie) {
-		int newVie = joueur.getVie() - vie;
-		if (newVie <= 0) {
-			newVie = 0;
-			//mourir? ou alors controlJeu regarde à chaque fin de tour la vie des joueurs
-			//joueur.setVie(newVie);
-		}
-		joueur.setVie(newVie);
-	}
 	
-	public void gagnerPopularité(int pop) {
-		int newPop = joueur.getPopularite() + pop;
-		if (newPop >= 5) {
-			newPop = 5;
-			//gagner? ou alors ControlJeu regarde à chaque fin de tour la pop des joueurs
-			//joueur.setPopularite(newPop);
-		}
-		joueur.setPopularite(newPop);
-	}
-	
-	public void perdrePopularité(int pop) {
+	public void perdrePopularite(int pop) {
 		int newPop = joueur.getPopularite() - pop;
 		if (newPop <= 0) {
 			newPop = 0;
@@ -174,23 +152,6 @@ public class ControlJoueur {
 		joueur.setPopularite(newPop);
 	}
 	
-	public void recevoirEffets(int vie, int pop) {
-		if (vie < 0) {
-			perdrePointsDeVie(Math.abs(vie));
-		} else {
-			//gagnerPointDeVie ?
-		}
-		
-		if (pop < 0) {
-			perdrePopularité(Math.abs(pop));
-		} else {
-			gagnerPopularité(pop);
-		}
-	}
-	
-	public void jouerTour() {
-		
-	}
 	
 	public Carte defausser(int idCarte) {
 		List<Carte> main = joueur.getMain();

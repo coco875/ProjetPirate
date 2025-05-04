@@ -62,7 +62,7 @@ public class ControlJeu {
 		} else if (joueurId == 2) {
 			return cJ2.piocher();
 		}
-		return null;
+		throw new IllegalArgumentException("Mauvais id de joueur");
 	}
 	
 	/**
@@ -103,15 +103,6 @@ public class ControlJeu {
 		cJ2.initialiserMain();
 	}
 	
-	public Carte piocherCarte(int joueurId) {
-		switch (joueurId) {
-		case 1:
-			return cJ1.piocher();
-		case 2:
-			return cJ2.piocher();
-		default:
-			throw new IllegalArgumentException("Id de joueur oob");
-
 			
 	public void jouerTour(int joueurId) {
 		if (joueurId == 1) {
