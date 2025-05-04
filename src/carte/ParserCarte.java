@@ -2,62 +2,90 @@ package carte;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
-import carte.Carte.TypeCarte;
 public class ParserCarte {
-	public static Carte lireCarte(String s) throws Exception {
-		TypeCarte t = TypeCarte.ATTAQUE;
-		String titre, description;
-		Integer valeurPrincipale = 0, valeurSecondaire = 0;
-		Integer orGagne = 0, orPerdu = 0, orVole = 0, vieGagne = 0;
-		Carte c = null;
-		BufferedReader br = new BufferedReader(new FileReader(s));
-		try {
-		    String line = br.readLine();
-		    if (line.equals("popularite")) t = TypeCarte.POPULAIRE;
-		    else if (line.equals("attaque")) t = TypeCarte.ATTAQUE;
-		    else if (line.equals("speciale")) t = TypeCarte.SPECIALE;
-		    else if (line.equals("passive")) t = TypeCarte.PASSIVE;
-		    else if (line.equals("tresor")) t = TypeCarte.TRESOR;
-		    else if (line.equals("soin")) t = TypeCarte.SOIN;
-		    else { /* Gérer les types non reconnus */ }
-		    
-		    titre = br.readLine();
-		    description = br.readLine();
-		    
-		    // Lecture des valeurs selon le type de carte
-		    if (t == TypeCarte.TRESOR) {
-		        orGagne = Integer.parseInt(br.readLine());
-		        orPerdu = Integer.parseInt(br.readLine());
-		        orVole = Integer.parseInt(br.readLine());
-		    } else if (t == TypeCarte.SOIN) {
-		        vieGagne = Integer.parseInt(br.readLine());
-		    } else {
-		        // Pour les cartes standards (attaque, popularité, etc.)
-		        valeurPrincipale = Integer.parseInt(br.readLine());
-		        valeurSecondaire = Integer.parseInt(br.readLine());
-		    }
-		    
-		    // Créer le bon type de carte selon le type lu
-		    if (t == TypeCarte.ATTAQUE) {
-		        c = new CarteAttaque(titre, description, valeurPrincipale, valeurSecondaire);
-		    } else if (t == TypeCarte.POPULAIRE) {
-		        c = new CartePopularite(titre, description, valeurPrincipale, valeurSecondaire);
-		    } else if (t == TypeCarte.TRESOR) {
-		        c = new CarteTresor(titre, description, orGagne, orPerdu, orVole);
-		    } else if (t == TypeCarte.SOIN) {
-		        c = new CarteSoin(titre, description, vieGagne);
-		    } else {
-		        // Pour les autres types, utiliser la classe de base
-		        c = new Carte(t, titre, description, valeurPrincipale, valeurSecondaire);
-		    }
-		} 
-		catch (Exception e) {
-			throw new IOException("Erreur lors de la création de carte: " + e.getMessage());
-		}
-		finally {
-		    br.close();
-		}
-		return c;
-	}
+    public static Carte lireCarte(String filePath) throws Exception {
+        Map<String, String> properties = new HashMap<>();
+        
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty() || line.startsWith("#")) { // Ignore empty lines and comments
+                    continue;
+                }
+                String[] parts = line.split(":", 2); // Split by the first colon only
+                if (parts.length == 2) {
+                    String key = parts[0].trim().toLowerCase(); // Use lowercase keys for consistency
+                    String value = parts[1].trim();
+                    properties.put(key, value);
+                } else {
+                    System.err.println("Ligne ignorée (format invalide) dans " + filePath + ": " + line);
+                }
+            }
+        } catch (IOException e) {
+            throw new IOException("Erreur de lecture du fichier: " + filePath, e);
+        }
+
+        String type = properties.getOrDefault("type", "").toLowerCase();
+        String titre = properties.getOrDefault("titre", "Sans titre");
+        String description = properties.getOrDefault("description", "");
+
+        try {
+            switch (type) {
+                case "attaque":
+                    int degatsInfliges = Integer.parseInt(properties.getOrDefault("degats_infliges", "0"));
+                    int degatsSubisAttaque = Integer.parseInt(properties.getOrDefault("degats_subis", "0"));
+                    int orVole = Integer.parseInt(properties.getOrDefault("or_vole", "0"));
+                    if (orVole > 0) {
+                         // Carte offensive de vol d'or
+                        CarteOffensive carteVol = new CarteOffensive(titre, description, orVole, true);
+                        carteVol.setOrVole(orVole); // Assurez-vous que cette méthode existe et fonctionne
+                        return carteVol;
+                    } else {
+                        // Carte offensive d'attaque directe
+                        return new CarteOffensive(titre, description, degatsInfliges, degatsSubisAttaque, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+                    }
+                    
+                case "soin":
+                    int vieGagnee = Integer.parseInt(properties.getOrDefault("vie_gagnee", "0"));
+                    return new CarteOffensive(titre, description, vieGagnee); // Utilise le constructeur de soin
+
+                case "popularite":
+                    int populariteGagnee = Integer.parseInt(properties.getOrDefault("popularite_gagnee", "0"));
+                    int degatsSubisPop = Integer.parseInt(properties.getOrDefault("degats_subis", "0"));
+                    return new CarteStrategique(titre, description, populariteGagnee, degatsSubisPop); // Constructeur popularité
+
+                case "tresor":
+                    int orGagne = Integer.parseInt(properties.getOrDefault("or_gagne", "0"));
+                     // Les trésors sont maintenant purement stratégiques (gain d'or)
+                    return new CarteStrategique(titre, description, orGagne, 0, true); // Utilise le constructeur trésor (gainOr, perteOr=0, isTresor=true)
+
+                case "speciale":
+                     // Gérer les cartes spéciales (potentiellement offensives ou stratégiques selon les clés)
+                     // Cette partie nécessite de clarifier la structure des cartes spéciales
+                     // Pour l'instant, on crée une carte stratégique simple
+                    System.err.println("Avertissement: Type 'speciale' non entièrement géré dans le parseur pour: " + titre);
+                    return new CarteStrategique(titre, description, "Effet spécial non défini", 0); // Placeholder
+
+                case "passive":
+                     // Gérer les cartes passives
+                     // Cette partie nécessite de clarifier la structure des cartes passives
+                    System.err.println("Avertissement: Type 'passive' non entièrement géré dans le parseur pour: " + titre);
+                    int valeurEffetPassif = Integer.parseInt(properties.getOrDefault("valeur_effet", "0"));
+                    int dureePassif = Integer.parseInt(properties.getOrDefault("duree", "2"));
+                    String effetPassif = properties.getOrDefault("effet", "Effet passif");
+                    return new CarteStrategique(titre, description, valeurEffetPassif, dureePassif, effetPassif); // Placeholder
+
+                default:
+                    throw new IllegalArgumentException("Type de carte inconnu: " + type + " dans " + filePath);
+            }
+        } catch (NumberFormatException e) {
+            throw new Exception("Erreur de format numérique dans le fichier: " + filePath, e);
+        } catch (Exception e) {
+            throw new Exception("Erreur lors de la création de la carte depuis: " + filePath, e);
+        }
+    }
 }

@@ -1,4 +1,4 @@
-soin
-Potion du Chirurgien
-Une mixture médicinale qui guérit rapidement vos blessures.
-3
+type: soin
+titre: Potion du Chirurgien
+description: Une mixture médicinale qui guérit rapidement vos blessures.
+vie_gagnee: 3

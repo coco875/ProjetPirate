@@ -1,41 +1,38 @@
 package carte;
 
 /**
- * @brief Classe représentant une carte de trésor
- * 
- * Cette classe étend la classe Carte pour représenter spécifiquement
- * les cartes qui affectent l'or du joueur ou de l'adversaire.
+ * @brief Classe représentant une carte de trésor (hérite de CarteStrategique)
  */
-public class CarteTresor extends Carte {
-    
+public class CarteTresor extends CarteStrategique {
+
     /**
      * @brief Constructeur standard pour une carte de trésor
      * @param nomCarte Nom de la carte
      * @param description Description de la carte
-     * @param orGagne Or gagné par le joueur
-     * @param orPerdu Or perdu par le joueur
+     * @param orGagne Or gagné en jouant la carte
+     * @param orPerdu Or perdu en jouant la carte
      * @param orVole Or volé à l'adversaire
      */
     public CarteTresor(String nomCarte, String description, int orGagne, int orPerdu, int orVole) {
-        super(TypeCarte.TRESOR, nomCarte, description, 0, 0);
-        setOrGagne(orGagne);
-        setOrPerdu(orPerdu);
-        setOrVole(orVole);
+        // Correction: Appel du constructeur approprié de CarteStrategique pour TRESOR
+        super(nomCarte, description, orGagne, orPerdu, orVole); 
     }
-    
+
     /**
-     * @brief Constructeur complet pour une carte de trésor
+     * @brief Constructeur complet pour une carte de trésor avec coût
      * @param nomCarte Nom de la carte
      * @param description Description de la carte
-     * @param orGagne Or gagné par le joueur
-     * @param orPerdu Or perdu par le joueur
-     * @param orVole Or volé à l'adversaire
+     * @param orGagne Or gagné
+     * @param orPerdu Or perdu
+     * @param orVole Or volé
      * @param cout Coût d'achat de la carte
      */
     public CarteTresor(String nomCarte, String description, int orGagne, int orPerdu, int orVole, int cout) {
-        super(TypeCarte.TRESOR, nomCarte, description, 0, 0, cout);
-        setOrGagne(orGagne);
-        setOrPerdu(orPerdu);
-        setOrVole(orVole);
+         // Correction: Appel du constructeur approprié de CarteStrategique pour TRESOR
+        super(nomCarte, description, orGagne, orPerdu, orVole);
+        // Définir le coût séparément
+        setCout(cout);
     }
+    
+    // Les méthodes getOrGagne, getOrPerdu, getOrVole sont héritées de Carte.
 }

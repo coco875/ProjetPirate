@@ -124,6 +124,79 @@ public class Joueur {
 	}
 	
 	/**
+	 * @brief Le joueur perd des points de vie
+	 * @param points Nombre de points à perdre
+	 */
+	public void perdrePV(int points) {
+		this.vie -= points;
+		if (this.vie < 0) {
+			this.vie = 0;
+		}
+	}
+	
+	/**
+	 * @brief Le joueur gagne des points de vie
+	 * @param points Nombre de points à gagner
+	 */
+	public void gagnerPointsDeVie(int points) {
+		this.vie += points;
+		if (this.vie > 5) {
+			this.vie = 5;
+		}
+	}
+	
+	/**
+	 * @brief Le joueur perd des points de popularité
+	 * @param points Nombre de points à perdre
+	 */
+	public void perdrePopularite(int points) {
+		this.popularite -= points;
+		if (this.popularite < 0) {
+			this.popularite = 0;
+		}
+	}
+	
+	/**
+	 * @brief Le joueur gagne des points de popularité
+	 * @param points Nombre de points à gagner
+	 */
+	public void gagnerPopularite(int points) {
+		this.popularite += points;
+		if (this.popularite > 5) {
+			this.popularite = 5;
+		}
+	}
+	
+	/**
+	 * @brief Le joueur perd de l'or
+	 * @param montant Montant d'or à perdre
+	 * @return true si le joueur avait assez d'or, false sinon
+	 */
+	public boolean perdreOr(int montant) {
+		if (this.or >= montant) {
+			this.or -= montant;
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * @brief Le joueur gagne de l'or
+	 * @param montant Montant d'or à gagner
+	 */
+	public void gagnerOr(int montant) {
+		this.or += montant;
+	}
+	
+	/**
+	 * @brief Méthode pour accéder au personnage (pour compatibilité)
+	 * @return Le pirate du joueur
+	 */
+	public Pirate getPersonnage() {
+		return this.pirate;
+	}
+	
+	/**
 	 * @brief Ajoute une carte à la main du joueur
 	 * @param carte Carte à ajouter
 	 */
@@ -136,15 +209,15 @@ public class Joueur {
 	 * @brief Retire une carte de la main du joueur
 	 * 
 	 * @param carte Carte à retirer
-	 * @throws IllegalStateException si la carte n'est pas dans la main
+	 * @return true si la carte a été retirée, false sinon
 	 */
-	public void retirerCarte(Carte carte) throws IllegalStateException {
+	public boolean retirerCarte(Carte carte) {
 		if (main.contains(carte)) {
 			main.remove(carte);
 			nbCartes = main.size();
-		} else {
-			throw new IllegalStateException("Carte absente dans la main");
+			return true;
 		}
+		return false;
 	}
 	
 	/**

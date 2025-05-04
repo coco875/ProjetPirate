@@ -20,10 +20,23 @@ public class MainUI {
     /**
      * @brief Point d'entrée principal
      * 
-     * @param args Arguments de la ligne de commande (non utilisés)
+     * @param args Arguments de la ligne de commande (attend "console" ou "gui")
      */
     public static void main(String[] args) {
-        // Demander à l'utilisateur quelle interface il souhaite utiliser
+        // Vérifier les arguments de la ligne de commande
+        if (args.length > 0) {
+            String interfaceType = args[0].toLowerCase();
+            if ("console".equals(interfaceType)) {
+                lancerInterfaceConsole();
+                return; // Terminer après le lancement
+            } else if ("gui".equals(interfaceType)) {
+                lancerInterfaceGraphique();
+                return; // Terminer après le lancement
+            }
+        }
+
+        // Si aucun argument valide n'est fourni, afficher la boîte de dialogue (comportement précédent)
+        System.out.println("Argument d'interface non reconnu ou manquant. Affichage de la boîte de dialogue de sélection.");
         String[] options = {"Interface graphique", "Interface console", "Quitter"};
         
         int choix = JOptionPane.showOptionDialog(

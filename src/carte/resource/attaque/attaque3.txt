@@ -1,5 +1,5 @@
-attaque
-Bordée de Mousquets
-Tirez une salve de mousquets sur votre ennemi.
-1
-2
+type: attaque
+titre: Bordée de Mousquets
+description: Tirez une salve de mousquets sur votre ennemi.
+degats_infliges: 1
+degats_subis: 2

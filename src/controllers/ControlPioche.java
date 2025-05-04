@@ -17,6 +17,13 @@ public class ControlPioche {
 	private Pioche pioche;
 	
 	public ControlPioche() {
+		initialiserPioche();
+	}
+	
+	/**
+	 * Initialise la pioche avec les cartes depuis les fichiers ou par défaut
+	 */
+	public void initialiserPioche() {
 		List<Carte> list = new ArrayList<>();
 		
 		// Vérifier si le répertoire existe
@@ -75,7 +82,20 @@ public class ControlPioche {
 			list.add(new CarteSoin("Bandages", "Des bandages pour stopper l'hémorragie", 1));
 		}
 		
-		this.pioche = new Pioche(list);
+		// Correction: Instancier Pioche sans argument, puis ajouter les cartes et mélanger
+		this.pioche = new Pioche(); 
+		for (Carte carte : list) {
+		    this.pioche.ajouterCarte(carte);
+		}
+		this.pioche.melanger();
+	}
+	
+	/**
+	 * Vérifie si la pioche est vide
+	 * @return true si la pioche est vide, false sinon
+	 */
+	public boolean estVide() {
+		return pioche.estVide();
 	}
 	
 	// Méthode pour charger les cartes depuis un répertoire
@@ -88,7 +108,6 @@ public class ControlPioche {
 						Carte carte = ParserCarte.lireCarte(f.toString());
 						if (carte != null) {
 							listCartes.add(carte);
-							System.out.println("Carte chargée: " + f.getName());
 						}
 					} catch (Exception e) {
 						System.out.println("Erreur lors de la lecture du fichier " + f.getName() + ": " + e.getMessage());
@@ -99,6 +118,6 @@ public class ControlPioche {
 	}
 
 	public Carte piocher() {
-		return pioche.piocher();
+		return pioche.estVide() ? null : pioche.piocher();
 	}
 }

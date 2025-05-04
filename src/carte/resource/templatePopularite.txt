@@ -1,5 +1,6 @@
-popularite
-Histoire de Trésor
-Racontez une histoire sur un trésor légendaire et gagnez en popularité.
-1
-2
+# Template pour une carte de popularité
+type: popularite
+titre: Popularité Modèle
+description: Un modèle de carte de popularité
+popularite_gagnee: 1
+degats_subis: 0

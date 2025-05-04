@@ -1,5 +1,5 @@
-attaque
-Trappe Piégée
-Activez une trappe sous les pieds de votre adversaire.
-1
-2
+type: attaque
+titre: Trappe Piégée
+description: Activez une trappe sous les pieds de votre adversaire.
+degats_infliges: 1
+degats_subis: 2

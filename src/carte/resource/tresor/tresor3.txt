@@ -1,6 +1,6 @@
-tresor
-Vol de Butin
-Vous subtilisez une partie du trésor de votre adversaire.
-0
-0
-8
+type: attaque
+titre: Vol de Butin
+description: Vous subtilisez une partie du trésor de votre adversaire.
+# degats_infliges: 0 # Pas de dégâts directs
+# degats_subis: 0
+or_vole: 8

@@ -3,10 +3,10 @@ package carte;
 /**
  * @brief Classe représentant une carte spéciale
  * 
- * Cette classe étend la classe Carte pour représenter spécifiquement
+ * Cette classe étend la classe CarteStrategique pour représenter spécifiquement
  * les cartes qui produisent des effets spéciaux uniques (entité uniquement - pas de logique métier).
  */
-public class CarteSpeciale extends Carte {
+public class CarteSpeciale extends CarteStrategique {
     /** Description détaillée de l'effet spécial */
     private String effetSpecial;
     /** Indique si la carte peut être réutilisée */
@@ -16,7 +16,7 @@ public class CarteSpeciale extends Carte {
      * @brief Constructeur standard pour une carte spéciale
      */
     public CarteSpeciale(String nomCarte, String description, String effetSpecial, int valeur) {
-        super(TypeCarte.SPECIALE, nomCarte, description, valeur, 0); // valeurSecondaire = 0 par défaut
+        super(nomCarte, description, effetSpecial, valeur); 
         this.effetSpecial = effetSpecial;
         this.estReutilisable = false;
     }
@@ -25,23 +25,9 @@ public class CarteSpeciale extends Carte {
      * @brief Constructeur complet pour une carte spéciale
      */
     public CarteSpeciale(String nomCarte, String description, String effetSpecial, int valeur, int cout) {
-        super(TypeCarte.SPECIALE, nomCarte, description, valeur, 0, cout); // valeurSecondaire = 0 par défaut
+        super(nomCarte, description, effetSpecial, valeur, cout);
         this.effetSpecial = effetSpecial;
         this.estReutilisable = false;
-    }
-
-    /**
-     * @brief Récupère la description de l'effet spécial
-     */
-    public String getEffetSpecial() {
-        return effetSpecial;
-    }
-
-    /**
-     * @brief Définit la description de l'effet spécial
-     */
-    public void setEffetSpecial(String effetSpecial) {
-        this.effetSpecial = effetSpecial;
     }
 
     /**

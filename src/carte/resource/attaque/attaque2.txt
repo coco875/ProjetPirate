@@ -1,5 +1,5 @@
-attaque
-Crochet du Capitaine
-Un coup vicieux avec votre crochet métallique.
-2
-0
+type: attaque
+titre: Crochet du Capitaine
+description: Un coup vicieux avec votre crochet métallique.
+degats_infliges: 2
+degats_subis: 0

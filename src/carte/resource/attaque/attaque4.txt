@@ -1,5 +1,5 @@
-attaque
-Abordage Surprise
-Prenez votre adversaire par surprise avec un abordage éclair.
-2
-0
+type: attaque
+titre: Abordage Surprise
+description: Prenez votre adversaire par surprise avec un abordage éclair.
+degats_infliges: 2
+degats_subis: 0

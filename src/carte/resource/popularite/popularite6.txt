@@ -1,5 +1,5 @@
-popularite
-Duel Victorieux
-Gagnez un duel spectaculaire contre un membre rebelle de l'équipage.
-2
-1
+type: popularite
+titre: Duel Victorieux
+description: Gagnez un duel spectaculaire contre un membre rebelle de l'équipage.
+popularite_gagnee: 2
+degats_subis: 1

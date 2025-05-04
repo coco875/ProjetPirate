@@ -6,13 +6,6 @@ package carte;
  * Cette classe représente les données d'une carte, conformément au modèle ECB.
  */
 public class Carte {
-
-	/**
-	 * @brief Types de cartes disponibles dans le jeu
-	 */
-	public enum TypeCarte {
-		POPULAIRE, ATTAQUE, SPECIALE, PASSIVE, TRESOR, SOIN;
-	}
 	
 	/** Type de la carte */
 	private TypeCarte type;
@@ -80,24 +73,10 @@ public class Carte {
 		this(type, jsonCarte, "ID: " + idCarte, 0, 0, 10); // Valeurs et coût par défaut
 		this.id = idCarte;
 	}
-	
-	/**
-	 * @brief Constructeur pour une carte de trésor
-	 */
-	public Carte(String nomCarte, String description, int orGagne, int orPerdu, int orVole) {
-		this(TypeCarte.TRESOR, nomCarte, description, 0, 0, 10);
-		this.orGagne = orGagne;
-		this.orPerdu = orPerdu;
-		this.orVole = orVole;
-	}
-	
-	/**
-	 * @brief Constructeur pour une carte de soin
-	 */
-	public Carte(String nomCarte, String description, int vieGagne) {
-		this(TypeCarte.SOIN, nomCarte, description, 0, 0, 10);
-		this.vieGagne = vieGagne;
-	}
+
+	// Note: Les constructeurs spécifiques comme celui pour les cartes de trésor ou de soin
+	// ont été supprimés car ils utilisaient les anciennes valeurs d'énumération.
+	// Ces constructeurs sont maintenant implémentés dans les classes dérivées.
 	
 	/**
 	 * @brief Récupère la valeur principale de la carte
@@ -156,20 +135,23 @@ public class Carte {
 	    StringBuilder sb = new StringBuilder();
 	    sb.append(this.nomCarte).append("\n").append(this.Description);
 	    
-	    if (this.estCarteAttaque()) {
-	        sb.append("\nDégâts infligés: ").append(this.valeur);
-	        sb.append("\nDégâts subis: ").append(this.valeurSecondaire);
-	    } else if (this.estCartePopularite()) {
-	        sb.append("\nPopularité: ").append(this.valeur);
-	        sb.append("\nDégâts subis: ").append(this.valeurSecondaire);
-	    } else if (this.estCarteTresor()) {
-	        if (this.orGagne > 0) sb.append("\nOr gagné: ").append(this.orGagne);
-	        if (this.orPerdu > 0) sb.append("\nOr perdu: ").append(this.orPerdu);
-	        if (this.orVole > 0) sb.append("\nOr volé: ").append(this.orVole);
-	    } else if (this.estCarteSoin()) {
-	        sb.append("\nVie gagnée: ").append(this.vieGagne);
-	    } else if (this.estCarteSpeciale()) {
-	        sb.append("\nValeur: ").append(this.valeur);
+	    if (this instanceof CarteOffensive) {
+	        CarteOffensive carteOffensive = (CarteOffensive) this;
+	        if (carteOffensive.estAttaqueDirecte()) {
+	            sb.append("\nDégâts infligés: ").append(this.valeur);
+	            sb.append("\nDégâts subis: ").append(this.valeurSecondaire);
+	        } else if (carteOffensive.estSoin()) {
+	            sb.append("\nVie gagnée: ").append(this.vieGagne);
+	        }
+	    } else if (this instanceof CarteStrategique) {
+	        CarteStrategique carteStrat = (CarteStrategique) this;
+	        if (carteStrat.estPopularite()) {
+	            sb.append("\nPopularité: ").append(this.valeur);
+	            sb.append("\nDégâts subis: ").append(this.valeurSecondaire);
+	        } else if (carteStrat.estTresor()) {
+	            if (this.orGagne > 0) sb.append("\nOr gagné: ").append(this.orGagne);
+	            if (this.orPerdu > 0) sb.append("\nOr perdu: ").append(this.orPerdu);
+	        }
 	    }
 	    
 	    return sb.toString();
@@ -211,95 +193,95 @@ public class Carte {
 	}
 	
 	/**
-	 * @brief Vérifie si la carte est une carte d'attaque
+	 * @brief Vérifie si la carte est une carte offensive (pour compatibilité)
 	 */
 	public boolean estCarteAttaque() {
-		return this.type == TypeCarte.ATTAQUE;
+		return this instanceof CarteOffensive && ((CarteOffensive) this).estAttaqueDirecte();
 	}
 
 	/**
-	 * @brief Vérifie si la carte est une carte de popularité
+	 * @brief Vérifie si la carte est une carte de popularité (pour compatibilité)
 	 */
 	public boolean estCartePopularite() {
-		return this.type == TypeCarte.POPULAIRE;
+		return this instanceof CarteStrategique && ((CarteStrategique) this).estPopularite();
 	}
 
 	/**
-	 * @brief Vérifie si la carte est une carte spéciale
+	 * @brief Vérifie si la carte est une carte spéciale (pour compatibilité)
 	 */
 	public boolean estCarteSpeciale() {
-		return this.type == TypeCarte.SPECIALE;
+		return this instanceof CarteStrategique && ((CarteStrategique) this).estSpeciale();
 	}
 
 	/**
-	 * @brief Vérifie si la carte est une carte passive
+	 * @brief Vérifie si la carte est une carte passive (pour compatibilité)
 	 */
 	public boolean estCartePassive() {
-		return this.type == TypeCarte.PASSIVE;
+		return this instanceof CarteStrategique && ((CarteStrategique) this).estPassive();
 	}
 	
 	/**
-	 * @brief Vérifie si la carte est une carte de trésor
+	 * @brief Vérifie si la carte est une carte de trésor (pour compatibilité)
 	 */
 	public boolean estCarteTresor() {
-		return this.type == TypeCarte.TRESOR;
+		return this instanceof CarteStrategique && ((CarteStrategique) this).estTresor();
 	}
 	
 	/**
-	 * @brief Vérifie si la carte est une carte de soin
+	 * @brief Vérifie si la carte est une carte de soin (pour compatibilité)
 	 */
 	public boolean estCarteSoin() {
-		return this.type == TypeCarte.SOIN;
+		return this instanceof CarteOffensive && ((CarteOffensive) this).estSoin();
 	}
 	
 	/**
-	 * @brief Récupère les points de dégâts si c'est une carte d'attaque
+	 * @brief Récupère les points de dégâts (pour compatibilité)
 	 */
 	public int getDegats() {
-		if (this.type != TypeCarte.ATTAQUE) {
-			return 0;
+		if (this instanceof CarteOffensive && ((CarteOffensive) this).estAttaqueDirecte()) {
+			return this.valeur;
 		}
-		return this.valeur;
+		return 0;
 	}
 	
 	/**
-	 * @brief Récupère les points de dégâts infligés si c'est une carte d'attaque
+	 * @brief Récupère les points de dégâts infligés (pour compatibilité)
 	 */
 	public int getDegatsInfliges() {
-		if (this.type != TypeCarte.ATTAQUE) {
-			return 0;
+		if (this instanceof CarteOffensive && ((CarteOffensive) this).estAttaqueDirecte()) {
+			return this.valeur;
 		}
-		return this.valeur;
+		return 0;
 	}
 	
 	/**
-	 * @brief Récupère les points de dégâts subis si c'est une carte d'attaque
+	 * @brief Récupère les points de dégâts subis (pour compatibilité)
 	 */
 	public int getDegatsSubis() {
-		if (this.type != TypeCarte.ATTAQUE) {
-			return 0;
+		if (this instanceof CarteOffensive && ((CarteOffensive) this).estAttaqueDirecte()) {
+			return this.valeurSecondaire;
 		}
-		return this.valeurSecondaire;
+		return 0;
 	}
 	
 	/**
-	 * @brief Récupère les points de popularité si c'est une carte de popularité
+	 * @brief Récupère les points de popularité (pour compatibilité)
 	 */
 	public int getPopularite() {
-		if (this.type != TypeCarte.POPULAIRE) {
-			return 0;
+		if (this instanceof CarteStrategique && ((CarteStrategique) this).estPopularite()) {
+			return this.valeur;
 		}
-		return this.valeur;
+		return 0;
 	}
 	
 	/**
-	 * @brief Récupère les points de dégâts subis par le joueur si c'est une carte de popularité
+	 * @brief Récupère les points de dégâts subis par le joueur (pour compatibilité)
 	 */
 	public int getDegatsSubisPopularite() {
-		if (this.type != TypeCarte.POPULAIRE) {
-			return 0;
+		if (this instanceof CarteStrategique && ((CarteStrategique) this).estPopularite()) {
+			return this.valeurSecondaire;
 		}
-		return this.valeurSecondaire;
+		return 0;
 	}
 	
 	/**

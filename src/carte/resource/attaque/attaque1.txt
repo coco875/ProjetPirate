@@ -1,5 +1,5 @@
-attaque
-Canon Dévastateur
-Déchaînez la puissance de votre canon sur l'adversaire.
-2
-1
+type: attaque
+titre: Canon Dévastateur
+description: Déchaînez la puissance de votre canon sur l'adversaire.
+degats_infliges: 2
+degats_subis: 1

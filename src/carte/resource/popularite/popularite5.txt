@@ -1,5 +1,5 @@
-popularite
-Promesse de Fortune
-Promettez à votre équipage un trésor fabuleux à la prochaine escale.
-1
-1
+type: popularite
+titre: Promesse de Fortune
+description: Promettez à votre équipage un trésor fabuleux à la prochaine escale.
+popularite_gagnee: 1
+degats_subis: 1

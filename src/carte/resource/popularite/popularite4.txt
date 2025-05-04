@@ -1,5 +1,5 @@
-popularite
-Démonstration de Courage
-Réalisez un acte de bravoure impressionnant devant l'équipage.
-2
-0
+type: popularite
+titre: Démonstration de Courage
+description: Réalisez un acte de bravoure impressionnant devant l'équipage.
+popularite_gagnee: 2
+degats_subis: 0
