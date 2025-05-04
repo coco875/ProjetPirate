@@ -1,7 +1,7 @@
 package carte;
 
 /**
- * @brief Énumération des types de cartes
+ * Énumération des types de cartes
  */
 public enum TypeCarte {
     // Types principaux uniquement

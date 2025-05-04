@@ -1,40 +1,45 @@
 package carte;
 
 /**
- * @brief Classe représentant une carte du jeu des Pirates
- * 
- * Cette classe représente les données d'une carte, conformément au modèle ECB.
+ * Classe représentant une carte du jeu des Pirates
  */
 public class Carte {
 	
-	/** Type de la carte */
 	private TypeCarte type;
-	/** Nom de la carte */
 	private String nomCarte;
-	/** Description de la carte */
 	private String Description;
-	/** Valeur principale de la carte (points d'attaque ou de popularité) */
-	private int valeur;
-	/** Valeur secondaire de la carte (dégâts subis ou effet secondaire) */
-	private int valeurSecondaire;
-	/** Identifiant unique de la carte */
-	private int id;
-	/** Coût de la carte pour l'achat au marché */
-	private int cout;
-	/** Or gagné en jouant cette carte */
-	private int orGagne;
-	/** Or perdu en jouant cette carte */
-	private int orPerdu;
-	/** Or volé à l'adversaire en jouant cette carte */
-	private int orVole;
-	/** Points de vie gagnés en jouant cette carte */
-	private int vieGagne;
+	private int valeur;             // Valeur principale (points d'attaque ou de popularité)
+	private int valeurSecondaire;   // Valeur secondaire (dégâts subis ou effet secondaire)
+	private int id;                 // Identifiant unique de la carte
+	private int cout;               // Coût de la carte pour l'achat au marché
+	private int orGagne;            // Or gagné en jouant cette carte
+	private int orPerdu;            // Or perdu en jouant cette carte
+	private int orVole;             // Or volé à l'adversaire en jouant cette carte
+	private int vieGagne;           // Points de vie gagnés en jouant cette carte
 
-	/** Compteur statique pour générer les IDs uniques */
 	private static int compteurId = 0;
 	
+	// Données pour l'effet de la carte
+	public static class EffetCarte {
+		public int degatsInfliges = 0;
+		public int degatsSubis = 0;
+		public int populariteGagnee = 0;
+		public int vieGagnee = 0;
+		public int orGagne = 0;
+		public int orPerdu = 0;
+		public int orVole = 0;
+		public String effetSpecial = null;
+		public int dureeEffet = 0;
+		public boolean estAttaque = false;
+		public boolean estPopularite = false;
+		public boolean estSpeciale = false;
+		public boolean estPassive = false;
+		public boolean estTresor = false;
+		public boolean estSoin = false;
+	}
+	
 	/**
-	 * @brief Constructeur complet pour une carte
+	 * Constructeur complet
 	 */
 	public Carte(TypeCarte type, String nomCarte, String description, int valeur, int valeurSecondaire, int cout) {
 		this.type = type;
@@ -43,7 +48,7 @@ public class Carte {
 		this.valeur = valeur;
 		this.valeurSecondaire = valeurSecondaire;
 		this.cout = cout;
-		 // Valeurs par défaut pour les nouveaux attributs
+		// Valeurs par défaut pour les nouveaux attributs
 		this.orGagne = 0;
 		this.orPerdu = 0;
 		this.orVole = 0;
@@ -53,289 +58,215 @@ public class Carte {
 	}
 	
 	/**
-	 * @brief Constructeur sans coût pour une carte
+	 * Constructeur sans coût
 	 */
 	public Carte(TypeCarte type, String nomCarte, String description, int valeur, int valeurSecondaire) {
 		this(type, nomCarte, description, valeur, valeurSecondaire, 10); // Coût par défaut à 10
 	}
 	
 	/**
-	 * @brief Constructeur simplifié pour une carte
+	 * Constructeur simplifié
 	 */
 	public Carte(TypeCarte type, String nomCarte, String description) {
 		this(type, nomCarte, description, 0, 0, 10); // Valeurs par défaut à 0, coût à 10
 	}
 	
 	/**
-	 * @brief Constructeur pour carte créée depuis un JSON
+	 * Constructeur pour carte créée depuis un JSON
 	 */
 	public Carte(String jsonCarte, int idCarte, TypeCarte type) {
 		this(type, jsonCarte, "ID: " + idCarte, 0, 0, 10); // Valeurs et coût par défaut
 		this.id = idCarte;
 	}
 
-	// Note: Les constructeurs spécifiques comme celui pour les cartes de trésor ou de soin
-	// ont été supprimés car ils utilisaient les anciennes valeurs d'énumération.
-	// Ces constructeurs sont maintenant implémentés dans les classes dérivées.
-	
 	/**
-	 * @brief Récupère la valeur principale de la carte
+	 * Méthode centrale pour obtenir tous les effets d'une carte
+	 * Cette méthode remplace toutes les méthodes spécifiques
+	 * @return Un objet contenant tous les effets et caractéristiques de la carte
 	 */
+	public EffetCarte effetCarte() {
+		EffetCarte effet = new EffetCarte();
+		
+		// Calcul des effets en fonction du type de carte
+		if (this instanceof CarteOffensive) {
+			CarteOffensive carteOff = (CarteOffensive) this;
+			if (carteOff.estAttaqueDirecte()) {
+				effet.degatsInfliges = this.valeur;
+				effet.degatsSubis = this.valeurSecondaire;
+				effet.estAttaque = true;
+			} else if (carteOff.estSoin()) {
+				effet.vieGagnee = this.vieGagne;
+				effet.estSoin = true;
+			} else if (carteOff.estTresorOffensif()) {
+				effet.orVole = this.orVole;
+			}
+		} else if (this instanceof CarteStrategique) {
+			CarteStrategique carteStrat = (CarteStrategique) this;
+			if (carteStrat.estPopularite()) {
+				effet.populariteGagnee = this.valeur;
+				effet.degatsSubis = this.valeurSecondaire;
+				effet.estPopularite = true;
+			} else if (carteStrat.estTresor()) {
+				effet.orGagne = this.orGagne;
+				effet.orPerdu = this.orPerdu;
+				effet.estTresor = true;
+			} else if (carteStrat.estSpeciale()) {
+				effet.effetSpecial = carteStrat.getTypeEffet();
+				effet.dureeEffet = 1; // Par défaut, effet immédiat
+				effet.estSpeciale = true;
+			} else if (carteStrat.estPassive()) {
+				effet.effetSpecial = carteStrat.getTypeEffet();
+				effet.dureeEffet = carteStrat.getDuree();
+				effet.estPassive = true;
+			}
+		}
+		
+		return effet;
+	}
+
+	// Getters et Setters de base
+	
 	public int getValeur() {
 		return valeur;
 	}
 	
-	/**
-	 * @brief Définit la valeur principale de la carte
-	 */
 	public void setValeur(int valeur) {
 		this.valeur = valeur;
 	}
 	
-	/**
-	 * @brief Récupère la valeur secondaire de la carte
-	 */
 	public int getValeurSecondaire() {
 		return valeurSecondaire;
 	}
 	
-	/**
-	 * @brief Définit la valeur secondaire de la carte
-	 */
 	public void setValeurSecondaire(int valeurSecondaire) {
 		this.valeurSecondaire = valeurSecondaire;
 	}
 	
-	/**
-	 * @brief Récupère le coût de la carte
-	 */
 	public int getCout() {
 		return cout;
 	}
 	
-	/**
-	 * @brief Définit le coût de la carte
-	 */
 	public void setCout(int cout) {
 		this.cout = cout;
 	}
 	
-	/**
-	 * @brief Récupère l'identifiant unique de la carte
-	 */
 	public int getId() {
 		return id;
 	}
 	
 	/**
-	 * @brief Retourne une représentation textuelle de la carte
+	 * Retourne une représentation textuelle de la carte
 	 */
 	@Override
 	public String toString() {
 	    StringBuilder sb = new StringBuilder();
 	    sb.append(this.nomCarte).append("\n").append(this.Description);
 	    
-	    if (this instanceof CarteOffensive) {
-	        CarteOffensive carteOffensive = (CarteOffensive) this;
-	        if (carteOffensive.estAttaqueDirecte()) {
-	            sb.append("\nDégâts infligés: ").append(this.valeur);
-	            sb.append("\nDégâts subis: ").append(this.valeurSecondaire);
-	        } else if (carteOffensive.estSoin()) {
-	            sb.append("\nVie gagnée: ").append(this.vieGagne);
-	        }
-	    } else if (this instanceof CarteStrategique) {
-	        CarteStrategique carteStrat = (CarteStrategique) this;
-	        if (carteStrat.estPopularite()) {
-	            sb.append("\nPopularité: ").append(this.valeur);
-	            sb.append("\nDégâts subis: ").append(this.valeurSecondaire);
-	        } else if (carteStrat.estTresor()) {
-	            if (this.orGagne > 0) sb.append("\nOr gagné: ").append(this.orGagne);
-	            if (this.orPerdu > 0) sb.append("\nOr perdu: ").append(this.orPerdu);
+	    EffetCarte effet = effetCarte();
+	    
+	    if (effet.degatsInfliges > 0) {
+	        sb.append("\nDégâts infligés: ").append(effet.degatsInfliges);
+	    }
+	    if (effet.degatsSubis > 0) {
+	        sb.append("\nDégâts subis: ").append(effet.degatsSubis);
+	    }
+	    if (effet.populariteGagnee > 0) {
+	        sb.append("\nPopularité: ").append(effet.populariteGagnee);
+	    }
+	    if (effet.vieGagnee > 0) {
+	        sb.append("\nVie gagnée: ").append(effet.vieGagnee);
+	    }
+	    if (effet.orGagne > 0) {
+	        sb.append("\nOr gagné: ").append(effet.orGagne);
+	    }
+	    if (effet.orPerdu > 0) {
+	        sb.append("\nOr perdu: ").append(effet.orPerdu);
+	    }
+	    if (effet.orVole > 0) {
+	        sb.append("\nOr volé: ").append(effet.orVole);
+	    }
+	    if (effet.effetSpecial != null) {
+	        sb.append("\nEffet spécial: ").append(effet.effetSpecial);
+	        if (effet.dureeEffet > 1) {
+	            sb.append(" (Durée: ").append(effet.dureeEffet).append(" tours)");
 	        }
 	    }
 	    
 	    return sb.toString();
 	}
 	
-	/**
-	 * @brief Définit la description de la carte
-	 */
 	public void setDescription(String description) {
 		Description = description;
 	}
 	
-	/**
-	 * @brief Récupère la description de la carte
-	 */
 	public String getDescription() {
 		return Description;
 	}
 	
-	/**
-	 * @brief Récupère le type de la carte
-	 */
 	public TypeCarte getType() {
 		return type;
 	}
 	
-	/**
-	 * @brief Définit le nom de la carte
-	 */
 	public void setNomCarte(String nomCarte) {
 		this.nomCarte = nomCarte;
 	}
 	
-	/**
-	 * @brief Récupère le nom de la carte
-	 */
 	public String getNomCarte() {
 		return nomCarte;
 	}
 	
-	/**
-	 * @brief Vérifie si la carte est une carte offensive (pour compatibilité)
-	 */
-	public boolean estCarteAttaque() {
-		return this instanceof CarteOffensive && ((CarteOffensive) this).estAttaqueDirecte();
-	}
-
-	/**
-	 * @brief Vérifie si la carte est une carte de popularité (pour compatibilité)
-	 */
-	public boolean estCartePopularite() {
-		return this instanceof CarteStrategique && ((CarteStrategique) this).estPopularite();
-	}
-
-	/**
-	 * @brief Vérifie si la carte est une carte spéciale (pour compatibilité)
-	 */
-	public boolean estCarteSpeciale() {
-		return this instanceof CarteStrategique && ((CarteStrategique) this).estSpeciale();
-	}
-
-	/**
-	 * @brief Vérifie si la carte est une carte passive (pour compatibilité)
-	 */
-	public boolean estCartePassive() {
-		return this instanceof CarteStrategique && ((CarteStrategique) this).estPassive();
-	}
+	// Méthodes d'accès simplifiées utilisant effetCarte()
 	
-	/**
-	 * @brief Vérifie si la carte est une carte de trésor (pour compatibilité)
-	 */
-	public boolean estCarteTresor() {
-		return this instanceof CarteStrategique && ((CarteStrategique) this).estTresor();
-	}
-	
-	/**
-	 * @brief Vérifie si la carte est une carte de soin (pour compatibilité)
-	 */
-	public boolean estCarteSoin() {
-		return this instanceof CarteOffensive && ((CarteOffensive) this).estSoin();
-	}
-	
-	/**
-	 * @brief Récupère les points de dégâts (pour compatibilité)
-	 */
 	public int getDegats() {
-		if (this instanceof CarteOffensive && ((CarteOffensive) this).estAttaqueDirecte()) {
-			return this.valeur;
-		}
-		return 0;
+		return effetCarte().degatsInfliges;
 	}
 	
-	/**
-	 * @brief Récupère les points de dégâts infligés (pour compatibilité)
-	 */
 	public int getDegatsInfliges() {
-		if (this instanceof CarteOffensive && ((CarteOffensive) this).estAttaqueDirecte()) {
-			return this.valeur;
-		}
-		return 0;
+		return effetCarte().degatsInfliges;
 	}
 	
-	/**
-	 * @brief Récupère les points de dégâts subis (pour compatibilité)
-	 */
 	public int getDegatsSubis() {
-		if (this instanceof CarteOffensive && ((CarteOffensive) this).estAttaqueDirecte()) {
-			return this.valeurSecondaire;
-		}
-		return 0;
+		return effetCarte().degatsSubis;
 	}
 	
-	/**
-	 * @brief Récupère les points de popularité (pour compatibilité)
-	 */
 	public int getPopularite() {
-		if (this instanceof CarteStrategique && ((CarteStrategique) this).estPopularite()) {
-			return this.valeur;
-		}
-		return 0;
+		return effetCarte().populariteGagnee;
 	}
 	
-	/**
-	 * @brief Récupère les points de dégâts subis par le joueur (pour compatibilité)
-	 */
 	public int getDegatsSubisPopularite() {
-		if (this instanceof CarteStrategique && ((CarteStrategique) this).estPopularite()) {
-			return this.valeurSecondaire;
-		}
-		return 0;
+		return effetCarte().estPopularite ? effetCarte().degatsSubis : 0;
 	}
 	
-	/**
-	 * @brief Récupère l'or gagné par la carte
-	 */
+	// Getters et Setters pour les attributs monétaires et de vie
+	
 	public int getOrGagne() {
 		return orGagne;
 	}
 	
-	/**
-	 * @brief Définit l'or gagné par la carte
-	 */
 	public void setOrGagne(int orGagne) {
 		this.orGagne = orGagne;
 	}
 	
-	/**
-	 * @brief Récupère l'or perdu par la carte
-	 */
 	public int getOrPerdu() {
 		return orPerdu;
 	}
 	
-	/**
-	 * @brief Définit l'or perdu par la carte
-	 */
 	public void setOrPerdu(int orPerdu) {
 		this.orPerdu = orPerdu;
 	}
 	
-	/**
-	 * @brief Récupère l'or volé par la carte
-	 */
 	public int getOrVole() {
 		return orVole;
 	}
 	
-	/**
-	 * @brief Définit l'or volé par la carte
-	 */
 	public void setOrVole(int orVole) {
 		this.orVole = orVole;
 	}
 	
-	/**
-	 * @brief Récupère les points de vie gagnés par la carte
-	 */
 	public int getVieGagne() {
 		return vieGagne;
 	}
 	
-	/**
-	 * @brief Définit les points de vie gagnés par la carte
-	 */
 	public void setVieGagne(int vieGagne) {
 		this.vieGagne = vieGagne;
 	}

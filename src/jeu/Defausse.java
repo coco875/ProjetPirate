@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import carte.Carte;
 
+/**
+ * Représente la défausse de cartes du jeu
+ */
 public class Defausse {
     private List<Carte> cartes;
 
@@ -12,8 +15,7 @@ public class Defausse {
     }
 
     /**
-     * @brief Ajoute une carte à la défausse.
-     * @param carte La carte à ajouter.
+     * Ajoute une carte à la défausse
      */
     public void ajouterCarte(Carte carte) {
         if (carte != null) {
@@ -22,15 +24,14 @@ public class Defausse {
     }
 
     /**
-     * @brief Retourne la liste des cartes dans la défausse.
-     * @return La liste des cartes.
+     * Retourne la liste des cartes dans la défausse
      */
     public List<Carte> getCartes() {
         return cartes;
     }
 
     /**
-     * @brief Vide la défausse.
+     * Vide la défausse
      */
     public void vider() {
         this.cartes.clear();

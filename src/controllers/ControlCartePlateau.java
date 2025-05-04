@@ -6,31 +6,29 @@ import java.util.List;
 import carte.CarteOffensive;
 import carte.CarteStrategique;
 import jeu.Defausse;
-import jeu.ZoneOffensive; // Renamed from ZoneAttaque
+import jeu.ZoneOffensive;
 import jeu.ZoneStrategique;
-import joueur.Joueur; // Import manquant pour la classe Joueur
+import joueur.Joueur;
 
 /**
- * @brief Contrôleur pour gérer les cartes sur le plateau
+ * Contrôleur pour gérer les cartes sur le plateau
  */
 public class ControlCartePlateau {
-    private ZoneOffensive zoneOffensiveJ1; // Renamed from ZoneAttaque
+    private ZoneOffensive zoneOffensiveJ1;
     private ZoneStrategique zoneStrategiqueJ1;
-    private ZoneOffensive zoneOffensiveJ2; // Renamed from ZoneAttaque
+    private ZoneOffensive zoneOffensiveJ2;
     private ZoneStrategique zoneStrategiqueJ2;
     private ControlJoueur controlJoueur1;
     private ControlJoueur controlJoueur2;
     private Defausse defausse;
 
     /**
-     * @brief Constructeur
-     * @param controlJoueur1 Contrôleur du joueur 1
-     * @param controlJoueur2 Contrôleur du joueur 2
+     * Constructeur
      */
     public ControlCartePlateau(ControlJoueur controlJoueur1, ControlJoueur controlJoueur2) {
-        this.zoneOffensiveJ1 = new ZoneOffensive(); // Renamed from ZoneAttaque
+        this.zoneOffensiveJ1 = new ZoneOffensive();
         this.zoneStrategiqueJ1 = new ZoneStrategique();
-        this.zoneOffensiveJ2 = new ZoneOffensive(); // Renamed from ZoneAttaque
+        this.zoneOffensiveJ2 = new ZoneOffensive();
         this.zoneStrategiqueJ2 = new ZoneStrategique();
         this.controlJoueur1 = controlJoueur1;
         this.controlJoueur2 = controlJoueur2;
@@ -38,9 +36,7 @@ public class ControlCartePlateau {
     }
 
     /**
-     * @brief Définit les joueurs pour ce tour
-     * @param controlJoueur1 Contrôleur du joueur 1
-     * @param controlJoueur2 Contrôleur du joueur 2
+     * Définit les joueurs pour ce tour
      */
     public void setJoueurs(ControlJoueur controlJoueur1, ControlJoueur controlJoueur2) {
         this.controlJoueur1 = controlJoueur1;
@@ -48,39 +44,35 @@ public class ControlCartePlateau {
     }
 
     /**
-     * @brief Ajoute une carte offensive à la zone d'attaque du joueur 1
-     * @param carte Carte offensive à ajouter
+     * Ajoute une carte offensive à la zone du joueur 1
      */
     public void ajouterCarteOffensiveJ1(CarteOffensive carte) {
         zoneOffensiveJ1.ajouterCarte(carte);
     }
 
     /**
-     * @brief Ajoute une carte offensive à la zone d'attaque du joueur 2
-     * @param carte Carte offensive à ajouter
+     * Ajoute une carte offensive à la zone du joueur 2
      */
     public void ajouterCarteOffensiveJ2(CarteOffensive carte) {
         zoneOffensiveJ2.ajouterCarte(carte);
     }
 
     /**
-     * @brief Ajoute une carte stratégique à la zone stratégique du joueur 1
-     * @param carte Carte stratégique à ajouter
+     * Ajoute une carte stratégique à la zone du joueur 1
      */
     public void ajouterCarteStrategiqueJ1(CarteStrategique carte) {
         zoneStrategiqueJ1.ajouterCarte(carte);
     }
 
     /**
-     * @brief Ajoute une carte stratégique à la zone stratégique du joueur 2
-     * @param carte Carte stratégique à ajouter
+     * Ajoute une carte stratégique à la zone du joueur 2
      */
     public void ajouterCarteStrategiqueJ2(CarteStrategique carte) {
         zoneStrategiqueJ2.ajouterCarte(carte);
     }
 
     /**
-     * @brief Applique les effets des cartes offensives sur le plateau
+     * Applique les effets des cartes offensives sur le plateau
      */
     public void appliquerEffetsCartesOffensives() {
         System.out.println("DEBUG - Début appliquerEffetsCartesOffensives()");
@@ -192,7 +184,7 @@ public class ControlCartePlateau {
     }
 
     /**
-     * @brief Applique les effets des cartes stratégiques sur les joueurs
+     * Applique les effets des cartes stratégiques sur les joueurs
      */
     public void appliquerEffetsCartesStrategiques() {
         List<CarteStrategique> cartesStrategiquesJ1 = zoneStrategiqueJ1.getCartesStrategiques();
@@ -216,9 +208,6 @@ public class ControlCartePlateau {
                         controlJoueur1.getJoueur().perdreOr(orPerdu);
                     }
                     break;
-                // Gérer d'autres types si nécessaire
-                // case SPECIALE:
-                // case PASSIVE:
             }
         }
 
@@ -240,15 +229,12 @@ public class ControlCartePlateau {
                         controlJoueur2.getJoueur().perdreOr(orPerdu);
                     }
                     break;
-                // Gérer d'autres types si nécessaire
-                // case SPECIALE:
-                // case PASSIVE:
             }
         }
     }
 
     /**
-     * @brief Défausse toutes les cartes du plateau
+     * Défausse toutes les cartes du plateau
      */
     public void defausserCartesPlateau() {
         // Défausser les cartes offensives
@@ -266,74 +252,40 @@ public class ControlCartePlateau {
         zoneStrategiqueJ2.viderZone();
     }
 
-    /**
-     * @brief Récupère la liste des cartes offensives du joueur 1
-     * @return Liste des cartes offensives
-     */
+    // Getters pour les zones de cartes
+    
     public List<CarteOffensive> getCartesOffensivesJ1() {
         return zoneOffensiveJ1.getCartesOffensives();
     }
 
-    /**
-     * @brief Récupère la liste des cartes offensives du joueur 2
-     * @return Liste des cartes offensives
-     */
     public List<CarteOffensive> getCartesOffensivesJ2() {
         return zoneOffensiveJ2.getCartesOffensives();
     }
 
-    /**
-     * @brief Récupère la liste des cartes stratégiques du joueur 1
-     * @return Liste des cartes stratégiques
-     */
     public List<CarteStrategique> getCartesStrategiquesJ1() {
         return zoneStrategiqueJ1.getCartesStrategiques();
     }
 
-    /**
-     * @brief Récupère la liste des cartes stratégiques du joueur 2
-     * @return Liste des cartes stratégiques
-     */
     public List<CarteStrategique> getCartesStrategiquesJ2() {
         return zoneStrategiqueJ2.getCartesStrategiques();
     }
 
-    /**
-     * @brief Récupère la zone offensive du joueur 1
-     * @return La zone offensive
-     */
     public ZoneOffensive getZoneOffensiveJ1() {
         return zoneOffensiveJ1;
     }
 
-    /**
-     * @brief Récupère la zone offensive du joueur 2
-     * @return La zone offensive
-     */
     public ZoneOffensive getZoneOffensiveJ2() {
         return zoneOffensiveJ2;
     }
 
-    /**
-     * @brief Récupère la zone stratégique du joueur 1
-     * @return La zone stratégique
-     */
     public ZoneStrategique getZoneStrategiqueJ1() {
         return zoneStrategiqueJ1;
     }
 
-    /**
-     * @brief Récupère la zone stratégique du joueur 2
-     * @return La zone stratégique
-     */
     public ZoneStrategique getZoneStrategiqueJ2() {
         return zoneStrategiqueJ2;
     }
 
-    /**
-     * @brief Récupère la défausse
-     * @return La défausse
-     */
     public Defausse getDefausse() {
         return defausse;
     }

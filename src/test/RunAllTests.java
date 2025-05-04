@@ -1,5 +1,8 @@
 package test;
 
+/**
+ * Classe principale exécutant l'ensemble des tests unitaires du projet
+ */
 public class RunAllTests {
     public static void main(String[] args) throws Exception {
         System.out.println("Lancement de tous les tests...");

@@ -10,10 +10,7 @@ import controllers.ControlPioche;
 import controllers.ControlCartePlateau;
 
 /**
- * @brief Test des fonctionnalités de pioche et gestion de la main
- * 
- * Cette classe teste les fonctionnalités de pioche et gestion de la main
- * d'un joueur après les modifications pour respecter le modèle ECB.
+ * Test des fonctionnalités de pioche et gestion de la main
  */
 public class TestPioche {
 
@@ -24,13 +21,13 @@ public class TestPioche {
 		
 		// Création des joueurs via le contrôleur de jeu
 		controlJeu.setJoueur1("Capitaine", new Pirate("Barbe Noire"));
-		controlJeu.setJoueur2("Second", new Pirate("Anne Bonny")); // Ajout pour initialiser ControlCartePlateau
+		controlJeu.setJoueur2("Second", new Pirate("Anne Bonny"));
 		
 		// Récupération du contrôleur de joueur 1
-		ControlJoueur controlJoueur = controlJeu.getJoueur(0); // Corrected method call
+		ControlJoueur controlJoueur = controlJeu.getJoueur(0);
 		
 		System.out.println("=== Test d'initialisation de la main ===");
-		// La méthode initialiserMain n'existe pas dans ControlJoueur, on utilise piocher à la place
+		// Utilisation de piocher au lieu de initialiserMain
 		for (int i = 0; i < 3; i++) {
 			controlJoueur.piocher();
 		}
@@ -38,12 +35,10 @@ public class TestPioche {
 		// Récupération du joueur
 		Joueur joueur = controlJoueur.getJoueur();
 		
-		// Vérification du nombre de cartes initial
 		System.out.println("Nombre de cartes en main: " + joueur.getMain().size());
 		System.out.println("Main du joueur après initialisation:");
 		controlJoueur.afficherMain();
 		
-		// Test de pioche supplémentaire
 		System.out.println("\n=== Test de pioche supplémentaire ===");
 		Carte cartePiochee = controlJoueur.piocher();
 		System.out.println("Carte piochée: " + cartePiochee);
@@ -75,7 +70,7 @@ public class TestPioche {
 			Carte carteAJouer = joueur.getMain().get(0);
 			System.out.println("Carte à jouer: " + carteAJouer);
 			
-			// Jouer la carte si c'est possible (nécessite que les contrôleurs soient correctement configurés)
+			// Jouer la carte si c'est possible
 			try {
 				controlJoueur.jouerCarte(carteAJouer);
 				System.out.println("Carte jouée avec succès");

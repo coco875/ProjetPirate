@@ -6,36 +6,34 @@ import java.util.List;
 import carte.CarteOffensive;
 
 /**
- * @brief Zone où les cartes offensives sont placées
+ * Zone où les cartes offensives sont placées
  */
-public class ZoneOffensive { // Renamed from ZoneAttaque
+public class ZoneOffensive {
     private List<CarteOffensive> cartes;
 
     /**
-     * @brief Constructeur
+     * Constructeur
      */
-    public ZoneOffensive() { // Renamed from ZoneAttaque
+    public ZoneOffensive() {
         cartes = new ArrayList<>();
     }
     
     /**
-     * @brief Ajoute une carte offensive à la zone
-     * @param carte La carte à ajouter
+     * Ajoute une carte offensive à la zone
      */
     public void ajouterCarte(CarteOffensive carte) {
         cartes.add(carte);
     }
     
     /**
-     * @brief Retourne toutes les cartes offensives de la zone
-     * @return Liste des cartes offensives
+     * Retourne toutes les cartes offensives de la zone
      */
     public List<CarteOffensive> getCartesOffensives() {
         return cartes;
     }
     
     /**
-     * @brief Vide la zone d'attaque
+     * Vide la zone d'attaque
      */
     public void viderZone() {
         cartes.clear();

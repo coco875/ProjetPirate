@@ -1,22 +1,16 @@
 package carte;
 
 /**
- * @brief Classe représentant une carte offensive
- * 
- * Cette classe représente toutes les cartes qui peuvent être placées dans la zone d'attaque.
- * Elle fusionne les fonctionnalités des anciennes cartes d'attaque, de soin et autres cartes offensives.
+ * Carte offensive du jeu (attaque, soin, etc.)
  */
 public class CarteOffensive extends Carte {
     
-    /** Type spécifique de carte offensive */
     private TypeOffensif typeOffensif;
-    /** Indique si la carte est active ou a déjà été jouée */
-    private boolean estJouee;
-    /** Coût spécial pour les cartes de type COUP_SPECIAL */
-    private int coutSpecial;
+    private boolean estJouee;        // Indique si la carte est active ou a déjà été jouée
+    private int coutSpecial;         // Coût spécial pour les cartes de type COUP_SPECIAL
     
     /**
-     * @brief Types spécifiques de cartes offensives
+     * Types spécifiques de cartes offensives
      */
     public enum TypeOffensif {
         ATTAQUE_DIRECTE,  // Attaque directe infligeant des dégâts
@@ -26,12 +20,7 @@ public class CarteOffensive extends Carte {
     }
     
     /**
-     * @brief Constructeur standard pour une carte offensive
-     * @param nomCarte Nom de la carte
-     * @param description Description de la carte
-     * @param degatsInfliges Points de dégâts infligés à l'adversaire (valeur principale)
-     * @param degatsSubis Points de dégâts subis par l'attaquant (valeur secondaire)
-     * @param typeOffensif Type spécifique de carte offensive
+     * Constructeur standard
      */
     public CarteOffensive(String nomCarte, String description, int degatsInfliges, 
                           int degatsSubis, TypeOffensif typeOffensif) {
@@ -42,13 +31,7 @@ public class CarteOffensive extends Carte {
     }
     
     /**
-     * @brief Constructeur complet pour une carte offensive
-     * @param nomCarte Nom de la carte
-     * @param description Description de la carte
-     * @param degatsInfliges Points de dégâts infligés à l'adversaire (valeur principale)
-     * @param degatsSubis Points de dégâts subis par l'attaquant (valeur secondaire)
-     * @param typeOffensif Type spécifique de carte offensive
-     * @param cout Coût d'achat de la carte
+     * Constructeur avec coût
      */
     public CarteOffensive(String nomCarte, String description, int degatsInfliges, 
                           int degatsSubis, TypeOffensif typeOffensif, int cout) {
@@ -59,10 +42,7 @@ public class CarteOffensive extends Carte {
     }
     
     /**
-     * @brief Constructeur pour une carte de soin
-     * @param nomCarte Nom de la carte
-     * @param description Description de la carte
-     * @param vieGagne Points de vie gagnés
+     * Constructeur pour carte de soin
      */
     public CarteOffensive(String nomCarte, String description, int vieGagne) {
         super(TypeCarte.OFFENSIVE, nomCarte, description, vieGagne, 0);
@@ -70,11 +50,7 @@ public class CarteOffensive extends Carte {
     }
     
     /**
-     * @brief Constructeur pour un coup spécial
-     * @param nomCarte Nom de la carte
-     * @param description Description de la carte
-     * @param valeur Valeur de l'effet
-     * @param coutSpecial Coût spécial pour utiliser la carte
+     * Constructeur pour coup spécial
      */
     public CarteOffensive(String nomCarte, String description, int valeur, int coutSpecial) {
         super(TypeCarte.OFFENSIVE, nomCarte, description, valeur, 0);
@@ -83,22 +59,15 @@ public class CarteOffensive extends Carte {
     }
     
     /**
-     * @brief Constructeur pour une carte de trésor offensive
-     * @param nomCarte Nom de la carte
-     * @param description Description de la carte
-     * @param orVole Or volé à l'adversaire
-     * @param estTresor Indique qu'il s'agit d'une carte trésor (pour disambiguation des constructeurs)
+     * Constructeur pour carte de trésor offensive
      */
     public CarteOffensive(String nomCarte, String description, int orVole, boolean estTresor) {
         super(TypeCarte.OFFENSIVE, nomCarte, description, orVole, 0);
         this.typeOffensif = TypeOffensif.TRESOR_OFFENSIF;
     }
     
-    /**
-     * @brief Factory method pour créer une carte offensive d'attaque à partir d'une CarteAttaque
-     * @param carteAttaque L'ancienne CarteAttaque à convertir
-     * @return Une nouvelle CarteOffensive
-     */
+    // Méthodes de conversion depuis les anciens types
+    
     public static CarteOffensive fromCarteAttaque(CarteAttaque carteAttaque) {
         return new CarteOffensive(
             carteAttaque.getNomCarte(),
@@ -110,11 +79,6 @@ public class CarteOffensive extends Carte {
         );
     }
     
-    /**
-     * @brief Factory method pour créer une carte offensive de soin à partir d'une CarteSoin
-     * @param carteSoin L'ancienne CarteSoin à convertir
-     * @return Une nouvelle CarteOffensive
-     */
     public static CarteOffensive fromCarteSoin(CarteSoin carteSoin) {
         CarteOffensive carte = new CarteOffensive(
             carteSoin.getNomCarte(),
@@ -125,11 +89,6 @@ public class CarteOffensive extends Carte {
         return carte;
     }
     
-    /**
-     * @brief Factory method pour créer une carte offensive de coup spécial à partir d'une CarteCoupSpecial
-     * @param carteCoupSpecial L'ancienne CarteCoupSpecial à convertir
-     * @return Une nouvelle CarteOffensive
-     */
     public static CarteOffensive fromCarteCoupSpecial(CarteCoupSpecial carteCoupSpecial) {
         return new CarteOffensive(
             carteCoupSpecial.getNomCarte(),
@@ -139,120 +98,70 @@ public class CarteOffensive extends Carte {
         );
     }
 
-    /**
-     * @brief Récupère le type spécifique de la carte offensive
-     * @return Type spécifique de la carte
-     */
+    // Getters et setters
+    
     public TypeOffensif getTypeOffensif() {
         return typeOffensif;
     }
     
-    /**
-     * @brief Définit le type spécifique de la carte offensive
-     * @param typeOffensif Nouveau type spécifique
-     */
     public void setTypeOffensif(TypeOffensif typeOffensif) {
         this.typeOffensif = typeOffensif;
     }
     
-    /**
-     * @brief Vérifie si la carte a déjà été jouée
-     * @return true si la carte a déjà été jouée, false sinon
-     */
     public boolean estJouee() {
         return estJouee;
     }
     
-    /**
-     * @brief Définit si la carte a été jouée
-     * @param estJouee État de la carte (jouée ou non)
-     */
     public void setEstJouee(boolean estJouee) {
         this.estJouee = estJouee;
     }
     
-    /**
-     * @brief Récupère le coût spécial de la carte
-     * @return Coût spécial
-     */
     public int getCoutSpecial() {
         return coutSpecial;
     }
     
-    /**
-     * @brief Définit le coût spécial de la carte
-     * @param coutSpecial Nouveau coût spécial
-     */
     public void setCoutSpecial(int coutSpecial) {
         this.coutSpecial = coutSpecial;
     }
     
-    /**
-     * @brief Vérifie si la carte est une attaque directe
-     * @return true si la carte est une attaque directe, false sinon
-     */
+    // Méthodes de vérification du type
+    
     public boolean estAttaqueDirecte() {
         return this.typeOffensif == TypeOffensif.ATTAQUE_DIRECTE;
     }
     
-    /**
-     * @brief Vérifie si la carte est un coup spécial
-     * @return true si la carte est un coup spécial, false sinon
-     */
     public boolean estCoupSpecial() {
         return this.typeOffensif == TypeOffensif.COUP_SPECIAL;
     }
     
-    /**
-     * @brief Vérifie si la carte est un soin
-     * @return true si la carte est un soin, false sinon
-     */
     public boolean estSoin() {
         return this.typeOffensif == TypeOffensif.SOIN;
     }
     
-    /**
-     * @brief Vérifie si la carte est un trésor offensif
-     * @return true si la carte est un trésor offensif, false sinon
-     */
     public boolean estTresorOffensif() {
         return this.typeOffensif == TypeOffensif.TRESOR_OFFENSIF;
     }
     
-    /**
-     * @brief Récupère les points de dégâts infligés par la carte
-     * @return Points de dégâts infligés
-     */
+    // Accesseurs spécifiques selon le type
+    
     public int getDegatsInfliges() {
         return getValeur();
     }
     
-    /**
-     * @brief Récupère les points de dégâts subis par l'attaquant
-     * @return Points de dégâts subis
-     */
     public int getDegatsSubis() {
         return getValeurSecondaire();
     }
 
-    /**
-     * @brief Récupère les points de vie gagnés si la carte est de type SOIN
-     * @return Points de vie gagnés, ou 0 sinon
-     */
     public int getVieGagnee() {
         return (this.typeOffensif == TypeOffensif.SOIN) ? getValeur() : 0;
     }
 
-    /**
-     * @brief Récupère l'or volé si la carte est de type TRESOR_OFFENSIF
-     * @return Or volé, ou 0 sinon
-     */
     public int getOrVole() {
         return (this.typeOffensif == TypeOffensif.TRESOR_OFFENSIF) ? getValeur() : 0;
     }
     
     /**
-     * @brief Retourne une représentation textuelle de la carte
+     * Représentation textuelle de la carte
      */
     @Override
     public String toString() {

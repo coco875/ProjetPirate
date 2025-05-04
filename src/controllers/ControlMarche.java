@@ -8,42 +8,37 @@ import carte.Carte;
 import carte.CarteAttaque;
 import carte.CartePopularite;
 import carte.CarteSpeciale;
-import carte.Marche; // Ajout de l'import manquant
+import carte.Marche;
 import joueur.Joueur;
 
 /**
- * @brief Contrôleur gérant les interactions avec le marché
- * 
- * Ce contrôleur gère l'achat et la vente de cartes au marché,
- * conformément au modèle ECB.
+ * Contrôleur gérant les interactions avec le marché
  */
 public class ControlMarche {
     private Marche marche;
     private ControlJoueur controlJoueur1;
     private ControlJoueur controlJoueur2;
     private ControlPioche controlPioche;
-    private ControlJeu controlJeu; // Ajout de la référence à ControlJeu
+    private ControlJeu controlJeu;
 
     /**
-     * Constructeur de ControlMarche.
-     * @param controlJoueur1 Le contrôleur du joueur 1.
-     * @param controlJoueur2 Le contrôleur du joueur 2.
-     * @param controlPioche Le contrôleur de la pioche.
-     * @param controlJeu Le contrôleur principal du jeu. // Ajout du paramètre
+     * Constructeur de ControlMarche
      */
     public ControlMarche(ControlJoueur controlJoueur1, ControlJoueur controlJoueur2, ControlPioche controlPioche, ControlJeu controlJeu) {
         this.marche = new Marche();
         this.controlJoueur1 = controlJoueur1;
         this.controlJoueur2 = controlJoueur2;
         this.controlPioche = controlPioche;
-        this.controlJeu = controlJeu; // Initialisation du champ
+        this.controlJeu = controlJeu;
         remplirMarcheInitial();
     }
 
-    // Méthode pour remplir initialement le marché
+    /**
+     * Remplit initialement le marché
+     */
     private void remplirMarcheInitial() {
         for (int i = 0; i < 3; i++) { // Remplir avec 3 cartes initiales
-            Carte carte = controlPioche.piocher(); // Correction: piocher() au lieu de piocherCarte()
+            Carte carte = controlPioche.piocher();
             if (carte != null) {
                 marche.ajouterCarte(carte);
             }
@@ -51,14 +46,14 @@ public class ControlMarche {
     }
 
     /**
-     * @brief Rafraîchit les cartes disponibles au marché
+     * Rafraîchit les cartes disponibles au marché
      */
     public void rafraichirMarche() {
         marche.getCartesDisponibles().clear();
         
         // Ajouter 3 cartes de la pioche au marché
         for (int i = 0; i < 3; i++) {
-            Carte carte = controlPioche.piocher(); // Correction: piocher() au lieu de piocherCarte()
+            Carte carte = controlPioche.piocher();
             if (carte != null) {
                 marche.ajouterCarte(carte);
             } else {
@@ -70,7 +65,7 @@ public class ControlMarche {
     }
 
     /**
-     * @brief Obtient la liste des cartes disponibles au marché
+     * Obtient la liste des cartes disponibles au marché
      */
     public List<Carte> getCartesDisponibles() {
         if (marche.getCartesDisponibles().isEmpty()) {
@@ -80,13 +75,13 @@ public class ControlMarche {
     }
 
     /**
-     * Permet à un joueur d'acheter une carte du marché.
-     * @param indexCarte L'index de la carte à acheter dans le marché.
-     * @return true si l'achat est réussi, false sinon.
+     * Permet à un joueur d'acheter une carte du marché
+     * @param indexCarte L'index de la carte à acheter
+     * @return true si l'achat est réussi, false sinon
      */
     public boolean acheterCarte(int indexCarte) {
         // Déterminer l'acheteur en fonction du joueur actif dans ControlJeu
-        ControlJoueur acheteur = (controlJeu.getJoueurActif() == 0) ? controlJoueur1 : controlJoueur2; // Utilisation de controlJeu
+        ControlJoueur acheteur = (controlJeu.getJoueurActif() == 0) ? controlJoueur1 : controlJoueur2;
         
         if (indexCarte < 0 || indexCarte >= marche.getCartesDisponibles().size()) {
             System.out.println("Index de carte invalide.");
@@ -119,7 +114,7 @@ public class ControlMarche {
     }
 
     /**
-     * @brief Vend une carte d'un joueur au marché
+     * Vend une carte d'un joueur au marché
      * @param joueurId L'ID du joueur qui vend la carte
      * @param indexCarte L'index de la carte à vendre dans la main du joueur
      * @return true si la vente a réussi, false sinon

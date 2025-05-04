@@ -9,7 +9,7 @@ import carte.CarteStrategique;
 import joueur.Joueur;
 
 /**
- * @brief Contrôleur pour gérer les joueurs
+ * Contrôleur pour gérer les joueurs
  */
 public class ControlJoueur {
     private Joueur joueur;
@@ -19,10 +19,7 @@ public class ControlJoueur {
     private ControlCarteSpeciale controlCarteSpeciale;
     
     /**
-     * @brief Constructeur du contrôleur
-     * @param joueur Joueur à contrôler
-     * @param controlJeu Contrôleur du jeu
-     * @param controlPioche Contrôleur de la pioche
+     * Constructeur du contrôleur
      */
     public ControlJoueur(Joueur joueur, ControlJeu controlJeu, ControlPioche controlPioche) {
         this.joueur = joueur;
@@ -31,39 +28,35 @@ public class ControlJoueur {
     }
     
     /**
-     * @brief Définit le contrôleur de carte plateau associé
-     * @param controlCartePlateau Contrôleur de carte plateau
+     * Définit le contrôleur de carte plateau associé
      */
     public void setControlCartePlateau(ControlCartePlateau controlCartePlateau) {
         this.controlCartePlateau = controlCartePlateau;
     }
     
     /**
-     * @brief Définit le contrôleur de carte spéciale associé
-     * @param controlCarteSpeciale Contrôleur de carte spéciale
+     * Définit le contrôleur de carte spéciale associé
      */
     public void setControlCarteSpeciale(ControlCarteSpeciale controlCarteSpeciale) {
         this.controlCarteSpeciale = controlCarteSpeciale;
     }
     
     /**
-     * @brief Récupère le joueur contrôlé
-     * @return Joueur contrôlé
+     * Récupère le joueur contrôlé
      */
     public Joueur getJoueur() {
         return joueur;
     }
     
     /**
-     * @brief Définit le joueur contrôlé
-     * @param joueur Nouveau joueur à contrôler
+     * Définit le joueur contrôlé
      */
     public void setJoueur(Joueur joueur) {
         this.joueur = joueur;
     }
     
     /**
-     * @brief Initialise la main du joueur en piochant 5 cartes
+     * Initialise la main du joueur en piochant 5 cartes
      */
     public void initialiserMain() {
         for (int i = 0; i < 5; i++) {
@@ -72,8 +65,7 @@ public class ControlJoueur {
     }
     
     /**
-     * @brief Pioche une carte pour le joueur
-     * @return Carte piochée
+     * Pioche une carte pour le joueur
      */
     public Carte piocher() {
         Carte carte = controlPioche.piocher();
@@ -84,8 +76,7 @@ public class ControlJoueur {
     }
     
     /**
-     * @brief Affiche la main du joueur
-     * @return Liste des cartes en main
+     * Affiche la main du joueur
      */
     public List<Carte> afficherMain() {
         List<Carte> main = joueur.getMain();
@@ -96,8 +87,7 @@ public class ControlJoueur {
     }
     
     /**
-     * @brief Retire une carte de la main du joueur
-     * @param carte Carte à retirer
+     * Retire une carte de la main du joueur
      * @return true si la carte a été retirée, false sinon
      */
     public boolean retirerCarte(Carte carte) {
@@ -105,7 +95,7 @@ public class ControlJoueur {
     }
     
     /**
-     * @brief Joue une carte depuis la main du joueur
+     * Joue une carte depuis la main du joueur
      * @param indexCarte Index de la carte à jouer
      * @return true si la carte a été jouée, false sinon
      */
@@ -146,8 +136,7 @@ public class ControlJoueur {
     }
     
     /**
-     * @brief Joue une carte spécifique depuis la main du joueur
-     * @param carte Carte à jouer
+     * Joue une carte spécifique depuis la main du joueur
      * @return true si la carte a été jouée, false sinon
      */
     public boolean jouerCarte(Carte carte) {
@@ -159,8 +148,7 @@ public class ControlJoueur {
     }
     
     /**
-     * @brief Défausse une carte de la main du joueur
-     * @param indexCarte Index de la carte à défausser
+     * Défausse une carte de la main du joueur
      * @return true si la carte a été défaussée, false sinon
      */
     public boolean defausserCarte(int indexCarte) {
@@ -182,49 +170,45 @@ public class ControlJoueur {
         return false; // La carte n'a pas pu être retirée ou la défausse n'est pas accessible
     }
 
+    // Méthodes affectant les attributs du joueur
+    
     /**
-     * @brief Fait perdre des points de vie au joueur
-     * @param pointsARetirer Points de vie à retirer
+     * Fait perdre des points de vie au joueur
      */
     public void perdrePV(int pointsARetirer) {
         joueur.perdrePV(pointsARetirer);
     }
     
     /**
-     * @brief Alias de perdrePV pour compatibilité
-     * @param pointsARetirer Points de vie à retirer
+     * Alias de perdrePV pour compatibilité
      */
     public void perdrePointsDeVie(int pointsARetirer) {
         perdrePV(pointsARetirer);
     }
     
     /**
-     * @brief Fait gagner des points de vie au joueur
-     * @param pointsAGagner Points de vie à gagner
+     * Fait gagner des points de vie au joueur
      */
     public void gagnerPointsDeVie(int pointsAGagner) {
         joueur.gagnerPointsDeVie(pointsAGagner);
     }
     
     /**
-     * @brief Fait perdre de la popularité au joueur
-     * @param pointsARetirer Points de popularité à retirer
+     * Fait perdre de la popularité au joueur
      */
     public void perdrePopularite(int pointsARetirer) {
         joueur.perdrePopularite(pointsARetirer);
     }
     
     /**
-     * @brief Fait gagner de la popularité au joueur
-     * @param pointsAGagner Points de popularité à gagner
+     * Fait gagner de la popularité au joueur
      */
     public void gagnerPopularite(int pointsAGagner) {
         joueur.gagnerPopularite(pointsAGagner);
     }
     
     /**
-     * @brief Fait perdre de l'or au joueur
-     * @param montant Montant d'or à retirer
+     * Fait perdre de l'or au joueur
      * @return true si l'or a été retiré, false sinon (pas assez d'or)
      */
     public boolean perdreOr(int montant) {
@@ -232,16 +216,14 @@ public class ControlJoueur {
     }
     
     /**
-     * @brief Fait gagner de l'or au joueur
-     * @param montant Montant d'or à gagner
+     * Fait gagner de l'or au joueur
      */
     public void gagnerOr(int montant) {
         joueur.gagnerOr(montant);
     }
     
     /**
-     * @brief Applique les effets des cartes de l'adversaire sur ce joueur
-     * @param cartesAdversaire Liste des cartes de l'adversaire
+     * Applique les effets des cartes de l'adversaire sur ce joueur
      */
     public void recevoirEffets(List<Carte> cartesAdversaire) {
         for (Carte carte : cartesAdversaire) {
@@ -257,7 +239,7 @@ public class ControlJoueur {
     }
     
     /**
-     * @brief Version surchargée de recevoirEffets pour rétrocompatibilité
+     * Version surchargée de recevoirEffets pour rétrocompatibilité
      * @param degats Dégâts à infliger
      * @param popularite Popularité à modifier (positif = gain, négatif = perte)
      */
@@ -276,7 +258,7 @@ public class ControlJoueur {
     }
     
     /**
-     * @brief Simule un tour complet du joueur
+     * Simule un tour complet du joueur
      */
     public void jouerTour() {
         // Piocher une carte
@@ -288,50 +270,28 @@ public class ControlJoueur {
         }
     }
     
-    /**
-     * @brief Retourne le nom du joueur
-     * @return Nom du joueur
-     */
+    // Getters
+    
     public String getNom() {
         return joueur.getNom();
     }
     
-    /**
-     * @brief Retourne les points de vie du joueur
-     * @return Points de vie
-     */
     public int getPointsDeVie() {
         return joueur.getPointsDeVie();
     }
     
-    /**
-     * @brief Retourne la popularité du joueur
-     * @return Popularité
-     */
     public int getPopularite() {
         return joueur.getPopularite();
     }
     
-    /**
-     * @brief Retourne l'or du joueur
-     * @return Montant d'or
-     */
     public int getOr() {
         return joueur.getOr();
     }
     
-    /**
-     * @brief Retourne le pirate du joueur
-     * @return Pirate
-     */
     public joueur.Pirate getPirate() {
         return joueur.getPirate();
     }
     
-    /**
-     * @brief Retourne la main du joueur
-     * @return Liste des cartes en main
-     */
     public List<Carte> getMain() {
         return joueur.getMain();
     }

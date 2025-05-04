@@ -2,22 +2,27 @@ package test;
 
 import carte.*;
 
+/**
+ * Test des fonctionnalités de base des cartes
+ */
 public class TestCarte {
 
 	public static void main(String[] args) throws Exception {
-		// TODO Auto-generated method stub
-		Carte c =new CarteAttaque("d","vd",2,3);
+		// Test de création et manipulation d'une carte d'attaque
+		Carte c = new CarteAttaque("d", "vd", 2, 3);
 		c.setDescription("a");
 		c.setNomCarte("b");
 		c.getNomCarte();
 		c.getType();
 		c.getDescription();
 		System.out.println(c.toString());
-		Carte d= new CartePopularite("titre", "de", 0, 1);
+		
+		// Test d'une carte popularité
+		Carte d = new CartePopularite("titre", "de", 0, 1);
 		System.out.println(d.toString());
-		Carte e= ParserCarte.lireCarte("src/carte/resource/templateAttaque.txt");
+		
+		// Test de chargement d'une carte depuis un fichier
+		Carte e = ParserCarte.lireCarte("src/carte/resource/templateAttaque.txt");
 		System.out.println(e.toString());
-
 	}
-
 }

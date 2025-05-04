@@ -13,6 +13,9 @@ import carte.CarteTresor;
 import carte.ParserCarte;
 import jeu.Pioche;
 
+/**
+ * Contrôleur gérant la pioche de cartes
+ */
 public class ControlPioche {
 	private Pioche pioche;
 	
@@ -92,13 +95,14 @@ public class ControlPioche {
 	
 	/**
 	 * Vérifie si la pioche est vide
-	 * @return true si la pioche est vide, false sinon
 	 */
 	public boolean estVide() {
 		return pioche.estVide();
 	}
 	
-	// Méthode pour charger les cartes depuis un répertoire
+	/**
+	 * Charge les cartes depuis un répertoire
+	 */
 	private void chargerCartesDepuisRepertoire(File repertoire, List<Carte> listCartes) {
 		File[] files = repertoire.listFiles();
 		if (files != null) {
@@ -117,6 +121,10 @@ public class ControlPioche {
 		}
 	}
 
+	/**
+	 * Pioche une carte
+	 * @return La carte piochée ou null si la pioche est vide
+	 */
 	public Carte piocher() {
 		return pioche.estVide() ? null : pioche.piocher();
 	}

@@ -44,14 +44,14 @@ public class TestControlJoueur {
     
     private static void testCreationControlJoueur() {
         // Création des objets nécessaires
-        ControlJeu controlJeu = new ControlJeu(); // Utiliser le constructeur sans argument
+        ControlJeu controlJeu = new ControlJeu();
         ControlPioche controlPioche = controlJeu.getControlPioche();
         Joueur joueur = new Joueur("TestJoueur", new Pirate("Jack Sparrow"));
 
-        // Création du contrôleur dans le bon ordre
+        // Création du contrôleur
         ControlJoueur controlJoueur = new ControlJoueur(joueur, controlJeu, controlPioche);
 
-        // Création du contrôleur de plateau après création du contrôleur joueur
+        // Création du contrôleur de plateau
         Joueur joueur2 = new Joueur("Adversaire", new Pirate("Barbe Noire"));
         ControlJoueur controlJoueur2 = new ControlJoueur(joueur2, controlJeu, controlPioche);
         ControlCartePlateau controlCartePlateau = new ControlCartePlateau(controlJoueur, controlJoueur2);
@@ -66,11 +66,9 @@ public class TestControlJoueur {
     
     private static void testPiocher() {
         // Création des objets nécessaires
-        ControlJeu controlJeu = new ControlJeu(); // Utiliser le constructeur sans argument
+        ControlJeu controlJeu = new ControlJeu();
         ControlPioche controlPioche = controlJeu.getControlPioche();
         Joueur joueur = new Joueur("TestJoueur", new Pirate("Jack Sparrow"));
-
-        // Création du contrôleur
         ControlJoueur controlJoueur = new ControlJoueur(joueur, controlJeu, controlPioche);
 
         // Taille initiale de la main
@@ -90,12 +88,10 @@ public class TestControlJoueur {
     }
     
     private static void testInitialiserMain() {
-        // Création des objets nécessaires
-        ControlJeu controlJeu = new ControlJeu(); // Utiliser le constructeur sans argument
+        // Création des objets
+        ControlJeu controlJeu = new ControlJeu();
         ControlPioche controlPioche = controlJeu.getControlPioche();
         Joueur joueur = new Joueur("TestJoueur", new Pirate("Jack Sparrow"));
-
-        // Création du contrôleur
         ControlJoueur controlJoueur = new ControlJoueur(joueur, controlJeu, controlPioche);
 
         // Initialisation de la main
@@ -110,7 +106,7 @@ public class TestControlJoueur {
     
     private static void testJouerCarte() {
         // Création des objets nécessaires
-        ControlJeu controlJeu = new ControlJeu(); // Utiliser le constructeur sans argument
+        ControlJeu controlJeu = new ControlJeu();
         ControlPioche controlPioche = controlJeu.getControlPioche();
 
         Joueur joueur1 = new Joueur("TestJoueur1", new Pirate("Jack Sparrow"));
@@ -139,11 +135,9 @@ public class TestControlJoueur {
     
     private static void testPerdrePointsDeVie() {
         // Création des objets nécessaires
-        ControlJeu controlJeu = new ControlJeu(); // Utiliser le constructeur sans argument
+        ControlJeu controlJeu = new ControlJeu();
         ControlPioche controlPioche = controlJeu.getControlPioche();
         Joueur joueur = new Joueur("TestJoueur", new Pirate("Jack Sparrow"));
-
-        // Création du contrôleur
         ControlJoueur controlJoueur = new ControlJoueur(joueur, controlJeu, controlPioche);
 
         // Points de vie initiaux
@@ -161,11 +155,9 @@ public class TestControlJoueur {
     
     private static void testGagnerPopularite() {
         // Création des objets nécessaires
-        ControlJeu controlJeu = new ControlJeu(); // Utiliser le constructeur sans argument
+        ControlJeu controlJeu = new ControlJeu();
         ControlPioche controlPioche = controlJeu.getControlPioche();
         Joueur joueur = new Joueur("TestJoueur", new Pirate("Jack Sparrow"));
-
-        // Création du contrôleur
         ControlJoueur controlJoueur = new ControlJoueur(joueur, controlJeu, controlPioche);
 
         // Popularité initiale
@@ -183,11 +175,9 @@ public class TestControlJoueur {
     
     private static void testRecevoirEffets() {
         // Création des objets nécessaires
-        ControlJeu controlJeu = new ControlJeu(); // Utiliser le constructeur sans argument
+        ControlJeu controlJeu = new ControlJeu();
         ControlPioche controlPioche = controlJeu.getControlPioche();
         Joueur joueur = new Joueur("TestJoueur", new Pirate("Jack Sparrow"));
-
-        // Création du contrôleur
         ControlJoueur controlJoueur = new ControlJoueur(joueur, controlJeu, controlPioche);
 
         // État initial
@@ -217,7 +207,7 @@ public class TestControlJoueur {
     
     private static void testJouerTour() {
         // Création des objets nécessaires
-        ControlJeu controlJeu = new ControlJeu(); // Utiliser le constructeur sans argument
+        ControlJeu controlJeu = new ControlJeu();
         ControlPioche controlPioche = controlJeu.getControlPioche();
 
         controlJeu.creerJoueur("TestJoueur1", "Jack Sparrow");

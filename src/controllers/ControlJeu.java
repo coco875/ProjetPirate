@@ -9,9 +9,8 @@ import joueur.Joueur;
 import joueur.Pirate;
 
 /**
- * @brief Contrôleur principal du jeu
- * 
- * Ce contrôleur coordonne les différents aspects du jeu des Pirates
+ * Contrôleur principal du jeu
+ * Coordonne les différents aspects du jeu des Pirates
  */
 public class ControlJeu {
     private Jeu jeu;
@@ -19,11 +18,11 @@ public class ControlJeu {
     private ControlCartePlateau controlCartePlateau;
     private ControlCarteSpeciale controlCarteSpeciale;
     private ControlMarche controlMarche;
-    private ControlJoueur[] controlJoueurs; // Déclaration du champ manquant
+    private ControlJoueur[] controlJoueurs; // Tableau des contrôleurs de joueurs
     private int joueurActif; // 0 pour joueur 1, 1 pour joueur 2
 
     /**
-     * @brief Constructeur du contrôleur
+     * Constructeur du contrôleur
      */
     public ControlJeu() {
         this.jeu = new Jeu();
@@ -33,7 +32,7 @@ public class ControlJeu {
     }
     
     /**
-     * @brief Initialise le jeu
+     * Initialise le jeu
      */
     public void initialiserJeu() {
         // Initialisation de la pioche
@@ -43,7 +42,7 @@ public class ControlJeu {
     }
     
     /**
-     * @brief Crée le joueur 1 (pour tests)
+     * Crée le joueur 1 (pour tests)
      */
     public void setJoueur1(String nom, Pirate pirate) {
         Joueur joueur = new Joueur(nom, pirate);
@@ -51,7 +50,7 @@ public class ControlJeu {
     }
     
     /**
-     * @brief Crée le joueur 2 (pour tests)
+     * Crée le joueur 2 (pour tests)
      */
     public void setJoueur2(String nom, Pirate pirate) {
         Joueur joueur = new Joueur(nom, pirate);
@@ -67,14 +66,12 @@ public class ControlJeu {
             controlJoueurs[0].setControlCarteSpeciale(controlCarteSpeciale);
             controlJoueurs[1].setControlCarteSpeciale(controlCarteSpeciale);
             
-            // Passer 'this' (ControlJeu) au constructeur de ControlMarche
             controlMarche = new ControlMarche(controlJoueurs[0], controlJoueurs[1], controlPioche, this);
         }
     }
     
     /**
-     * @brief Crée un joueur
-     * 
+     * Crée un joueur
      * @param nomJoueur Nom du joueur
      * @param nomPirate Nom du pirate
      * @return Le joueur créé
@@ -99,7 +96,6 @@ public class ControlJeu {
             controlJoueurs[0].setControlCarteSpeciale(controlCarteSpeciale);
             controlJoueurs[1].setControlCarteSpeciale(controlCarteSpeciale);
             
-            // Passer 'this' (ControlJeu) au constructeur de ControlMarche
             controlMarche = new ControlMarche(controlJoueurs[0], controlJoueurs[1], controlPioche, this);
         }
         
@@ -107,7 +103,7 @@ public class ControlJeu {
     }
     
     /**
-     * @brief Distribue les cartes initiales aux joueurs
+     * Distribue les cartes initiales aux joueurs
      */
     public void distribuerCartesInitiales() {
         // Chaque joueur reçoit 3 cartes au début
@@ -119,9 +115,7 @@ public class ControlJeu {
     }
     
     /**
-     * @brief Ajoute une carte offensive au plateau pour le joueur actif
-     * 
-     * @param carte La carte à ajouter
+     * Ajoute une carte offensive au plateau pour le joueur actif
      */
     public void ajouterCarteOffensive(CarteOffensive carte) {
         if (joueurActif == 0) {
@@ -132,9 +126,7 @@ public class ControlJeu {
     }
     
     /**
-     * @brief Ajoute une carte stratégique au plateau pour le joueur actif
-     * 
-     * @param carte La carte à ajouter
+     * Ajoute une carte stratégique au plateau pour le joueur actif
      */
     public void ajouterCarteStrategique(CarteStrategique carte) {
         if (joueurActif == 0) {
@@ -145,7 +137,7 @@ public class ControlJeu {
     }
     
     /**
-     * @brief Applique les effets de toutes les cartes sur le plateau
+     * Applique les effets de toutes les cartes sur le plateau
      */
     public void appliquerEffetsCartes() {
         // Appliquer les effets des cartes d'attaque
@@ -161,7 +153,7 @@ public class ControlJeu {
     }
     
     /**
-     * @brief Défausse toutes les cartes du plateau
+     * Défausse toutes les cartes du plateau
      */
     public void defausserCartesPlateau() {
         controlCartePlateau.defausserCartesPlateau();
@@ -172,8 +164,7 @@ public class ControlJeu {
     }
     
     /**
-     * @brief Vérifie si la partie est terminée
-     * 
+     * Vérifie si la partie est terminée
      * @return true si la partie est terminée, false sinon
      */
     public boolean verifierFinPartie() {
@@ -192,16 +183,11 @@ public class ControlJeu {
         }
         
         // Vérifier si la pioche est vide
-        if (controlPioche.estVide()) {
-            return true;
-        }
-        
-        return false;
+        return controlPioche.estVide();
     }
     
     /**
-     * @brief Détermine le vainqueur de la partie
-     * 
+     * Détermine le vainqueur de la partie
      * @return Le joueur vainqueur ou null en cas d'égalité
      */
     public Joueur determinerVainqueur() {
@@ -236,44 +222,29 @@ public class ControlJeu {
         }
     }
     
-    /**
-     * @brief Récupère le contrôleur d'un joueur
-     * 
-     * @param index Index du joueur (0 ou 1)
-     * @return Contrôleur du joueur
-     */
+    // Getters et méthodes de gestion du jeu
+    
     public ControlJoueur getJoueur(int index) {
         return controlJoueurs[index];
     }
     
-    /**
-     * @brief Récupère le contrôleur de carte plateau
-     * 
-     * @return Contrôleur du plateau de cartes
-     */
     public ControlCartePlateau getControlCartePlateau() {
         return controlCartePlateau;
     }
     
     /**
-     * @brief Passe au joueur suivant
+     * Passe au joueur suivant
      */
     public void passerAuJoueurSuivant() {
         joueurActif = (joueurActif + 1) % 2;
     }
     
-    /**
-     * @brief Récupère l'index du joueur actif
-     * 
-     * @return Index du joueur actif
-     */
     public int getJoueurActif() {
         return joueurActif;
     }
     
     /**
-     * @brief Définit le joueur actif
-     * 
+     * Définit le joueur actif
      * @param index Index du joueur actif (0 ou 1)
      */
     public void setJoueurActif(int index) {
@@ -282,26 +253,16 @@ public class ControlJeu {
         }
     }
     
-    /**
-     * @brief Récupère le contrôleur du marché
-     * 
-     * @return Contrôleur du marché
-     */
     public ControlMarche getControlMarche() {
         return controlMarche;
     }
     
-    /**
-     * @brief Récupère le contrôleur de la pioche.
-     * @return Le contrôleur de la pioche.
-     */
     public ControlPioche getControlPioche() {
         return controlPioche;
     }
     
     /**
-     * @brief Termine l'itération actuelle et vérifie si le jeu continue
-     * 
+     * Termine l'itération actuelle et vérifie si le jeu continue
      * @param continuer Indique si les joueurs souhaitent continuer le jeu
      * @return true si le jeu doit continuer, false s'il doit se terminer
      */
@@ -331,9 +292,7 @@ public class ControlJeu {
     }
     
     /**
-     * @brief Initialise la main du joueur
-     * 
-     * @param indexJoueur Index du joueur (0 ou 1)
+     * Initialise la main du joueur
      */
     public void initialiserMainJoueur(int indexJoueur) {
         // Vérifier que l'index du joueur est valide
@@ -348,8 +307,7 @@ public class ControlJeu {
     }
     
     /**
-     * @brief Fait piocher une carte au joueur actif
-     * 
+     * Fait piocher une carte au joueur actif
      * @return La carte piochée ou null si la pioche est vide
      */
     public carte.Carte piocherCarte() {
@@ -360,8 +318,7 @@ public class ControlJeu {
     }
     
     /**
-     * @brief Fait jouer une carte au joueur actif
-     * 
+     * Fait jouer une carte au joueur actif
      * @param indexCarte Index de la carte à jouer dans la main du joueur
      * @return true si la carte a été jouée avec succès, false sinon
      */
@@ -373,8 +330,7 @@ public class ControlJeu {
     }
     
     /**
-     * @brief Vérifie si un joueur a gagné la partie
-     * 
+     * Vérifie si un joueur a gagné la partie
      * @return Numéro du joueur gagnant (1 ou 2) ou 0 s'il n'y a pas de gagnant
      */
     public int verifierVictoire() {
@@ -391,8 +347,7 @@ public class ControlJeu {
     }
     
     /**
-     * @brief Défausse une carte de la main du joueur actif
-     * 
+     * Défausse une carte de la main du joueur actif
      * @param indexCarte Index de la carte à défausser
      * @return true si la carte a été défaussée avec succès, false sinon
      */

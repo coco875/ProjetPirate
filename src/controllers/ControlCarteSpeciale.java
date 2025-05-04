@@ -12,6 +12,9 @@ public class ControlCarteSpeciale {
         this.joueur2 = joueur2;
     }
 
+    /**
+     * Active une carte spéciale
+     */
     public void activerCarteSpeciale(CarteCoupSpecial carte) {
         if (carte != null && !carte.estJouee()) {
             carte.setEstJouee(true);
@@ -19,12 +22,13 @@ public class ControlCarteSpeciale {
         }
     }
     
+    /**
+     * Active l'effet spécial d'une carte
+     */
     public void activerEffetSpecial(CarteCoupSpecial carte, ControlJoueur joueurActif, ControlJoueur joueurAdverse) {
         // Logique pour activer l'effet spécial de la carte
-        // Exemple : appliquer des dégâts, soigner, piocher des cartes, etc.
-        // Cette logique dépendra de la nature de l'effet spécial défini dans la carte.
         if (carte != null) {
-            System.out.println("Carte spéciale activée: " + carte.getNomCarte()); // Correction: getNomCarte() au lieu de getNom()
+            System.out.println("Carte spéciale activée: " + carte.getNomCarte());
             // Implémenter la logique spécifique de l'effet ici
             // Par exemple:
             // if (carte.getEffet().equals("SOIN")) {
