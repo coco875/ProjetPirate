@@ -34,15 +34,4 @@ public class CartePassive extends CarteStrategique {
          // Appel au constructeur de CarteStrategique pour les cartes passives avec coût
         super(nomCarte, description, valeur, duree, typeEffet, cout);
     }
-
-    /**
-     * @brief Diminue la durée de l'effet passif
-     * @return Vrai si l'effet est toujours actif, faux sinon
-     */
-    public boolean reduireDuree() {
-        int duree = getDuree();
-        duree--;
-        setDuree(duree);
-        return duree > 0;
-    }
 }

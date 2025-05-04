@@ -199,7 +199,6 @@ public class CarteStrategique extends Carte {
 	}
 	
 	// Méthodes de vérification du type
-	
 	public boolean estPopularite() {
 		return this.typeStrategique == TypeStrategique.POPULARITE;
 	}

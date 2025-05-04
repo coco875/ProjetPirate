@@ -43,15 +43,15 @@ public class ControlCarteSpeciale {
      * Applique les effets des cartes spéciales jouées
      */
     public void appliquerEffetsCartes() {
-        // Implémentation pour appliquer les effets des cartes spéciales
-        System.out.println("Effets des cartes spéciales appliqués");
+        System.out.println("Application des effets des cartes spéciales");
+        // Logique pour appliquer les effets des cartes spéciales
     }
     
     /**
-     * Défausse les cartes spéciales utilisées
+     * Défausse les cartes utilisées
      */
     public void defausserCartes() {
-        // Implémentation pour défausser les cartes spéciales utilisées
-        System.out.println("Cartes spéciales défaussées");
+        System.out.println("Défausse des cartes spéciales utilisées");
+        // Logique pour défausser les cartes utilisées
     }
 }

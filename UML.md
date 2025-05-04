@@ -46,295 +46,543 @@ Relations :
 ### Diagramme de classe (Mermaid)
 ```mermaid
 classDiagram
-    class Jeu {
+    %% Entry Points %%
+    class Main {
+        + main(String[]) void
+    }
+    class MainUI {
+        + main(String[]) void
+        - lancerInterfaceGraphique() void
+        - lancerInterfaceConsole() void
+    }
+
+    %% Boundaries %%
+    class BoundaryJeu {
+        - controlJeu: ControlJeu
+        - controlMarche: ControlMarche
+        - scan: Scanner
+        + lancerJeu() void
+        + jouerPartie() void
+        + afficherMessage() void
+        + afficherRegles() void
+        + demarrerJeu() void
+        + fermer() void
+        # demanderNomJoueur(int) String
+        # demanderNomPirate(int) String
+        - jouerCarte(Carte, ControlJoueur) void
+        - demanderContinuerIteration() boolean
+        - afficherResultatFinal() void
+    }
+    class BoundaryJeuSwing {
+        <<JFrame>>
+        - controlJeu: ControlJeu
+        - controlMarche: ControlMarche
+        - joueurActuel: int
+        - partieEnCours: boolean
+        + BoundaryJeuSwing(ControlJeu, ControlMarche)
+        - initUI() void
+        - createMenuBar() void
+        - createPlayerPanel(int) JPanel
+        - afficherRegles() void
+        - demarrerPartie() void
+        - selectionnerCapitaine(String) Pirate
+        - updatePlayerPanels() void
+        - updatePlayerPanel(JPanel, int) void
+        - createCardButton(Carte, int) JButton
+        - updateCardDisplay() void
+        - activerBoutonsTour(boolean) void
+        - piocherCarte() void
+        - jouerCarte(Carte, int) void
+        - ouvrirMarche() void
+        - finirTour() void
+        - gererTailleMain() void
+        - partieTerminee() void
+        + main(String[]) void
+    }
+
+    %% Controllers %%
+    class ControlJeu {
+        - jeu: Jeu
+        - controlPioche: ControlPioche
+        - controlCartePlateau: ControlCartePlateau
+        - controlCarteSpeciale: ControlCarteSpeciale
+        - controlMarche: ControlMarche
+        - controlJoueurs: ControlJoueur[]
+        - joueurActif: int
+        + initialiserJeu() void
+        + setJoueur1(String, Pirate) void
+        + setJoueur2(String, Pirate) void
+        + creerJoueur(String, String) Joueur
+        + distribuerCartesInitiales() void
+        + ajouterCarteOffensive(CarteOffensive) void
+        + ajouterCarteStrategique(CarteStrategique) void
+        + appliquerEffetsCartes() void
+        + defausserCartesPlateau() void
+        + verifierFinPartie() boolean
+        + determinerVainqueur() Joueur
+        + getJoueur(int) ControlJoueur
+        + passerAuJoueurSuivant() void
+        + getJoueurActif() int
+        + setJoueurActif(int) void
+        + getControlMarche() ControlMarche
+        + getControlPioche() ControlPioche
+        + getControlCartePlateau() ControlCartePlateau
+        + initialiserMainJoueur(int) void
+        + piocherCarte() Carte
+        + jouerCarte(int) boolean
+        + verifierVictoire() int
+        + defausserCarte(int) boolean
+    }
+    class ControlJoueur {
+        - joueur: Joueur
+        - controlJeu: ControlJeu
+        - controlPioche: ControlPioche
+        - controlCartePlateau: ControlCartePlateau
+        - controlCarteSpeciale: ControlCarteSpeciale
+        + ControlJoueur(Joueur, ControlJeu, ControlPioche)
+        + setControlCartePlateau(ControlCartePlateau) void
+        + setControlCarteSpeciale(ControlCarteSpeciale) void
+        + getJoueur() Joueur
+        + setJoueur(Joueur) void
+        + initialiserMain() void
+        + piocher() Carte
+        + afficherMain() List~Carte~
+        + retirerCarte(Carte) boolean
+        + jouerCarte(int) boolean
+        + jouerCarte(Carte) boolean
+        + defausserCarte(int) boolean
+        + perdrePV(int) void
+        + gagnerPointsDeVie(int) void
+        + perdrePopularite(int) void
+        + gagnerPopularite(int) void
+        + perdreOr(int) boolean
+        + gagnerOr(int) void
+        + recevoirEffets(List~Carte~) void
+        + recevoirEffets(int, int) void
+        + jouerTour() void
+        + getNom() String
+        + getPointsDeVie() int
+        + getPopularite() int
+        + getOr() int
+        + getPirate() Pirate
+        + getMain() List~Carte~
+    }
+    class ControlPioche {
         - pioche: Pioche
-        - joueur1: Joueur
-        - joueur2: Joueur
-        + initialiserJeu(joueur1: Joueur, joueur2: Joueur): void
+        + ControlPioche()
+        + initialiserPioche() void
+        + estVide() boolean
+        + piocher() Carte
+        - chargerCartesDepuisRepertoire(File, List~Carte~) void
+    }
+    class ControlCartePlateau {
+        - zoneOffensiveJ1: ZoneOffensive
+        - zoneStrategiqueJ1: ZoneStrategique
+        - zoneOffensiveJ2: ZoneOffensive
+        - zoneStrategiqueJ2: ZoneStrategique
+        - controlJoueur1: ControlJoueur
+        - controlJoueur2: ControlJoueur
+        - defausse: Defausse
+        + ControlCartePlateau(ControlJoueur, ControlJoueur)
+        + setJoueurs(ControlJoueur, ControlJoueur) void
+        + ajouterCarteOffensiveJ1(CarteOffensive) void
+        + ajouterCarteOffensiveJ2(CarteOffensive) void
+        + ajouterCarteStrategiqueJ1(CarteStrategique) void
+        + ajouterCarteStrategiqueJ2(CarteStrategique) void
+        + appliquerEffetsCartesOffensives() void
+        + appliquerEffetsCartesStrategiques() void
+        + defausserCartesPlateau() void
+        + getCartesOffensivesJ1() List~CarteOffensive~
+        + getCartesOffensivesJ2() List~CarteOffensive~
+        + getCartesStrategiquesJ1() List~CarteStrategique~
+        + getCartesStrategiquesJ2() List~CarteStrategique~
+        + getZoneOffensiveJ1() ZoneOffensive
+        + getZoneOffensiveJ2() ZoneOffensive
+        + getZoneStrategiqueJ1() ZoneStrategique
+        + getZoneStrategiqueJ2() ZoneStrategique
+        + getDefausse() Defausse
+        - defausserCartes(List) void
+    }
+    class ControlCarteSpeciale {
+        - joueur1: ControlJoueur
+        - joueur2: ControlJoueur
+        + ControlCarteSpeciale(ControlJoueur, ControlJoueur)
+        + activerCarteSpeciale(CarteCoupSpecial) void
+        + activerEffetSpecial(CarteCoupSpecial, ControlJoueur, ControlJoueur) void
+        + appliquerEffetsCartes() void
+        + defausserCartes() void
+    }
+    class ControlMarche {
+        - marche: Marche
+        - controlJoueur1: ControlJoueur
+        - controlJoueur2: ControlJoueur
+        - controlPioche: ControlPioche
+        - controlJeu: ControlJeu
+        + ControlMarche(ControlJoueur, ControlJoueur, ControlPioche, ControlJeu)
+        - remplirMarcheInitial() void
+        + rafraichirMarche() void
+        + getCartesDisponibles() List~Carte~
+        + acheterCarte(int) boolean
+        + vendreCarte(int, int) boolean
     }
 
+    %% Entities %%
+    class Jeu {
+        ' Représente l'état global du jeu
+    }
+    class Joueur {
+        - nom: String
+        - pirate: Pirate
+        - vie: int
+        - popularite: int
+        - or: int
+        - nbCartes: int
+        - main: List~Carte~
+        + Joueur(String, Pirate)
+        + getPointsDeVie() int
+        + setVie(Integer) void
+        + getPopularite() int
+        + setPopularite(Integer) void
+        + getOr() int
+        + setOr(Integer) void
+        + getNbCartes() int
+        + setNbCartes(Integer) void
+        + getNom() String
+        + getPirate() Pirate
+        + perdrePV(int) void
+        + gagnerPointsDeVie(int) void
+        + perdrePopularite(int) void
+        + gagnerPopularite(int) void
+        + perdreOr(int) boolean
+        + gagnerOr(int) void
+        + getPersonnage() Pirate
+        + ajouterCarte(Carte) void
+        + retirerCarte(Carte) boolean
+        + getMain() List~Carte~
+    }
+    class Pirate {
+        - nom: String
+        - description: String
+        - popularite: int
+        - vie: int
+        - carteCoupSpeciale: CarteCoupSpecial
+        + Pirate(String, String, int, int)
+        + Pirate(String)
+        + getDescription() String
+        + setDescription(String) void
+        + getNom() String
+        + getCarteCoupSpeciale() CarteCoupSpecial
+        + setCarteCoupSpeciale(CarteCoupSpecial) void
+        + getPopularite() int
+        + setPopularite(int) void
+        + getVie() int
+    }
     class Pioche {
-        - pioche: List~Carte~
-        + Pioche(listeCartes: List~Carte~)
-        + piocher(): Carte
-        + hasNext(): boolean
-        + next(): Carte
+        - cartes: List~Carte~
+        + Pioche()
+        + ajouterCarte(Carte) void
+        + melanger() void
+        + piocher() Carte
+        + estVide() boolean
+        + getNombreCartes() int
+    }
+    class Defausse {
+        - cartes: List~Carte~
+        + Defausse()
+        + ajouterCarte(Carte) void
+        + getCartes() List~Carte~
+        + vider() void
+    }
+    class Marche {
+        - cartesDisponibles: List~Carte~
+        + Marche()
+        + ajouterCarte(Carte) void
+        + getCartesDisponibles() List~Carte~
+        + afficherMarché() void
+    }
+    class ZoneOffensive {
+        - cartes: List~CarteOffensive~
+        + ajouterCarte(CarteOffensive) void
+        + viderZone() void
+        + getCartesOffensives() List~CarteOffensive~
+    }
+    class ZoneStrategique {
+        - cartes: List~CarteStrategique~
+        + ajouterCarte(CarteStrategique) void
+        + viderZone() void
+        + getCartesStrategiques() List~CarteStrategique~
+    }
+    class ZoneCarteSpeciale {
+        - cartes: List~CarteSpeciale~
+        + ajouterCarte(CarteSpeciale) void
+        + viderZone() void
+        + getCartesSpeciales() List~CarteSpeciale~
     }
 
+    %% Ressources et parsers %%
+    class Ressource {
+        - nom: String
+        - valeur: int
+        + Ressource(String, int)
+        + getNom() String
+        + getValeur() int
+    }
+    class ParserCarte {
+        + lireCarte(String) Carte
+    }
+    class ParserPirate {
+        + lirePirate(String) Pirate
+    }
+
+    %% Cartes %%
     class Carte {
         - type: TypeCarte
         - nomCarte: String
         - Description: String
         - valeur: int
+        - valeurSecondaire: int
         - id: int
         - cout: int
+        - orGagne: int
+        - orPerdu: int
+        - orVole: int
+        - vieGagne: int
         - static compteurId: int
-        + Carte(type: TypeCarte, nomCarte: String, description: String, valeur: int, cout: int)
-        + Carte(type: TypeCarte, nomCarte: String, description: String, valeur: int)
-        + Carte(type: TypeCarte, nomCarte: String, description: String)
-        + getValeur(): int
-        + setValeur(valeur: int): void
-        + getCout(): int
-        + setCout(cout: int): void
-        + getId(): int
-        + toString(): String
-        + setDescription(description: String): void
-        + getDescription(): String
-        + getType(): TypeCarte
-        + setNomCarte(nomCarte: String): void
-        + getNomCarte(): String
-        + estCarteAttaque(): boolean
-        + estCartePopularite(): boolean
-        + estCarteSpeciale(): boolean
-        + estCartePassive(): boolean
+        + Carte(TypeCarte, String, String, int, int, int)
+        + Carte(TypeCarte, String, String, int, int)
+        + Carte(TypeCarte, String, String)
+        + Carte(String, int, TypeCarte)
+        + effetCarte() EffetCarte
+        + getValeur() int
+        + setValeur(int) void
+        + getValeurSecondaire() int
+        + setValeurSecondaire(int) void
+        + getCout() int
+        + setCout(int) void
+        + getId() int
+        + toString() String
+        + setDescription(String) void
+        + getDescription() String
+        + getType() TypeCarte
+        + setNomCarte(String) void
+        + getNomCarte() String
+        + getDegats() int
+        + getDegatsInfliges() int
+        + getDegatsSubis() int
+        + getPopularite() int
+        + getDegatsSubisPopularite() int
+        + getOrGagne() int
+        + setOrGagne(int) void
+        + getOrPerdu() int
+        + setOrPerdu(int) void
+        + getOrVole() int
+        + setOrVole(int) void
+        + getVieGagne() int
+        + setVieGagne(int) void
     }
-
+    class EffetCarte {
+        + degatsInfliges: int
+        + degatsSubis: int
+        + populariteGagnee: int
+        + vieGagnee: int
+        + orGagne: int
+        + orPerdu: int
+        + orVole: int
+        + effetSpecial: String
+        + dureeEffet: int
+        + estAttaque: boolean
+        + estPopularite: boolean
+        + estSpeciale: boolean
+        + estPassive: boolean
+        + estTresor: boolean
+        + estSoin: boolean
+    }
     class TypeCarte {
         <<enumeration>>
-        POPULAIRE
-        ATTAQUE
+        OFFENSIVE
+        STRATEGIQUE
+        SPECIALE
+        ACTIVE
+        PASSIVE
+        PROBABILITE
+        TRESOR
+    }
+    class CarteOffensive {
+        - typeOffensif: TypeOffensif
+        - estJouee: boolean
+        - coutSpecial: int
+        + CarteOffensive(String, String, int, int, TypeOffensif)
+        + CarteOffensive(String, String, int, int, TypeOffensif, int)
+        + CarteOffensive(String, String, int)
+        + CarteOffensive(String, String, int, int)
+        + CarteOffensive(String, String, int, boolean)
+        + fromCarteAttaque(CarteAttaque) CarteOffensive
+        + fromCarteSoin(CarteSoin) CarteOffensive
+        + fromCarteCoupSpecial(CarteCoupSpecial) CarteOffensive
+        + getTypeOffensif() TypeOffensif
+        + setTypeOffensif(TypeOffensif) void
+        + estJouee() boolean
+        + setEstJouee(boolean) void
+        + getCoutSpecial() int
+        + setCoutSpecial(int) void
+        + estAttaqueDirecte() boolean
+        + estCoupSpecial() boolean
+        + estSoin() boolean
+        + estTresorOffensif() boolean
+        + getDegatsInfliges() int
+        + getDegatsSubis() int
+        + getVieGagnee() int
+        + getOrVole() int
+        + toString() String
+    }
+    class TypeOffensif {
+        <<enumeration>>
+        ATTAQUE_DIRECTE
+        COUP_SPECIAL
+        SOIN
+        TRESOR_OFFENSIF
+    }
+    class CarteStrategique {
+        - typeStrategique: TypeStrategique
+        - effetSpecial: String
+        - typeEffet: String
+        - duree: int
+        + estPopularite() boolean
+        + estTresor() boolean
+        + estSpeciale() boolean
+        + estPassive() boolean
+        + getPopulariteGagnee() int
+        + getDegatsSubis() int
+        + getOrGagne() int
+        + getOrPerdu() int
+        + getTypeEffet() String
+        + getDuree() int
+        + getEffetSpecial() String
+        + getTypeStrategique() TypeStrategique
+        + setTypeStrategique(TypeStrategique) void
+    }
+    class TypeStrategique {
+        <<enumeration>>
+        POPULARITE
+        TRESOR
         SPECIALE
         PASSIVE
     }
-
     class CarteAttaque {
-        - degats: int
-        + CarteAttaque(nomCarte: String, description: String, idCarte: int, degats: int)
-        + getDegats(): int
-        + setDegats(degats: int): void
+        + CarteAttaque(String, String, int)
+        + CarteAttaque(String, String, int, int)
+        + CarteAttaque(String, String, int, int, int)
     }
-
+    class CarteSoin {
+        + CarteSoin(String, String, int)
+    }
+    class CarteTresor {
+        + CarteTresor(String, String, int, int, int)
+    }
     class CartePopularite {
-        - pointsPopularite: int
-        + CartePopularite(nomCarte: String, description: String, idCarte: int, pointsPopularite: int)
-        + getPointsPopularite(): int
-        + setPointsPopularite(pointsPopularite: int): void
+        + CartePopularite(String, String, int, int)
+        + CartePopularite(String, String, int, int, int)
     }
-
     class CarteSpeciale {
-        - bonusSpecial: String
-        + CarteSpeciale(nomCarte: String, description: String, idCarte: int)
-        + CarteSpeciale(bonusSpecial: String, nomCarte: String, description: String, idCarte: int)
-        + getBonusSpecial(): String
-        + setBonusSpecial(bonusSpecial: String): void
+        - effetSpecial: String
+        - estReutilisable: boolean
+        + CarteSpeciale(String, String, String, int)
+        + CarteSpeciale(String, String, String, int, int)
+        + estReutilisable() boolean
+        + setReutilisable(boolean) void
     }
-
     class CarteCoupSpecial {
-        - coutSpecial: int
-        + CarteCoupSpecial(coutSpecial: int, nomCarte: String, idCarte: int, type: TypeCarte)
-        + CarteCoupSpecial(coutSpecial: int, nomCarte: String, description: String, idCarte: int)
-        + getCoutSpecial(): int
-        + setCoutSpecial(coutSpecial: int): void
+        + CarteCoupSpecial(String, String, int, int)
+    }
+    class CarteActive {
+        - estJouee: boolean
+        + CarteActive(TypeCarte, String, String, int, int)
+        + CarteActive(TypeCarte, String, String, int)
+        + CarteActive(TypeCarte, String, String)
+        + estJouee() boolean
+        + setEstJouee(boolean) void
+    }
+    class CartePassive {
+        + duree: int
+    }
+    class CarteProbabilite {
+        + probabilite: double
     }
 
-    class Joueur {
-        - nom: String
-        - pirate: Pirate
-        - vie: Integer
-        - popularite: Integer
-        - or: Integer
-        - nbCartes: Integer
-        - main: List~Carte~
-        + Joueur(nom: String, pirate: Pirate)
-        + getPointsDeVie(): Integer
-        + setVie(vie: Integer): void
-        + getPopularite(): Integer
-        + setPopularite(popularite: Integer): void
-        + getOr(): Integer
-        + setOr(or: Integer): void
-        + getNbCartes(): Integer
-        + setNbCartes(nbCartes: Integer): void
-        + getNom(): String
-        + getPirate(): Pirate
-        + ajouterCarte(carte: Carte): void
-        + retirerCarte(carte: Carte): void
-        + getMain(): List~Carte~
-    }
+    %% Relationships %%
+    Main --> BoundaryJeu : crée
+    Main --> ControlJeu : crée
+    MainUI --> BoundaryJeu : crée
+    MainUI --> BoundaryJeuSwing : crée
+    MainUI --> ControlJeu : crée
 
-    class Pirate {
-        - nom: String
-        - bonus: int
-        + Pirate(nom: String)
-        + getNom(): String
-        + setNom(nom: String): void
-        + getBonus(): int
-        + setBonus(bonus: int): void
-    }
+    BoundaryJeu --> ControlJeu : utilise
+    BoundaryJeu --> ControlMarche : utilise
+    BoundaryJeuSwing --> ControlJeu : utilise
+    BoundaryJeuSwing --> ControlMarche : utilise
 
-    class ControlJeu {
-        - cJ1: ControlJoueur
-        - cJ2: ControlJoueur
-        - cPioche: ControlPioche
-        - cMarche: ControlMarche
-        - cCartePlateau: ControlCartePlateau
-        + ControlJeu()
-        + initControllers(): void
-        + initialiserMainJoueur(joueurId: int): void
-        + piocherCarte(joueurId: int): Carte
-        + defausserCarte(joueurId: int, indexCarte: int): void
-        + getControlMarche(): ControlMarche
-        + setJoueur1(nom: String, pirate: Pirate): void
-        + setJoueur2(nom: String, pirate: Pirate): void
-        + jouerTour(joueurId: int): void
-        + verifierVictoire(): boolean
-        + afficherMain(joueurId: int): List~Carte~
-        + jouerCarte(joueurId: int, indexCarte: int): void
-        + getJoueur(joueurId: int): Joueur
-    }
+    ControlJeu "1" *--> "2" ControlJoueur : contrôle
+    ControlJeu --> ControlPioche : utilise
+    ControlJeu --> ControlCartePlateau : crée et utilise
+    ControlJeu --> ControlCarteSpeciale : crée et utilise
+    ControlJeu --> ControlMarche : crée et utilise
+    ControlJeu --> Jeu : gère
 
-    class ControlJoueur {
-        - joueur: Joueur
-        - cCartePlateau: ControlCartePlateau
-        - cPioche: ControlPioche
-        + ControlJoueur(joueur: Joueur, cCartePlateau: ControlCartePlateau, cPioche: ControlPioche)
-        + setJoueur(joueur: Joueur): void
-        + piocher(): Carte
-        + initialiserMain(): void
-        + afficherMain(): List~Carte~
-        + retirerCarte(carte: Carte): void
-        + perdrePointsDeVie(points: int): void
-        + gagnerPopularite(points: int): void
-        + recevoirEffets(vie: int, pop: int): void
-        + jouerCarte(carte: Carte): void
-        + getJoueur(): Joueur
-        + jouerTour(): void
-        + setControlCartePlateau(controlCartePlateau: ControlCartePlateau): void
-    }
+    ControlJoueur --> Joueur : gère
+    ControlJoueur --> ControlJeu : référence
+    ControlJoueur --> ControlPioche : utilise pour piocher
+    ControlJoueur --> ControlCartePlateau : accède aux zones
+    ControlJoueur --> ControlCarteSpeciale : gère les effets spéciaux
 
-    class ControlPioche {
-        - pioche: Pioche
-        + ControlPioche()
-        + piocher(): Carte
-    }
+    ControlPioche --> Pioche : gère
+    ControlPioche ..> ParserCarte : utilise
 
-    class ControlCartePlateau {
-        - controlJoueur1: ControlJoueur
-        - controlJoueur2: ControlJoueur
-        + ControlCartePlateau(controlJoueur1: ControlJoueur, controlJoueur2: ControlJoueur)
-        + jouerCarteAttaque(carte: Carte, joueur: Joueur): void
-        + jouerCartePopularite(carte: Carte, joueur: Joueur): void
-        + jouerCarteSpeciale(carte: Carte, joueur: Joueur): void
-        + jouerCartePassive(carte: Carte, joueur: Joueur): void
-    }
+    ControlCartePlateau --> ZoneOffensive : gère
+    ControlCartePlateau --> ZoneStrategique : gère
+    ControlCartePlateau --> Defausse : gère
+    ControlCartePlateau --> ControlJoueur : applique les effets
 
-    class ControlCarteSpeciale {
-        + activerCarteSpeciale(carte: CarteCoupSpecial): void
-    }
+    ControlCarteSpeciale --> ControlJoueur : applique les effets
+    ControlCarteSpeciale ..> CarteCoupSpecial : active
 
-    class ControlMarche {
-        - cartesDisponibles: List~Carte~
-        - controlJoueur1: ControlJoueur
-        - controlJoueur2: ControlJoueur
-        - controlPioche: ControlPioche
-        - random: Random
-        + ControlMarche(controlJoueur1: ControlJoueur, controlJoueur2: ControlJoueur, controlPioche: ControlPioche)
-        + rafraichirMarche(): void
-        + getCartesDisponibles(): List~Carte~
-        + acheterCarte(joueurId: int, indexCarte: int): boolean
-        + vendreCarte(joueurId: int, indexCarte: int): boolean
-    }
+    ControlMarche --> Marche : gère
+    ControlMarche --> ControlJoueur : interagit avec
+    ControlMarche --> ControlPioche : utilise
+    ControlMarche --> ControlJeu : référence
 
-    class BoundaryJeu {
-        - controlJeu: ControlJeu
-        - controlMarche: ControlMarche
-        - scanner: Scanner
-        + BoundaryJeu(controlJeu: ControlJeu, controlMarche: ControlMarche)
-        + afficherRegles(): void
-        + configurerJoueurs(): void
-        + initialiserMains(): void
-        + afficherEtatJoueur(joueurId: int): void
-        + afficherMain(joueurId: int): void
-        + gererMarche(joueurId: int): void
-        + jouerTour(joueurId: int): void
-        + afficherResultats(): void
-        + lancerJeu(): void
-    }
+    Joueur --> Pirate : possède
+    Joueur --> "*" Carte : main
 
-    class ZoneAttaque {
-        - cartesAttaque: List~CarteAttaque~
-        + ajouterCarte(carte: CarteAttaque): void
-        + getCartesAttaque(): List~CarteAttaque~
-    }
+    Pirate --> CarteCoupSpecial : peut avoir
 
-    class ZonePop {
-        - cartesPopularite: List~CartePopularite~
-        + ajouterCarte(carte: CartePopularite): void
-        + getCartesPopularite(): List~CartePopularite~
-    }
+    Pioche --> "*" Carte : contient
+    Defausse --> "*" Carte : contient
+    Marche --> "*" Carte : propose
 
-    class ZoneCarteSpeciale {
-        - cartesSpeciales: List~CarteSpeciale~
-        + ajouterCarte(carte: CarteSpeciale): void
-        + getCartesSpeciales(): List~CarteSpeciale~
-    }
+    ZoneOffensive --> "*" CarteOffensive : contient
+    ZoneStrategique --> "*" CarteStrategique : contient
+    ZoneCarteSpeciale --> "*" CarteSpeciale : contient
 
-    class Defausse {
-        - cartesDefaussees: List~Carte~
-        + ajouterCarte(carte: Carte): void
-        + viderDefausse(): void
-        + getCartesDefaussees(): List~Carte~
-    }
+    Carte --> TypeCarte : est de type
+    Carte ..> EffetCarte : crée
+    Carte --> "*" Ressource : peut utiliser
 
-    class ParserCarte {
-        + lireCarte(cheminFichier: String): Carte
-    }
+    CarteOffensive --|> Carte : hérite
+    CarteOffensive --> TypeOffensif : est de type
 
-    class Ressource {
-        - or: int
-        - bois: int
-        + getOr(): int
-        + getBois(): int
-        + setOr(or: int): void
-        + setBois(bois: int): void
-    }
+    CarteStrategique --|> Carte : hérite
+    CarteStrategique --> TypeStrategique : est de type
 
-    class Marche {
-        - ressources: List~Ressource~
-        + acheterRessource(ressource: Ressource): void
-        + vendreRessource(ressource: Ressource): void
-    }
+    CarteAttaque --|> CarteOffensive : hérite
+    CarteSoin --|> CarteOffensive : hérite
+    CarteTresor --|> Carte : hérite
+    CartePopularite --|> CarteStrategique : hérite
+    CarteSpeciale --|> CarteStrategique : hérite
+    CarteCoupSpecial --|> CarteOffensive : hérite
+    CarteActive --|> Carte : hérite
+    CartePassive --|> CarteStrategique : hérite
+    CarteProbabilite --|> Carte : hérite
 
-    Carte --> TypeCarte
-    CarteAttaque --|> Carte
-    CartePopularite --|> Carte
-    CarteSpeciale --|> Carte
-    CarteCoupSpecial --|> CarteSpeciale
-    
-    Jeu --> Pioche
-    Jeu --> Joueur
-    
-    Joueur --> Pirate
-    Joueur --> Carte
-    
-    Pioche --> Carte
-    
-    ControlJeu --> ControlJoueur
-    ControlJeu --> ControlPioche
-    ControlJeu --> ControlMarche
-    ControlJeu --> ControlCartePlateau
-    
-    ControlJoueur --> Joueur
-    ControlJoueur --> ControlCartePlateau
-    ControlJoueur --> ControlPioche
-    
-    ControlCartePlateau --> ControlJoueur
-    
-    ControlPioche --> Pioche
-    
-    ControlMarche --> ControlJoueur
-    ControlMarche --> ControlPioche
-    ControlMarche --> Carte
-    
-    ControlCarteSpeciale --> CarteCoupSpecial
-    
-    BoundaryJeu --> ControlJeu
-    BoundaryJeu --> ControlMarche
-    
-    ZoneAttaque --> CarteAttaque
-    ZonePop --> CartePopularite
-    ZoneCarteSpeciale --> CarteSpeciale
-    
-    Defausse --> Carte
-    
-    Marche --> Ressource
+    ParserCarte ..> Carte : crée
+    ParserPirate ..> Pirate : crée
 ```
