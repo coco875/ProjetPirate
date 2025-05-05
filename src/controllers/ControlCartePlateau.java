@@ -88,6 +88,12 @@ public class ControlCartePlateau {
 		zonePop.viderZone();
 	}
 	
+	
+	
+	public void jouerCarte(Carte carte, Joueur joueurActif) {
+		
+	}
+	
 	/**
 	 * @brief Gère le jeu d'une carte d'attaque
 	 */
