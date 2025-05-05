@@ -10,4 +10,22 @@
         <maven.compiler.release>21</maven.compiler.release>
         <exec.mainClass>com.mycompany.ihm_pirate.Ihm_pirate</exec.mainClass>
     </properties>
+    
+    <build>
+        <sourceDirectory>src</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>src</directory>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>images</directory>
+            </resource>
+            <resource>
+                <directory>fonts</directory>
+            </resource>
+        </resources>
+    </build>
 </project>
