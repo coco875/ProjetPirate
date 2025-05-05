@@ -18,6 +18,7 @@
                 <directory>src</directory>
                 <excludes>
                     <exclude>**/*.java</exclude>
+                    <exclude>**/test/**</exclude>
                 </excludes>
             </resource>
             <resource>
@@ -27,5 +28,17 @@
                 <directory>fonts</directory>
             </resource>
         </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**/test/**</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>
