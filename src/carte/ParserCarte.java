@@ -46,17 +46,14 @@ public class ParserCarte {
                 case "attaque":
                     int degatsInfliges = Integer.parseInt(properties.getOrDefault("degats_infliges", "0"));
                     int degatsSubisAttaque = Integer.parseInt(properties.getOrDefault("degats_subis", "0"));
-                    int orVole = Integer.parseInt(properties.getOrDefault("or_vole", "0"));
                     
-                    if (orVole > 0) {
-                        // Carte offensive de vol d'or
-                        CarteOffensive carteVol = new CarteOffensive(titre, description, orVole, true);
-                        carteVol.setOrVole(orVole);
-                        return carteVol;
-                    } else {
-                        // Carte offensive d'attaque directe
-                        return new CarteOffensive(titre, description, degatsInfliges, degatsSubisAttaque, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+                    // Vérification de l'attribut or_vole (maintenant ignoré)
+                    if (properties.containsKey("or_vole")) {
+                        System.out.println("Avertissement: L'attribut 'or_vole' est ignoré car la fonctionnalité de vol d'or a été supprimée. Carte: " + titre);
                     }
+                    
+                    // Carte offensive d'attaque directe
+                    return new CarteOffensive(titre, description, degatsInfliges, degatsSubisAttaque, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
                     
                 case "soin":
                     int vieGagnee = Integer.parseInt(properties.getOrDefault("vie_gagnee", "0"));

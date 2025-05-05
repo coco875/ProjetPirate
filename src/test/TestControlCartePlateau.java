@@ -140,13 +140,14 @@ public class TestControlCartePlateau {
         System.out.println("DEBUG - AVANT: J2 PV=" + vieInitialeJ2 + " Or=" + orInitialJ2);
         
         // Ajout de cartes offensives
-        // J1 joue : Attaque (2 dégâts infligés, 1 subi), Soin (3 PV), Vol (8 Or)
+        // J1 joue : Attaque (2 dégâts infligés, 1 subi), Soin (3 PV)
+        // La carte "Vol de Butin" est remplacée par une attaque normale
         CarteOffensive attaqueJ1 = new CarteOffensive("Canon", "", 2, 1, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
         CarteOffensive soinJ1 = new CarteOffensive("Potion", "", 3); // Constructeur Soin
-        CarteOffensive volJ1 = new CarteOffensive("Vol de Butin", "", 8, true); // Constructeur Tresor Offensif
+        CarteOffensive attaqueExtraJ1 = new CarteOffensive("Vol de Butin", "Cette carte était auparavant une carte de vol", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
         cCartePlateau.ajouterCarteOffensiveJ1(attaqueJ1);
         cCartePlateau.ajouterCarteOffensiveJ1(soinJ1);
-        cCartePlateau.ajouterCarteOffensiveJ1(volJ1);
+        cCartePlateau.ajouterCarteOffensiveJ1(attaqueExtraJ1);
         
         // J2 joue : Attaque (1 dégât infligé, 0 subi)
         CarteOffensive attaqueJ2 = new CarteOffensive("Mousquet", "", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
@@ -164,23 +165,19 @@ public class TestControlCartePlateau {
         System.out.println("DEBUG - APRES: J1 PV=" + joueur1.getPointsDeVie() + " Or=" + joueur1.getOr());
         System.out.println("DEBUG - APRES: J2 PV=" + joueur2.getPointsDeVie() + " Or=" + joueur2.getOr());
         
-        // Vérifications J1
-        // Dégâts subis: 1 (attaqueJ1) + 1 (attaqueJ2) = 2
-        // Soins reçus: 3 (soinJ1)
-        // Total PV J1: vieInitialeJ1 - 2 + 3 = vieInitialeJ1 + 1
-        // Mais limité à 5 selon les règles du jeu
+        // Vérifications modifiées - plus de vol d'or
+        // Dégâts subis par J1: 1 (attaqueJ1) + 1 (attaqueJ2) = 2
+        // Soins reçus par J1: 3 (soinJ1)
+        // Total PV J1: vieInitialeJ1 - 2 + 3 = vieInitialeJ1 + 1, mais limité à 5
         assertEquals("PV J1 incorrects", (long)5, (long)joueur1.getPointsDeVie());
-        // Or volé: 8 (volJ1), mais limité à ce que possède J2 (3)
-        // Total Or J1: orInitialJ1 + 3
-        assertEquals("Or J1 incorrect", (long)(orInitialJ1 + 3), (long)joueur1.getOr());
+        // Or de J1 inchangé (plus de vol d'or)
+        assertEquals("Or J1 incorrect", (long)orInitialJ1, (long)joueur1.getOr());
 
-        // Vérifications J2
-        // Dégâts subis: 2 (attaqueJ1)
-        // Or perdu: 3 (tout son or, car volJ1 > orInitialJ2)
-        // Total PV J2: vieInitialeJ2 - 2
-        assertEquals("PV J2 incorrects", (long)(vieInitialeJ2 - 2), (long)joueur2.getPointsDeVie());
-        // Total Or J2: 0
-        assertEquals("Or J2 incorrect", (long)0, (long)joueur2.getOr());
+        // Dégâts subis par J2: 2 (attaqueJ1) + 1 (attaqueExtraJ1) = 3
+        // Total PV J2: vieInitialeJ2 - 3
+        assertEquals("PV J2 incorrects", (long)(vieInitialeJ2 - 3), (long)joueur2.getPointsDeVie());
+        // Or de J2 inchangé (plus de vol d'or)
+        assertEquals("Or J2 incorrect", (long)orInitialJ2, (long)joueur2.getOr());
         
         System.out.println("Test d'application des effets de cartes offensives (amélioré) réussi!");
     }

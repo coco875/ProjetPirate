@@ -85,12 +85,10 @@ public class ControlCartePlateau {
         int degatsJ1versJ2 = 0;
         int degatsSubisJ1 = 0;
         int soinsJ1 = 0;
-        int orVoleJ1aJ2 = 0;
         
         int degatsJ2versJ1 = 0;
         int degatsSubisJ2 = 0;
         int soinsJ2 = 0;
-        int orVoleJ2aJ1 = 0;
         
         // Calcul des effets des cartes du joueur 1
         System.out.println("DEBUG - Traitement des cartes offensives J1: " + zoneOffensiveJ1.getCartesOffensives().size());
@@ -106,10 +104,6 @@ public class ControlCartePlateau {
                 case SOIN:
                     soinsJ1 += carte.getVieGagnee();
                     System.out.println("DEBUG - Carte Soin: ajout " + carte.getVieGagnee() + " PV pour J1");
-                    break;
-                case TRESOR_OFFENSIF:
-                    orVoleJ1aJ2 += carte.getOrVole();
-                    System.out.println("DEBUG - Carte Trésor: ajout " + carte.getOrVole() + " Or volé à J2");
                     break;
                 default:
                     System.out.println("DEBUG - Type de carte non géré: " + carte.getTypeOffensif());
@@ -131,18 +125,14 @@ public class ControlCartePlateau {
                     soinsJ2 += carte.getVieGagnee();
                     System.out.println("DEBUG - Carte Soin: ajout " + carte.getVieGagnee() + " PV pour J2");
                     break;
-                case TRESOR_OFFENSIF:
-                    orVoleJ2aJ1 += carte.getOrVole();
-                    System.out.println("DEBUG - Carte Trésor: ajout " + carte.getOrVole() + " Or volé à J1");
-                    break;
                 default:
                     System.out.println("DEBUG - Type de carte non géré: " + carte.getTypeOffensif());
             }
         }
         
         System.out.println("DEBUG - Résumé des effets:");
-        System.out.println("DEBUG - J1: " + degatsSubisJ1 + " dégâts subis, " + soinsJ1 + " soins, " + orVoleJ1aJ2 + " or volé");
-        System.out.println("DEBUG - J2: " + degatsJ1versJ2 + " dégâts subis, " + soinsJ2 + " soins, " + orVoleJ2aJ1 + " or volé");
+        System.out.println("DEBUG - J1: " + degatsSubisJ1 + " dégâts subis, " + soinsJ1 + " soins");
+        System.out.println("DEBUG - J2: " + degatsJ1versJ2 + " dégâts subis, " + soinsJ2 + " soins");
         
         // Application des effets calculés
         System.out.println("DEBUG - Avant application: J1 PV=" + joueur1.getPointsDeVie() + ", J2 PV=" + joueur2.getPointsDeVie());
@@ -163,20 +153,6 @@ public class ControlCartePlateau {
             System.out.println("DEBUG - Application de " + soinsJ2 + " soins à J2");
             joueur2.gagnerPointsDeVie(soinsJ2);
             System.out.println("DEBUG - Après soins: J2 PV=" + joueur2.getPointsDeVie());
-        }
-        
-        // Vol d'or
-        if (orVoleJ1aJ2 > 0) {
-            int orDisponible = Math.min(orVoleJ1aJ2, joueur2.getOr());
-            joueur2.perdreOr(orDisponible);
-            joueur1.gagnerOr(orDisponible);
-            System.out.println("DEBUG - J1 vole " + orDisponible + " or à J2");
-        }
-        if (orVoleJ2aJ1 > 0) {
-            int orDisponible = Math.min(orVoleJ2aJ1, joueur1.getOr());
-            joueur1.perdreOr(orDisponible);
-            joueur2.gagnerOr(orDisponible);
-            System.out.println("DEBUG - J2 vole " + orDisponible + " or à J1");
         }
         
         System.out.println("DEBUG - Final: J1 PV=" + joueur1.getPointsDeVie() + " Or=" + joueur1.getOr());

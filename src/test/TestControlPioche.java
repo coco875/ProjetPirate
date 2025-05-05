@@ -19,7 +19,7 @@ public class TestControlPioche {
         testerCarte("src/carte/resource/popularite/popularite1.txt", "Chansons de Marin", 0, 0, 2, 0, 0); // Popularité
         testerCarte("src/carte/resource/soin/soin1.txt", "Potion du Chirurgien", 0, 0, 0, 3, 0); // Soin
         testerCarte("src/carte/resource/tresor/tresor1.txt", "Coffre au Trésor", 0, 0, 0, 0, 10); // Trésor (gain or)
-        testerCarte("src/carte/resource/tresor/tresor3.txt", "Vol de Butin", 0, 0, 0, 0, 8); // Trésor (vol or -> maintenant attaque)
+        testerCarte("src/carte/resource/tresor/tresor3.txt", "Vol de Butin", 0, 0, 0, 0, 0); // Anciennement vol d'or, maintenant attaque simple
 
         System.out.println("\n--- Test de pioche standard ---");
         // Test de la méthode piocher (affiche les détails)
@@ -50,9 +50,8 @@ public class TestControlPioche {
                 assertEquals("Dégâts subis incorrects pour " + filePath, expectedDegatsSubis, co.getDegatsSubis());
             } else if (co.getTypeOffensif() == CarteOffensive.TypeOffensif.SOIN) {
                 assertEquals("Vie gagnée incorrecte pour " + filePath, expectedVie, co.getVieGagnee());
-            } else if (co.getTypeOffensif() == CarteOffensive.TypeOffensif.TRESOR_OFFENSIF) { // Correction: VOL_OR -> TRESOR_OFFENSIF
-                 assertEquals("Or volé incorrect pour " + filePath, expectedOr, co.getOrVole());
             }
+            // La vérification pour TRESOR_OFFENSIF a été supprimée
         } else if (carte instanceof CarteStrategique) {
             CarteStrategique cs = (CarteStrategique) carte;
              if (cs.getTypeStrategique() == CarteStrategique.TypeStrategique.POPULARITE) {
@@ -77,9 +76,8 @@ public class TestControlPioche {
                     System.out.print(" [Dégâts: " + co.getDegatsInfliges() + ", Subis: " + co.getDegatsSubis() + "]");
                 } else if (co.getTypeOffensif() == CarteOffensive.TypeOffensif.SOIN) {
                     System.out.print(" [Vie: " + co.getVieGagnee() + "]");
-                } else if (co.getTypeOffensif() == CarteOffensive.TypeOffensif.TRESOR_OFFENSIF) { // Correction: VOL_OR -> TRESOR_OFFENSIF
-                    System.out.print(" [Or Volé: " + co.getOrVole() + "]");
                 }
+                // L'affichage pour TRESOR_OFFENSIF a été supprimé
             } else if (carte instanceof CarteStrategique) {
                 CarteStrategique cs = (CarteStrategique) carte;
                  if (cs.getTypeStrategique() == CarteStrategique.TypeStrategique.POPULARITE) {

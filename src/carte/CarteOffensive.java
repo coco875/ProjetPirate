@@ -15,8 +15,8 @@ public class CarteOffensive extends Carte {
     public enum TypeOffensif {
         ATTAQUE_DIRECTE,  // Attaque directe infligeant des dégâts
         COUP_SPECIAL,     // Attaque à effet spécial
-        SOIN,             // Soin permettant de récupérer des points de vie
-        TRESOR_OFFENSIF   // Carte de trésor à effet offensif (vol d'or)
+        SOIN              // Soin permettant de récupérer des points de vie
+        // TRESOR_OFFENSIF a été supprimé (fonctionnalité de vol d'or retirée)
     }
     
     /**
@@ -58,13 +58,7 @@ public class CarteOffensive extends Carte {
         this.coutSpecial = coutSpecial;
     }
     
-    /**
-     * Constructeur pour carte de trésor offensive
-     */
-    public CarteOffensive(String nomCarte, String description, int orVole, boolean estTresor) {
-        super(TypeCarte.OFFENSIVE, nomCarte, description, orVole, 0);
-        this.typeOffensif = TypeOffensif.TRESOR_OFFENSIF;
-    }
+    // Le constructeur pour les cartes de trésor offensives a été supprimé
     
     // Méthodes de conversion depuis les anciens types
     
@@ -139,7 +133,7 @@ public class CarteOffensive extends Carte {
     }
     
     public boolean estTresorOffensif() {
-        return this.typeOffensif == TypeOffensif.TRESOR_OFFENSIF;
+        return false; // Méthode conservée pour la compatibilité mais renvoie toujours false
     }
     
     // Accesseurs spécifiques selon le type
@@ -157,7 +151,7 @@ public class CarteOffensive extends Carte {
     }
 
     public int getOrVole() {
-        return (this.typeOffensif == TypeOffensif.TRESOR_OFFENSIF) ? getValeur() : 0;
+        return 0; // Méthode conservée pour la compatibilité mais renvoie toujours 0
     }
     
     /**
@@ -180,9 +174,7 @@ public class CarteOffensive extends Carte {
             case SOIN:
                 sb.append("\nVie gagnée: ").append(getVieGagnee());
                 break;
-            case TRESOR_OFFENSIF:
-                sb.append("\nOr volé: ").append(getOrVole());
-                break;
+            // Le cas TRESOR_OFFENSIF a été supprimé
         }
         
         return sb.toString();
