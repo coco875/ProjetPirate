@@ -1,152 +1,363 @@
-﻿package controllers;
+package controllers;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import carte.Carte;
-import joueur.*;
+import carte.CarteOffensive;
+import carte.CarteStrategique;
+import jeu.Jeu;
+import jeu.ZoneOffensive; // Renamed from ZoneAttaque
+import jeu.ZoneStrategique;
+import joueur.Joueur;
+import joueur.Pirate;
 
 import carte.Carte;
 import jeu.Jeu;
 
 /**
- * @brief Contrôleur principal du jeu
- * 
- * Ce contrôleur coordonne les autres contrôleurs et implémente
- * la logique globale du jeu conformément au modèle ECB.
+ * Contrôleur principal du jeu
+ * Coordonne les différents aspects du jeu des Pirates
  */
 public class ControlJeu {
+    private Jeu jeu;
+    private ControlPioche controlPioche;
+    private ControlCartePlateau controlCartePlateau;
+    private ControlCarteSpeciale controlCarteSpeciale;
+    private ControlMarche controlMarche;
+    private ControlJoueur[] controlJoueurs; // Tableau des contrôleurs de joueurs
+    private int joueurActif; // 0 pour joueur 1, 1 pour joueur 2
 
-	private ControlJoueur cJ1;
-	private ControlJoueur cJ2;
-	private ControlPioche cPioche;
-	private ControlMarche cMarche;
-	private ControlCartePlateau cCartePlateau;
-	
-	
-	public ControlJeu() {
-		initControllers();
-	}
-	
-	public void initControllers() {
-
-		this.cPioche = new ControlPioche();
-		this.cJ1 = new ControlJoueur(null, null, cPioche);
-		this.cJ2 = new ControlJoueur(null, null, cPioche);
-		this.cCartePlateau = new ControlCartePlateau(cJ1, cJ2);
-		this.cMarche = new ControlMarche(cJ1, cJ2, cPioche);
-		
-
-		// Maintenant que les contrôleurs sont créés, mettez à jour les références à ControlCartePlateau
-		this.cJ1.setControlCartePlateau(cCartePlateau);
-		this.cJ2.setControlCartePlateau(cCartePlateau);
-	}
-	
-	/**
-	 * @brief Initialise la main d'un joueur avec 4 cartes
-	 */
-	public void initialiserMainJoueur(int joueurId) {
-		if (joueurId == 1) {
-			cJ1.initialiserMain();
-		} else if (joueurId == 2) {
-			cJ2.initialiserMain();
-		}
-	}
-	
-	/**
-	 * @brief Fait piocher une carte à un joueur
-	 */
-	public Carte piocherCarte(int joueurId) {
-		if (joueurId == 1) {
-			return cJ1.piocher();
-		} else if (joueurId == 2) {
-			return cJ2.piocher();
-		}
-		throw new IllegalArgumentException("Mauvais id de joueur");
-	}
-	
-	/**
-	 * @brief Défausse une carte de la main d'un joueur
-	 */
-	public void defausserCarte(int joueurId, int indexCarte) {
-		if (joueurId == 1 && indexCarte >= 0 && indexCarte < cJ1.getJoueur().getMain().size()) {
-			Carte carte = cJ1.getJoueur().getMain().get(indexCarte);
-			cJ1.retirerCarte(carte);
-		} else if (joueurId == 2 && indexCarte >= 0 && indexCarte < cJ2.getJoueur().getMain().size()) {
-			Carte carte = cJ2.getJoueur().getMain().get(indexCarte);
-			cJ2.retirerCarte(carte);
-		}
-	}
-	
-	/**
-	 * @brief Obtient le contrôleur de marché
-	 */
-	public ControlMarche getControlMarche() {
-		return cMarche;
-	}
-
-
-	public void setJoueur1(String nom, Pirate pirate) {
-		Joueur j1 = new Joueur(nom, pirate);
-		cJ1.setJoueur(j1);
-		
-	}
-	
-	public void setJoueur2(String nom, Pirate pirate) {
-		Joueur j2 = new Joueur(nom, pirate);
-		cJ2.setJoueur(j2);
-		
-	}
-	
-	public void initialiserMainsJoueurs() {
-		cJ1.initialiserMain();
-		cJ2.initialiserMain();
-	}
-	
-			
-	public void jouerTour(int joueurId) {
-		if (joueurId == 1) {
-			cJ1.jouerTour();
-		} else if (joueurId == 2) {
-			cJ2.jouerTour();
-		}
-	}
-
-	public boolean verifierVictoire() {
-		if (cJ1.getJoueur().getPointsDeVie() <= 0 || cJ2.getJoueur().getPopularite() >= 5) {
-			System.out.println(cJ2.getJoueur().getNom() + " a gagné !");
-			return true;
-		} else if (cJ2.getJoueur().getPointsDeVie() <= 0 || cJ1.getJoueur().getPopularite() >= 5) {
-			System.out.println(cJ1.getJoueur().getNom() + " a gagné !");
-			return true;
-		}
-		return false;
-	}
-
-	public List<Carte> afficherMain(int joueurId) {
-		if (joueurId == 1) {
-			return cJ1.afficherMain();
-		} else if (joueurId == 2) {
-			return cJ2.afficherMain();
-		}
-		return new ArrayList<>();
-	}
-
-	public void jouerCarte(int joueurId, int indexCarte) {
-		if (joueurId == 1) {
-			Carte carte = cJ1.getJoueur().getMain().get(indexCarte);
-			cJ1.jouerCarte(carte);
-		} else if (joueurId == 2) {
-			Carte carte = cJ2.getJoueur().getMain().get(indexCarte);
-			cJ2.jouerCarte(carte);
-		}
-	}
-	
-	public Joueur getJoueur(int joueurId) {
-		if (joueurId == 1) {
-			return cJ1.getJoueur();
-		} else {
-			return cJ2.getJoueur();
-		}
-	}
+    /**
+     * Constructeur du contrôleur
+     */
+    public ControlJeu() {
+        this.jeu = new Jeu();
+        this.controlPioche = new ControlPioche();
+        this.controlJoueurs = new ControlJoueur[2]; // Initialisation du tableau
+        this.joueurActif = 0; // Le joueur 1 commence
+    }
+    
+    /**
+     * Initialise le jeu
+     */
+    public void initialiserJeu() {
+        // Initialisation de la pioche
+        controlPioche.initialiserPioche();
+        
+        // Les contrôleurs de joueurs seront créés lors de la création des joueurs
+    }
+    
+    /**
+     * Crée le joueur 1 (pour tests)
+     */
+    public void setJoueur1(String nom, Pirate pirate) {
+        Joueur joueur = new Joueur(nom, pirate);
+        controlJoueurs[0] = new ControlJoueur(joueur, this, controlPioche);
+    }
+    
+    /**
+     * Crée le joueur 2 (pour tests)
+     */
+    public void setJoueur2(String nom, Pirate pirate) {
+        Joueur joueur = new Joueur(nom, pirate);
+        controlJoueurs[1] = new ControlJoueur(joueur, this, controlPioche);
+        
+        // Initialiser le plateau si les deux joueurs sont créés
+        if (controlJoueurs[0] != null && controlJoueurs[1] != null) {
+            controlCartePlateau = new ControlCartePlateau(controlJoueurs[0], controlJoueurs[1]);
+            controlJoueurs[0].setControlCartePlateau(controlCartePlateau);
+            controlJoueurs[1].setControlCartePlateau(controlCartePlateau);
+            
+            controlCarteSpeciale = new ControlCarteSpeciale(controlJoueurs[0], controlJoueurs[1]);
+            controlJoueurs[0].setControlCarteSpeciale(controlCarteSpeciale);
+            controlJoueurs[1].setControlCarteSpeciale(controlCarteSpeciale);
+            
+            controlMarche = new ControlMarche(controlJoueurs[0], controlJoueurs[1], controlPioche, this);
+        }
+    }
+    
+    /**
+     * Crée un joueur
+     * @param nomJoueur Nom du joueur
+     * @param nomPirate Nom du pirate
+     * @return Le joueur créé
+     */
+    public Joueur creerJoueur(String nomJoueur, String nomPirate) {
+        // Créer le joueur
+        Joueur joueur = new Joueur(nomJoueur, new Pirate(nomPirate));
+        
+        // Déterminer l'index du joueur (0 pour le premier, 1 pour le second)
+        int indexJoueur = (controlJoueurs[0] == null) ? 0 : 1;
+        
+        // Créer le contrôleur de joueur
+        controlJoueurs[indexJoueur] = new ControlJoueur(joueur, this, controlPioche);
+        
+        // Si les deux joueurs sont créés, initialiser le plateau
+        if (controlJoueurs[0] != null && controlJoueurs[1] != null) {
+            controlCartePlateau = new ControlCartePlateau(controlJoueurs[0], controlJoueurs[1]);
+            controlJoueurs[0].setControlCartePlateau(controlCartePlateau);
+            controlJoueurs[1].setControlCartePlateau(controlCartePlateau);
+            
+            controlCarteSpeciale = new ControlCarteSpeciale(controlJoueurs[0], controlJoueurs[1]);
+            controlJoueurs[0].setControlCarteSpeciale(controlCarteSpeciale);
+            controlJoueurs[1].setControlCarteSpeciale(controlCarteSpeciale);
+            
+            controlMarche = new ControlMarche(controlJoueurs[0], controlJoueurs[1], controlPioche, this);
+        }
+        
+        return joueur;
+    }
+    
+    /**
+     * Distribue les cartes initiales aux joueurs
+     */
+    public void distribuerCartesInitiales() {
+        // Chaque joueur reçoit 3 cartes au début
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                controlJoueurs[i].piocher();
+            }
+        }
+    }
+    
+    /**
+     * Ajoute une carte offensive au plateau pour le joueur actif
+     */
+    public void ajouterCarteOffensive(CarteOffensive carte) {
+        if (joueurActif == 0) {
+            controlCartePlateau.ajouterCarteOffensiveJ1(carte);
+        } else {
+            controlCartePlateau.ajouterCarteOffensiveJ2(carte);
+        }
+    }
+    
+    /**
+     * Ajoute une carte stratégique au plateau pour le joueur actif
+     */
+    public void ajouterCarteStrategique(CarteStrategique carte) {
+        if (joueurActif == 0) {
+            controlCartePlateau.ajouterCarteStrategiqueJ1(carte);
+        } else {
+            controlCartePlateau.ajouterCarteStrategiqueJ2(carte);
+        }
+    }
+    
+    /**
+     * Applique les effets de toutes les cartes sur le plateau
+     */
+    public void appliquerEffetsCartes() {
+        // Appliquer les effets des cartes d'attaque
+        controlCartePlateau.appliquerEffetsCartesOffensives();
+        
+        // Appliquer les effets des cartes de popularité
+        controlCartePlateau.appliquerEffetsCartesStrategiques();
+        
+        // Appliquer les effets des cartes spéciales (si présentes)
+        if (controlCarteSpeciale != null) {
+            controlCarteSpeciale.appliquerEffetsCartes();
+        }
+    }
+    
+    /**
+     * Défausse toutes les cartes du plateau
+     */
+    public void defausserCartesPlateau() {
+        controlCartePlateau.defausserCartesPlateau();
+        
+        if (controlCarteSpeciale != null) {
+            controlCarteSpeciale.defausserCartes();
+        }
+    }
+    
+    /**
+     * Vérifie si la partie est terminée
+     * @return true si la partie est terminée, false sinon
+     */
+    public boolean verifierFinPartie() {
+        // Vérifier si un des joueurs est mort (0 point de vie)
+        for (int i = 0; i < 2; i++) {
+            if (controlJoueurs[i].getJoueur().getPointsDeVie() <= 0) {
+                return true;
+            }
+        }
+        
+        // Vérifier si un des joueurs a atteint le maximum de popularité
+        for (int i = 0; i < 2; i++) {
+            if (controlJoueurs[i].getJoueur().getPopularite() >= 5) {
+                return true;
+            }
+        }
+        
+        // Vérifier si la pioche est vide
+        return controlPioche.estVide();
+    }
+    
+    /**
+     * Détermine le vainqueur de la partie
+     * @return Le joueur vainqueur ou null en cas d'égalité
+     */
+    public Joueur determinerVainqueur() {
+        Joueur joueur1 = controlJoueurs[0].getJoueur();
+        Joueur joueur2 = controlJoueurs[1].getJoueur();
+        
+        // Si un joueur est mort, l'autre gagne
+        if (joueur1.getPointsDeVie() <= 0) {
+            return joueur2;
+        } else if (joueur2.getPointsDeVie() <= 0) {
+            return joueur1;
+        }
+        
+        // Si un joueur a atteint le maximum de popularité, il gagne
+        if (joueur1.getPopularite() >= 5) {
+            return joueur1;
+        } else if (joueur2.getPopularite() >= 5) {
+            return joueur2;
+        }
+        
+        // Sinon, le joueur avec le plus de points combinés gagne
+        int score1 = joueur1.getPointsDeVie() + joueur1.getPopularite() + (joueur1.getOr() / 2);
+        int score2 = joueur2.getPointsDeVie() + joueur2.getPopularite() + (joueur2.getOr() / 2);
+        
+        if (score1 > score2) {
+            return joueur1;
+        } else if (score2 > score1) {
+            return joueur2;
+        } else {
+            // En cas d'égalité parfaite
+            return null;
+        }
+    }
+    
+    // Getters et méthodes de gestion du jeu
+    
+    public ControlJoueur getJoueur(int index) {
+        return controlJoueurs[index];
+    }
+    
+    public ControlCartePlateau getControlCartePlateau() {
+        return controlCartePlateau;
+    }
+    
+    /**
+     * Passe au joueur suivant
+     */
+    public void passerAuJoueurSuivant() {
+        joueurActif = (joueurActif + 1) % 2;
+    }
+    
+    public int getJoueurActif() {
+        return joueurActif;
+    }
+    
+    /**
+     * Définit le joueur actif
+     * @param index Index du joueur actif (0 ou 1)
+     */
+    public void setJoueurActif(int index) {
+        if (index == 0 || index == 1) {
+            this.joueurActif = index;
+        }
+    }
+    
+    public ControlMarche getControlMarche() {
+        return controlMarche;
+    }
+    
+    public ControlPioche getControlPioche() {
+        return controlPioche;
+    }
+    
+    /**
+     * Termine l'itération actuelle et vérifie si le jeu continue
+     * @param continuer Indique si les joueurs souhaitent continuer le jeu
+     * @return true si le jeu doit continuer, false s'il doit se terminer
+     */
+    public boolean terminerIteration(boolean continuer) {
+        // Si les joueurs ne souhaitent pas continuer, on arrête le jeu
+        if (!continuer) {
+            return false;
+        }
+        
+        // Vérifier si la partie est terminée selon les règles du jeu
+        if (verifierFinPartie()) {
+            return false;
+        }
+        
+        // Défausser les cartes du plateau pour la prochaine itération
+        defausserCartesPlateau();
+        
+        // Faire piocher une carte à chaque joueur pour la prochaine itération
+        for (int i = 0; i < 2; i++) {
+            controlJoueurs[i].piocher();
+        }
+        
+        // Réinitialiser le joueur actif au premier joueur
+        joueurActif = 0;
+        
+        return true;
+    }
+    
+    /**
+     * Initialise la main du joueur
+     */
+    public void initialiserMainJoueur(int indexJoueur) {
+        // Vérifier que l'index du joueur est valide
+        if (indexJoueur < 0 || indexJoueur >= controlJoueurs.length || controlJoueurs[indexJoueur] == null) {
+            return;
+        }
+        
+        // Initialiser la main du joueur avec 3 cartes
+        for (int i = 0; i < 3; i++) {
+            controlJoueurs[indexJoueur].piocher();
+        }
+    }
+    
+    /**
+     * Fait piocher une carte au joueur actif
+     * @return La carte piochée ou null si la pioche est vide
+     */
+    public carte.Carte piocherCarte() {
+        if (joueurActif >= 0 && joueurActif < controlJoueurs.length && controlJoueurs[joueurActif] != null) {
+            return controlJoueurs[joueurActif].piocher();
+        }
+        return null;
+    }
+    
+    /**
+     * Fait jouer une carte au joueur actif
+     * @param indexCarte Index de la carte à jouer dans la main du joueur
+     * @return true si la carte a été jouée avec succès, false sinon
+     */
+    public boolean jouerCarte(int indexCarte) {
+        if (joueurActif >= 0 && joueurActif < controlJoueurs.length && controlJoueurs[joueurActif] != null) {
+            return controlJoueurs[joueurActif].jouerCarte(indexCarte);
+        }
+        return false;
+    }
+    
+    /**
+     * Vérifie si un joueur a gagné la partie
+     * @return Numéro du joueur gagnant (1 ou 2) ou 0 s'il n'y a pas de gagnant
+     */
+    public int verifierVictoire() {
+        if (verifierFinPartie()) {
+            Joueur vainqueur = determinerVainqueur();
+            
+            if (vainqueur == controlJoueurs[0].getJoueur()) {
+                return 1;
+            } else if (vainqueur == controlJoueurs[1].getJoueur()) {
+                return 2;
+            }
+        }
+        return 0; // Pas de gagnant pour l'instant
+    }
+    
+    /**
+     * Défausse une carte de la main du joueur actif
+     * @param indexCarte Index de la carte à défausser
+     * @return true si la carte a été défaussée avec succès, false sinon
+     */
+    public boolean defausserCarte(int indexCarte) {
+        if (joueurActif >= 0 && joueurActif < controlJoueurs.length && controlJoueurs[joueurActif] != null) {
+            return controlJoueurs[joueurActif].defausserCarte(indexCarte);
+        }
+        return false;
+    }
 }

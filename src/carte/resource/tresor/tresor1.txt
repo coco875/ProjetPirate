@@ -1,0 +1,4 @@
+type: tresor
+titre: Coffre au Trésor
+description: Vous découvrez un coffre rempli d'or sur une île abandonnée.
+or_gagne: 10

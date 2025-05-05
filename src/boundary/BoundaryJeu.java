@@ -4,408 +4,268 @@ import java.util.List;
 import java.util.Scanner;
 
 import carte.Carte;
+import carte.CarteOffensive;
+import carte.CarteStrategique;
 import controllers.ControlJeu;
+import controllers.ControlJoueur;
+import controllers.ControlPioche;
 import controllers.ControlMarche;
-import joueur.Pirate;
+import jeu.Pioche;
+import joueur.Joueur;
 
 /**
- * @brief Frontière gérant les interactions avec l'utilisateur
- * 
- * Cette classe implémente l'interface utilisateur du jeu
- * conformément au modèle ECB.
+ * @brief Classe boundary pour l'interface en mode console
  */
 public class BoundaryJeu {
-	private ControlJeu controlJeu;
-	private ControlMarche controlMarche;
-	private Scanner scanner;
-
+	protected ControlJeu controlJeu;
+	protected Scanner scan;
+	protected ControlMarche controlMarche;
+	
 	public BoundaryJeu(ControlJeu controlJeu, ControlMarche controlMarche) {
 		this.controlJeu = controlJeu;
 		this.controlMarche = controlMarche;
-		this.scanner = new Scanner(System.in);
-	}
-
-    // Remplacer finalize par une méthode de fermeture explicite
-    public void fermerScanner() {
-        if (scanner != null) {
-            scanner.close();
-        }
-    }
-
-	/**
-	 * @brief Affiche les règles du jeu
-	 */
-	public void afficherRegles() {
-		System.out.println("\n=== Règles du Jeu des Pirates ===");
-		System.out.println("- Deux joueurs s'affrontent en utilisant des cartes");
-		System.out.println("- Chaque joueur commence avec 5 points de vie et 0 point de popularité");
-		System.out.println("- À chaque tour, un joueur pioche une carte et peut jouer jusqu'à 2 cartes");
-		System.out.println("- Les cartes d'attaque permettent de réduire les points de vie de l'adversaire");
-		System.out.println("- Les cartes de popularité augmentent la popularité du joueur");
-		System.out.println("- Les cartes spéciales ont des effets uniques liés au capitaine");
-		System.out.println("- Les joueurs peuvent gagner de l'or et l'utiliser au marché");
-		System.out.println("- Objectif: atteindre 5 points de popularité OU réduire les points de vie de l'adversaire à 0");
-		System.out.println("- Après chaque tour, le joueur doit avoir exactement 4 cartes en main");
-		System.out.println("=================================\n");
-	}
-
-	/**
-	 * @brief Configure les joueurs en début de partie
-	 */
-	public void configurerJoueurs() {
-		System.out.println("=== Configuration des joueurs ===");
-		
-		// Configuration du joueur 1
-		System.out.println("\nCréation du pirate 1");
-		System.out.print("Entrez votre nom : ");
-		String nomPirate1 = scanner.nextLine();
-		
-		System.out.println("Choisissez votre capitaine : ");
-		afficherCapitainesDisponibles();
-		int idPirate1 = scanner.nextInt();
-		scanner.nextLine(); // Consommer le saut de ligne
-		while (idPirate1 < 1 || idPirate1 > 4) {
-			System.out.println("Entrez à nouveau le numéro de votre capitaine (1-4) :");
-			idPirate1 = scanner.nextInt();
-			scanner.nextLine(); // Consommer le saut de ligne
-		}
-
-		// Créer le pirate 1
-		Pirate pirate1 = creerCapitaine(idPirate1);
-		
-		// Configuration du joueur 2
-		System.out.println("\nCréation du pirate 2");
-		System.out.print("Entrez votre nom : ");
-		String nomPirate2 = scanner.nextLine();
-		
-		System.out.println("Choisissez votre capitaine : ");
-		afficherCapitainesDisponibles();
-		int idPirate2 = scanner.nextInt();
-		scanner.nextLine(); // Consommer le saut de ligne
-		while ((idPirate2 < 1 || idPirate2 > 4) || idPirate1 == idPirate2) {
-			if (idPirate2 < 1 || idPirate2 > 4) {
-				System.out.println("Entrez à nouveau le numéro de votre capitaine (1-4)");
-			} else if (idPirate1 == idPirate2) {
-				System.out.println("Veuillez choisir un capitaine différent");
-			}
-			idPirate2 = scanner.nextInt();
-			scanner.nextLine(); // Consommer le saut de ligne
-		}
-
-		// Créer le pirate 2
-		Pirate pirate2 = creerCapitaine(idPirate2);
-
-		// Configurer les joueurs
-		controlJeu.setJoueur1(nomPirate1, pirate1);
-		controlJeu.setJoueur2(nomPirate2, pirate2);
-		
-		System.out.println("\nJoueurs configurés avec succès!");
+		scan = new Scanner(System.in);
 	}
 	
 	/**
-	 * @brief Affiche les capitaines disponibles
+	 * @brief Affiche un message d'accueil
 	 */
-	private void afficherCapitainesDisponibles() {
-		System.out.println("1: Barbe Noire (bonus aux cartes d'attaque)");
-		System.out.println("2: Jack Sparrow (bonus à l'or et aux cartes spéciales)");
-		System.out.println("3: Anne Bonny (bonus aux cartes de popularité)");
-		System.out.println("4: Barbe Rouge (équilibré)");
+	public void afficherMessage() {
+		System.out.println("Bienvenue dans le jeu des Pirates !");
+		System.out.println("----------------------------------");
 	}
 	
-	/**
-	 * @brief Crée un capitaine selon l'ID choisi
-	 */
-	private Pirate creerCapitaine(int id) {
-		switch(id) {
-			case 1:
-				return new Pirate("Barbe Noire");
-			case 2:
-				return new Pirate("Jack Sparrow");
-			case 3:
-				return new Pirate("Anne Bonny");
-			case 4:
-			default:
-				return new Pirate("Barbe Rouge");
-		}
-	}
-
-	/**
-	 * @brief Initialise les mains des joueurs au début de la partie
-	 */
-	public void initialiserMains() {
-		System.out.println("\n=== Initialisation des mains ===");
-		controlJeu.initialiserMainJoueur(1);
-		controlJeu.initialiserMainJoueur(2);
-		System.out.println("Mains des joueurs initialisées avec 4 cartes chacun.");
-	}
-
-	/**
-	 * @brief Affiche l'état actuel d'un joueur (vie, popularité, or)
-	 */
-	public void afficherEtatJoueur(int joueurId) {
-		System.out.println("\n=== État du joueur " + joueurId + " ===");
-		System.out.println("Nom: " + controlJeu.getJoueur(joueurId).getNom());
-		System.out.println("Capitaine: " + controlJeu.getJoueur(joueurId).getPirate().getNom());
-		System.out.println("Points de vie: " + controlJeu.getJoueur(joueurId).getPointsDeVie());
-		System.out.println("Popularité: " + controlJeu.getJoueur(joueurId).getPopularite());
-		System.out.println("Or: " + controlJeu.getJoueur(joueurId).getOr());
-	}
-
-	/**
-	 * @brief Affiche la main d'un joueur
-	 */
-	public void afficherMain(int joueurId) {
-		System.out.println("\n=== Main du joueur " + joueurId + " ===");
-		List<Carte> main = controlJeu.afficherMain(joueurId);
-		
-		if (main.isEmpty()) {
-			System.out.println("La main est vide!");
-			return;
-		}
-		
-		for (int i = 0; i < main.size(); i++) {
-			Carte carte = main.get(i);
-			System.out.println(i + ": " + carte.getNomCarte() + " (" + carte.getType() + ", valeur: " + carte.getValeur() + ")");
-			System.out.println("   Description: " + carte.getDescription());
-		}
-	}
-
-	/**
-	 * @brief Gère le marché pour un joueur
-	 */
-	public void gererMarche(int joueurId) {
-		System.out.println("\n=== Marché ===");
-		System.out.println("Bienvenue au marché, " + controlJeu.getJoueur(joueurId).getNom() + "!");
-		System.out.println("Vous avez " + controlJeu.getJoueur(joueurId).getOr() + " pièces d'or.");
-		
-		if (controlJeu.getJoueur(joueurId).getOr() < 1) {
-			System.out.println("Vous n'avez pas assez d'or pour acheter quoi que ce soit.");
-			return;
-		}
-		
-		// Afficher les cartes disponibles
-		System.out.println("\nCartes disponibles à l'achat:");
-		List<Carte> cartesMarche = controlMarche.getCartesDisponibles();
-		
-		if (cartesMarche.isEmpty()) {
-			System.out.println("Aucune carte n'est disponible pour le moment.");
-			return;
-		}
-		
-		for (int i = 0; i < cartesMarche.size(); i++) {
-			Carte carte = cartesMarche.get(i);
-			System.out.println(i + ": " + carte.getNomCarte() + " (" + carte.getType() + ", coût: " + carte.getCout() + ")");
-			System.out.println("   Description: " + carte.getDescription());
-		}
-		
-		// Proposer d'acheter une carte
-		System.out.println("\nVoulez-vous acheter une carte ? (o/n)");
-		String reponse = scanner.nextLine();
-		
-		if (reponse.equalsIgnoreCase("o")) {
-			System.out.print("Entrez l'index de la carte à acheter : ");
-			int indexCarte = scanner.nextInt();
-			scanner.nextLine(); // Consommer le saut de ligne
-			
-			// Vérifier que l'index est valide
-			while (indexCarte < 0 || indexCarte >= cartesMarche.size()) {
-				System.out.print("Index invalide. Entrez l'index de la carte à acheter (0-" + 
-						(cartesMarche.size() - 1) + ") : ");
-				indexCarte = scanner.nextInt();
-				scanner.nextLine(); // Consommer le saut de ligne
-			}
-			
-			// Acheter la carte
-			boolean achatReussi = controlMarche.acheterCarte(joueurId, indexCarte);
-			
-			if (achatReussi) {
-				System.out.println("Achat réussi !");
-			} else {
-				System.out.println("Achat échoué. Vous n'avez peut-être pas assez d'or.");
-			}
-		}
-	}
-
-	/**
-	 * @brief Gère le tour d'un joueur
-	 */
-	public void jouerTour(int joueurId) {
-		System.out.println("\n=== Tour du joueur " + joueurId + " ===");
-		
-		// Afficher l'état du joueur
-		afficherEtatJoueur(joueurId);
-		
-		// Piocher une carte
-		System.out.println("\nVous piochez une carte...");
-		controlJeu.piocherCarte(joueurId);
-		System.out.println("Carte piochée avec succès!");
-		
-		// Afficher la main mise à jour
-		afficherMain(joueurId);
-		
-		// Proposer de visiter le marché (1 chance sur 3)
-		if (Math.random() < 0.33) {
-			System.out.println("\nUn marché est disponible!");
-			System.out.println("Voulez-vous visiter le marché ? (o/n)");
-			String reponseMarche = scanner.nextLine();
-			
-			if (reponseMarche.equalsIgnoreCase("o")) {
-				gererMarche(joueurId);
-				// Afficher la main mise à jour après le marché
-				afficherMain(joueurId);
-			}
-		}
-		
-		// Permettre de jouer jusqu'à 2 cartes
-		int cartesJouees = 0;
-		boolean continuerAJouer = true;
-		
-		while (cartesJouees < 2 && continuerAJouer && !controlJeu.getJoueur(joueurId).getMain().isEmpty()) {
-			System.out.println("\nVoulez-vous jouer une carte ? (" + (cartesJouees + 1) + "/2) (o/n)");
-			String reponse = scanner.nextLine();
-			
-			if (reponse.equalsIgnoreCase("o")) {
-				System.out.print("Choisissez une carte à jouer (index) : ");
-				int indexCarte = scanner.nextInt();
-				scanner.nextLine(); // Consommer le saut de ligne
-				
-				// Vérifier que l'index est valide
-				while (indexCarte < 0 || indexCarte >= controlJeu.getJoueur(joueurId).getMain().size()) {
-					System.out.print("Index invalide. Choisissez une carte à jouer (0-" + 
-							(controlJeu.getJoueur(joueurId).getMain().size() - 1) + ") : ");
-					indexCarte = scanner.nextInt();
-					scanner.nextLine(); // Consommer le saut de ligne
-				}
-				
-				// Jouer la carte
-				controlJeu.jouerCarte(joueurId, indexCarte);
-				System.out.println("Carte jouée avec succès!");
-				cartesJouees++;
-				
-				// Afficher l'état du joueur et sa main après avoir joué la carte
-				afficherEtatJoueur(joueurId);
-				afficherMain(joueurId);
-			} else {
-				continuerAJouer = false;
-			}
-		}
-		
-		// Gérer la taille de la main (doit être exactement 4 cartes)
-		gererTailleMain(joueurId);
-		
-		System.out.println("\nFin du tour du joueur " + joueurId);
-	}
-	
-	/**
-	 * @brief Gère la taille de la main (doit être exactement 4 cartes)
-	 */
-	private void gererTailleMain(int joueurId) {
-		int tailleCourante = controlJeu.getJoueur(joueurId).getMain().size();
-		
-		// Si le joueur a plus de 4 cartes, il doit en défausser
-		if (tailleCourante > 4) {
-			System.out.println("\nVous avez " + tailleCourante + " cartes en main, mais le maximum est de 4.");
-			System.out.println("Vous devez défausser " + (tailleCourante - 4) + " carte(s).");
-			
-			for (int i = 0; i < tailleCourante - 4; i++) {
-				afficherMain(joueurId);
-				System.out.print("Choisissez une carte à défausser (index) : ");
-				int indexDefausse = scanner.nextInt();
-				scanner.nextLine(); // Consommer le saut de ligne
-				
-				// Vérifier que l'index est valide
-				while (indexDefausse < 0 || indexDefausse >= controlJeu.getJoueur(joueurId).getMain().size()) {
-					System.out.print("Index invalide. Choisissez une carte à défausser (0-" + 
-							(controlJeu.getJoueur(joueurId).getMain().size() - 1) + ") : ");
-					indexDefausse = scanner.nextInt();
-					scanner.nextLine(); // Consommer le saut de ligne
-				}
-				
-				// Défausser la carte
-				controlJeu.defausserCarte(joueurId, indexDefausse);
-				System.out.println("Carte défaussée.");
-			}
-		}
-		// Si le joueur a moins de 4 cartes, il pioche jusqu'à en avoir 4
-		else if (tailleCourante < 4) {
-			System.out.println("\nVous avez " + tailleCourante + " cartes en main, le minimum est de 4.");
-			System.out.println("Vous piochez " + (4 - tailleCourante) + " carte(s) supplémentaire(s).");
-			
-			for (int i = 0; i < 4 - tailleCourante; i++) {
-				controlJeu.piocherCarte(joueurId);
-			}
-			
-			afficherMain(joueurId);
-		}
-	}
-
-	/**
-	 * @brief Affiche les résultats de la partie
-	 */
-	public void afficherResultats() {
-		System.out.println("\n=== Résultats de la partie ===");
-		
-		// Afficher l'état final des deux joueurs
-		afficherEtatJoueur(1);
-		afficherEtatJoueur(2);
-		
-		// Déterminer le gagnant
-		String gagnant = "";
-		String raisonVictoire = "";
-		
-		if (controlJeu.getJoueur(2).getPointsDeVie() <= 0 || controlJeu.getJoueur(1).getPopularite() >= 5) {
-			gagnant = controlJeu.getJoueur(1).getNom();
-			if (controlJeu.getJoueur(2).getPointsDeVie() <= 0) {
-				raisonVictoire = "a réduit les points de vie de son adversaire à 0";
-			} else {
-				raisonVictoire = "a atteint 5 points de popularité";
-			}
-		} else if (controlJeu.getJoueur(1).getPointsDeVie() <= 0 || controlJeu.getJoueur(2).getPopularite() >= 5) {
-			gagnant = controlJeu.getJoueur(2).getNom();
-			if (controlJeu.getJoueur(1).getPointsDeVie() <= 0) {
-				raisonVictoire = "a réduit les points de vie de son adversaire à 0";
-			} else {
-				raisonVictoire = "a atteint 5 points de popularité";
-			}
-		}
-		
-		System.out.println("\nLe gagnant est : " + gagnant + " qui " + raisonVictoire + " !");
-		System.out.println("Félicitations !");
-	}
-
 	/**
 	 * @brief Lance le jeu
 	 */
 	public void lancerJeu() {
-		System.out.println("\n=== Le jeu des Pirates commence ! ===");
-		
-		// Afficher les règles
+		afficherMessage();
 		afficherRegles();
+		demarrerJeu();
+	}
+	
+	/**
+	 * @brief Affiche les règles du jeu
+	 */
+	public void afficherRegles() {
+		System.out.println("\n=== Règles du jeu ===");
+		System.out.println("Le jeu se déroule au tour par tour entre deux joueurs.");
+		System.out.println("Chaque joueur possède 5 points de vie, 0 point de popularité et 3 pièces d'or au départ.");
+		System.out.println("À chaque tour, vous piochez une carte et choisissez une carte à jouer parmi votre main.");
+		System.out.println("Les cartes peuvent être offensives (attaque, soin) ou stratégiques (popularité, effet passif).");
+		System.out.println("Le premier joueur qui arrive à 0 point de vie perd la partie.");
+		System.out.println("Bon jeu !\n");
+	}
+	
+	/**
+	 * @brief Démarre le jeu
+	 */
+	public void demarrerJeu() {
+		// Initialisation des contrôleurs
+		controlJeu.initialiserJeu();
 		
-		// Configuration des joueurs
-		configurerJoueurs();
+		// Premier joueur
+		String nomJoueur1 = demanderNomJoueur(1);
+		String nomPirate1 = demanderNomPirate(1);
+		controlJeu.creerJoueur(nomJoueur1, nomPirate1);
 		
-		// Initialiser les mains des joueurs
-		initialiserMains();
+		// Deuxième joueur
+		String nomJoueur2 = demanderNomJoueur(2);
+		String nomPirate2 = demanderNomPirate(2);
+		controlJeu.creerJoueur(nomJoueur2, nomPirate2);
 		
-		// Boucle principale du jeu
-		boolean partieEnCours = true;
-		while (partieEnCours) {
-			jouerTour(1);
-			if (controlJeu.verifierVictoire()) {
-				partieEnCours = false;
-				break;
+		// Distribution des cartes initiales
+		controlJeu.distribuerCartesInitiales();
+		
+		// Démarrage de la partie
+		jouerPartie();
+	}
+	
+	/**
+	 * @brief Demande le nom d'un joueur
+	 * 
+	 * @param numeroJoueur Numéro du joueur
+	 * @return Nom du joueur
+	 */
+	protected String demanderNomJoueur(int numeroJoueur) {
+		System.out.print("Nom du joueur " + numeroJoueur + " : ");
+		return scan.nextLine();
+	}
+	
+	/**
+	 * @brief Demande le nom du pirate d'un joueur
+	 * 
+	 * @param numeroJoueur Numéro du joueur
+	 * @return Nom du pirate
+	 */
+	protected String demanderNomPirate(int numeroJoueur) {
+		System.out.print("Nom du pirate du joueur " + numeroJoueur + " : ");
+		return scan.nextLine();
+	}
+	
+	/**
+	 * @brief Gère le déroulement d'une partie
+	 */
+	public void jouerPartie() {
+		boolean finPartie = false;
+		int tourJoueur = 0;
+		boolean continuerIteration = true;
+		
+		while (!finPartie && continuerIteration) {
+			// Déterminer le joueur actif
+			ControlJoueur joueurActif = controlJeu.getJoueur(tourJoueur % 2);
+			Joueur j = joueurActif.getJoueur();
+			
+			// Afficher l'état du jeu
+			System.out.println("\n=== Tour de " + j.getNom() + " ===");
+			System.out.println("Vie: " + j.getPointsDeVie() + "/5, Popularité: " + j.getPopularite() + "/5, Or: " + j.getOr());
+			
+			// Piocher une carte
+			Carte cartePiochee = joueurActif.piocher();
+			System.out.println("Vous avez pioché : " + cartePiochee);
+			
+			// Afficher la main du joueur
+			System.out.println("\nVotre main :");
+			List<Carte> main = joueurActif.afficherMain();
+			
+			// Demander quelle carte jouer
+			System.out.println("\nQuelle carte voulez-vous jouer ? (1-" + main.size() + ", 0 pour passer)");
+			int choix = scan.nextInt();
+			scan.nextLine(); // Consommer la nouvelle ligne
+			
+			if (choix > 0 && choix <= main.size()) {
+				// Jouer la carte choisie
+				Carte carteChoisie = main.get(choix - 1);
+				System.out.println("Vous jouez : " + carteChoisie);
+				
+				jouerCarte(carteChoisie, joueurActif);
+				
+				// Retirer la carte de la main
+				joueurActif.retirerCarte(carteChoisie);
+			} else {
+				System.out.println("Vous passez votre tour.");
 			}
-
-			jouerTour(2);
-			if (controlJeu.verifierVictoire()) {
-				partieEnCours = false;
+			
+			// Appliquer les effets des cartes sur le plateau
+			controlJeu.appliquerEffetsCartes();
+			
+			// Vérifier si la partie est terminée
+			finPartie = controlJeu.verifierFinPartie();
+			
+			// Défausser les cartes du plateau à la fin du tour
+			controlJeu.defausserCartesPlateau();
+			
+			// Passer au joueur suivant
+			tourJoueur++;
+			
+			// Si ce n'est pas la fin de partie, demander si on continue l'itération
+			if (!finPartie && (tourJoueur % 2 == 0)) { // À chaque fin d'itération (après que les deux joueurs ont joué)
+				continuerIteration = demanderContinuerIteration();
 			}
 		}
 		
-		// Afficher les résultats
-		afficherResultats();
+		// Afficher le résultat final
+		if (finPartie) {
+			afficherResultatFinal();
+		} else {
+			System.out.println("\n=== Partie interrompue ===");
+			System.out.println("Vous avez choisi d'arrêter la partie.");
+		}
+	}
+	
+	/**
+	 * @brief Demande à l'utilisateur s'il souhaite continuer l'itération
+	 * 
+	 * @return true si l'utilisateur souhaite continuer, false sinon
+	 */
+	private boolean demanderContinuerIteration() {
+		System.out.println("\n=== Fin d'itération ===");
+		System.out.println("Continuer l'itération ? (O/N)");
+		String reponse = scan.nextLine().trim().toUpperCase();
+		return reponse.equals("O") || reponse.equals("OUI");
+	}
+	
+	/**
+	 * @brief Joue une carte en fonction de son type
+	 * 
+	 * @param carte La carte à jouer
+	 * @param joueurActif Contrôleur du joueur actif
+	 */
+	private void jouerCarte(Carte carte, ControlJoueur joueurActif) {
+		System.out.println("Description : " + carte.getDescription());
 		
-		System.out.println("\n=== La partie est terminée ! ===");
+		// Détermine le type de carte et agit en conséquence
+		if (carte instanceof CarteOffensive) {
+			CarteOffensive carteOff = (CarteOffensive) carte;
+			
+			if (carteOff.estAttaqueDirecte()) {
+				System.out.println("Vous attaquez ! Dégâts infligés : " + carteOff.getDegatsInfliges());
+				System.out.println("Vous subissez " + carteOff.getDegatsSubis() + " points de dégâts en retour.");
+			} else if (carteOff.estSoin()) {
+				System.out.println("Vous vous soignez ! Points de vie gagnés : " + carteOff.getVieGagne());
+			} else if (carteOff.estCoupSpecial()) {
+				System.out.println("Vous utilisez un coup spécial ! Effet : " + carteOff.getValeur());
+				System.out.println("Coût : " + carteOff.getCoutSpecial() + " or");
+			} else if (carteOff.estTresorOffensif()) {
+				System.out.println("Vous volez " + carteOff.getOrVole() + " or à votre adversaire !");
+			}
+			
+			controlJeu.ajouterCarteOffensive(carteOff);
+		} else if (carte instanceof CarteStrategique) {
+			CarteStrategique carteStrat = (CarteStrategique) carte;
+			
+			if (carteStrat.estPopularite()) {
+				System.out.println("Vous gagnez en popularité ! Points gagnés : " + carteStrat.getPopulariteGagnee());
+				System.out.println("Vous subissez " + carteStrat.getDegatsSubis() + " points de dégâts.");
+			} else if (carteStrat.estPassive()) {
+				System.out.println("Vous utilisez une carte passive ! Effet : " + carteStrat.getTypeEffet());
+				System.out.println("Durée : " + carteStrat.getDuree() + " tours");
+			} else if (carteStrat.estSpeciale()) {
+				System.out.println("Vous utilisez une carte spéciale ! Effet : " + carteStrat.getEffetSpecial());
+			} else if (carteStrat.estTresor()) {
+				if (carteStrat.getOrGagne() > 0) {
+					System.out.println("Vous gagnez " + carteStrat.getOrGagne() + " or !");
+				}
+				if (carteStrat.getOrPerdu() > 0) {
+					System.out.println("Vous perdez " + carteStrat.getOrPerdu() + " or !");
+				}
+			}
+			
+			controlJeu.ajouterCarteStrategique(carteStrat);
+		} else {
+			System.out.println("Type de carte non reconnu !");
+		}
+	}
+	
+	/**
+	 * @brief Affiche le résultat final de la partie
+	 */
+	private void afficherResultatFinal() {
+		Joueur vainqueur = controlJeu.determinerVainqueur();
+		System.out.println("\n=== Fin de la partie ===");
+		
+		if (vainqueur != null) {
+			System.out.println("Le vainqueur est : " + vainqueur.getNom() + " (" + vainqueur.getPersonnage().getNom() + ")");
+		} else {
+			System.out.println("Match nul !");
+		}
+		
+		// Afficher les statistiques des joueurs
+		for (int i = 0; i < 2; i++) {
+			Joueur j = controlJeu.getJoueur(i).getJoueur();
+			System.out.println(j.getNom() + " (" + j.getPersonnage().getNom() + "):");
+			System.out.println("  Vie: " + j.getPointsDeVie() + "/5");
+			System.out.println("  Popularité: " + j.getPopularite() + "/5");
+			System.out.println("  Or: " + j.getOr());
+		}
+	}
+	
+	/**
+	 * @brief Ferme les ressources utilisées
+	 */
+	public void fermer() {
+		if (scan != null) {
+			scan.close();
+		}
 	}
 }

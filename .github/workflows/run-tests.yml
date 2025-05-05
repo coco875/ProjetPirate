@@ -1,0 +1,50 @@
+name: Tests du Jeu des Pirates
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout du code
+      uses: actions/checkout@v3
+      
+    - name: Configuration de Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+        
+    - name: Création du dossier bin
+      run: mkdir -p bin
+      
+    - name: Création du dossier lib
+      run: mkdir -p lib
+      
+    - name: Téléchargement de JUnit
+      run: |
+        curl -L https://repo1.maven.org/maven2/junit/junit/4.13.2/junit-4.13.2.jar -o lib/junit-4.13.2.jar
+        curl -L https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar -o lib/hamcrest-core-1.3.jar
+      
+    - name: Vérification des caractères BOM
+      run: |
+        for file in $(find src -name "*.java"); do
+          if [ "$(hexdump -n 3 -e '"%X"' "$file")" == "EFBBBF" ]; then
+            echo "Correction du BOM dans le fichier $file"
+            tail -c +4 "$file" > "$file.tmp"
+            mv "$file.tmp" "$file"
+          fi
+        done
+      
+    - name: Compilation
+      run: |
+        javac -d bin -sourcepath src -cp "lib/junit-4.13.2.jar:lib/hamcrest-core-1.3.jar" $(find src -name "*.java")
+      
+    - name: Exécution des tests
+      run: |
+        java -cp bin:lib/junit-4.13.2.jar:lib/hamcrest-core-1.3.jar test.RunAllTests

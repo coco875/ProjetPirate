@@ -34,7 +34,7 @@ public class TestBoundaryJeu {
 		controlJoueur2.setControlCartePlateau(controlCartePlateau);
 		
 		// Création du contrôleur de marché
-		ControlMarche controlMarche = new ControlMarche(controlJoueur1, controlJoueur2, controlPioche);
+		ControlMarche controlMarche = new ControlMarche(controlJoueur1, controlJoueur2, controlPioche, controlJeu); // Ajout de controlJeu
 		
 		// Création de la frontière (interface utilisateur)
 		BoundaryJeu boundaryJeu = new BoundaryJeu(controlJeu, controlMarche);

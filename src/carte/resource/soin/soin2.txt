@@ -1,0 +1,4 @@
+type: soin
+titre: Bandages d'Urgence
+description: Des bandages de fortune pour stopper l'hémorragie.
+vie_gagnee: 1

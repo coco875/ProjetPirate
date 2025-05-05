@@ -8,90 +8,88 @@ import carte.Carte;
 import carte.CarteAttaque;
 import carte.CartePopularite;
 import carte.CarteSpeciale;
+import carte.Marche;
 import joueur.Joueur;
 
 /**
- * @brief Contrôleur gérant les interactions avec le marché
- * 
- * Ce contrôleur gère l'achat et la vente de cartes au marché,
- * conformément au modèle ECB.
+ * Contrôleur gérant les interactions avec le marché
  */
 public class ControlMarche {
-    private List<Carte> cartesDisponibles;
+    private Marche marche;
     private ControlJoueur controlJoueur1;
     private ControlJoueur controlJoueur2;
-    private Random random;
-    
-    public ControlMarche(ControlJoueur controlJoueur1, ControlJoueur controlJoueur2, ControlPioche controlPioche) {
+    private ControlPioche controlPioche;
+    private ControlJeu controlJeu;
+
+    /**
+     * Constructeur de ControlMarche
+     */
+    public ControlMarche(ControlJoueur controlJoueur1, ControlJoueur controlJoueur2, ControlPioche controlPioche, ControlJeu controlJeu) {
+        this.marche = new Marche();
         this.controlJoueur1 = controlJoueur1;
         this.controlJoueur2 = controlJoueur2;
-        this.cartesDisponibles = new ArrayList<>();
-        this.random = new Random();
-        
-        // Initialiser le marché avec quelques cartes
-        rafraichirMarche();
+        this.controlPioche = controlPioche;
+        this.controlJeu = controlJeu;
+        remplirMarcheInitial();
     }
 
     /**
-     * @brief Rafraîchit les cartes disponibles au marché
+     * Remplit initialement le marché
+     */
+    private void remplirMarcheInitial() {
+        for (int i = 0; i < 3; i++) { // Remplir avec 3 cartes initiales
+            Carte carte = controlPioche.piocher();
+            if (carte != null) {
+                marche.ajouterCarte(carte);
+            }
+        }
+    }
+
+    /**
+     * Rafraîchit les cartes disponibles au marché
      */
     public void rafraichirMarche() {
-        cartesDisponibles.clear();
+        marche.getCartesDisponibles().clear();
         
-        // Ajouter 3 cartes aléatoires au marché
+        // Ajouter 3 cartes de la pioche au marché
         for (int i = 0; i < 3; i++) {
-            int type = random.nextInt(3); // 0: attaque, 1: popularité, 2: spéciale
-            Carte carte;
-            
-            switch (type) {
-                case 0:
-                    carte = new CarteAttaque("Épée du corsaire", "Une épée puissante qui inflige des dégâts importants", 2, 3);
-                    break;
-                case 1:
-                    carte = new CartePopularite("Trésor caché", "Un trésor qui augmente grandement votre popularité", 3, 2);
-                    break;
-                case 2:
-                    carte = new CarteSpeciale("Carte spéciale du capitaine", "Une carte avec des pouvoirs spéciaux", "Effet spécial unique", 2);
-                    break;
-                default:
-                    carte = new CarteAttaque("Canon", "Un canon pour attaquer l'adversaire", 1, 2);
+            Carte carte = controlPioche.piocher();
+            if (carte != null) {
+                marche.ajouterCarte(carte);
+            } else {
+                // Si la pioche est vide, créer une carte par défaut
+                carte = new CarteAttaque("Canon", "Un canon pour attaquer l'adversaire", 1, 2);
+                marche.ajouterCarte(carte);
             }
-            
-            cartesDisponibles.add(carte);
         }
     }
 
     /**
-     * @brief Obtient la liste des cartes disponibles au marché
+     * Obtient la liste des cartes disponibles au marché
      */
     public List<Carte> getCartesDisponibles() {
-        if (cartesDisponibles.isEmpty()) {
+        if (marche.getCartesDisponibles().isEmpty()) {
             rafraichirMarche();
         }
-        return cartesDisponibles;
+        return marche.getCartesDisponibles();
     }
 
     /**
-     * @brief Achète une carte du marché pour un joueur
-     * @param joueurId L'ID du joueur qui achète la carte
-     * @param indexCarte L'index de la carte à acheter dans la liste des cartes disponibles
-     * @return true si l'achat a réussi, false sinon
+     * Permet à un joueur d'acheter une carte du marché
+     * @param indexCarte L'index de la carte à acheter
+     * @return true si l'achat est réussi, false sinon
      */
-    public boolean acheterCarte(int joueurId, int indexCarte) {
-        if (indexCarte < 0 || indexCarte >= cartesDisponibles.size()) {
+    public boolean acheterCarte(int indexCarte) {
+        // Déterminer l'acheteur en fonction du joueur actif dans ControlJeu
+        ControlJoueur acheteur = (controlJeu.getJoueurActif() == 0) ? controlJoueur1 : controlJoueur2;
+        
+        if (indexCarte < 0 || indexCarte >= marche.getCartesDisponibles().size()) {
+            System.out.println("Index de carte invalide.");
             return false;
         }
         
-        Carte carteAcheter = cartesDisponibles.get(indexCarte);
-        Joueur joueur;
-        
-        if (joueurId == 1) {
-            joueur = controlJoueur1.getJoueur();
-        } else if (joueurId == 2) {
-            joueur = controlJoueur2.getJoueur();
-        } else {
-            return false;
-        }
+        Carte carteAcheter = marche.getCartesDisponibles().get(indexCarte);
+        Joueur joueur = acheteur.getJoueur();
         
         int cout = carteAcheter.getCout();
         
@@ -102,10 +100,10 @@ public class ControlMarche {
             joueur.ajouterCarte(carteAcheter);
             
             // Retirer la carte des cartes disponibles
-            cartesDisponibles.remove(indexCarte);
+            marche.getCartesDisponibles().remove(indexCarte);
             
             // Si le marché est vide, le rafraîchir
-            if (cartesDisponibles.isEmpty()) {
+            if (marche.getCartesDisponibles().isEmpty()) {
                 rafraichirMarche();
             }
             
@@ -116,7 +114,7 @@ public class ControlMarche {
     }
 
     /**
-     * @brief Vend une carte d'un joueur au marché
+     * Vend une carte d'un joueur au marché
      * @param joueurId L'ID du joueur qui vend la carte
      * @param indexCarte L'index de la carte à vendre dans la main du joueur
      * @return true si la vente a réussi, false sinon
