@@ -35,7 +35,7 @@ public class Marche {
     /**
      * Affiche les cartes disponibles au marché
      */
-    public void afficherMarché() {
+    public void afficherMarche() {
         System.out.println("Marché: Liste des cartes disponibles.");
         if (cartesDisponibles.isEmpty()) {
             System.out.println("Le marché est vide.");
