@@ -180,13 +180,6 @@ public class ControlJoueur {
     }
     
     /**
-     * Alias de perdrePointsDeVie pour compatibilité
-     */
-    public void perdrePointsDeVie(int pointsARetirer) {
-        perdrePointsDeVie(pointsARetirer);
-    }
-    
-    /**
      * Fait gagner des points de vie au joueur
      */
     public void gagnerPointsDeVie(int pointsAGagner) {

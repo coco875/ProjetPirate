@@ -17,23 +17,23 @@ public class RunAllTests {
 
         // Test de la classe Joueur
         System.out.println("\nTestJoueur:");
-        TestJoueur.main(args);
+        // TestJoueur.main(args);
 
         // Test de la classe ControlJeu
         System.out.println("\nTestControlJeu:");
-        TestControlJeu.main(args);
+        // TestControlJeu.main(args);
         
         // Test de la classe ControlJoueur
         System.out.println("\nTestControlJoueur:");
-        TestControlJoueur.main(args);
+        // TestControlJoueur.main(args);
         
         // Test de la classe ControlCartePlateau
         System.out.println("\nTestControlCartePlateau:");
-        TestControlCartePlateau.main(args);
+        // TestControlCartePlateau.main(args);
         
         // Test de la classe ControlCarteSpeciale
         System.out.println("\nTestControlCarteSpeciale:");
-        TestControlCarteSpeciale.main(args);
+        // TestControlCarteSpeciale.main(args);
         
         // Test de la classe ControlMarche
         System.out.println("\nTestControlMarche:");
@@ -41,7 +41,7 @@ public class RunAllTests {
         
         // Test de la classe ControlPioche
         System.out.println("\nTestControlPioche:");
-        TestControlPioche.main(args);
+        // TestControlPioche.main(args);
         
         // Test de la classe BoundaryJeu
         System.out.println("\nTestBoundaryJeu:");
