@@ -11,7 +11,7 @@ import java.io.*;
 import javax.swing.border.LineBorder;
 import java.util.*;
 import java.util.function.*;
-
+import joueur.Pirate;
 /**
  *
  * @author FNX4294A

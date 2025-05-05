@@ -1,5 +1,0 @@
-# Template pour une carte de soin
-type: soin
-titre: Soin Modèle
-description: Un modèle de carte de soin
-vie_gagnee: 1

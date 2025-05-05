@@ -1,6 +1,0 @@
-# Template pour une carte de trésor
-type: tresor
-titre: Trésor Modèle
-description: Un modèle de carte de trésor
-or_gagne: 3
-# or_perdu: 0 (Non utilisé actuellement dans le parseur pour type trésor)

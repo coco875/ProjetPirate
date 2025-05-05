@@ -1,6 +1,0 @@
-# Template pour une carte de popularité
-type: popularite
-titre: Popularité Modèle
-description: Un modèle de carte de popularité
-popularite_gagnee: 1
-degats_subis: 0

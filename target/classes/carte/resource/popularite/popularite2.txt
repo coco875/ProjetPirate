@@ -1,5 +1,0 @@
-type: popularite
-titre: Distribution de Rhum
-description: Partagez votre réserve de rhum avec l'équipage pour gagner leur faveur.
-popularite_gagnee: 1
-degats_subis: 2
