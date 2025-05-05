@@ -76,7 +76,7 @@ public class Joueur {
 	/**
 	 * Le joueur perd des points de vie
 	 */
-	public void perdrePV(int points) {
+	public void perdrePointsDeVie(int points) {
 		this.vie -= points;
 		if (this.vie < 0) {
 			this.vie = 0;

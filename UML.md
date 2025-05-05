@@ -151,7 +151,7 @@ classDiagram
         + jouerCarte(int) boolean
         + jouerCarte(Carte) boolean
         + defausserCarte(int) boolean
-        + perdrePV(int) void
+        + perdrePointsDeVie(int) void
         + gagnerPointsDeVie(int) void
         + perdrePopularite(int) void
         + gagnerPopularite(int) void
@@ -249,7 +249,7 @@ classDiagram
         + setNbCartes(Integer) void
         + getNom() String
         + getPirate() Pirate
-        + perdrePV(int) void
+        + perdrePointsDeVie(int) void
         + gagnerPointsDeVie(int) void
         + perdrePopularite(int) void
         + gagnerPopularite(int) void
