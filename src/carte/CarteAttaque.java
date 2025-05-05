@@ -1,51 +1,45 @@
 package carte;
 
 /**
- * @brief Classe représentant une carte d'attaque
- * 
- * Cette classe étend la classe Carte pour représenter spécifiquement
- * les cartes d'attaque (entité uniquement - pas de logique métier).
+ * @brief Classe représentant une carte d'attaque (hérite de CarteOffensive)
  */
-public class CarteAttaque extends Carte {
-    /** Points de dégâts infligés par la carte */
-    private int degats;
-
-    /**
-     * @brief Constructeur standard pour une carte d'attaque
-     */
-    public CarteAttaque(String nomCarte, String description, int degats, int idCarte) {
-        super(TypeCarte.ATTAQUE, nomCarte, description, degats);
-        this.degats = degats;
-    }
+public class CarteAttaque extends CarteOffensive {
     
     /**
-     * @brief Constructeur standard pour une carte d'attaque sans ID
+     * @brief Constructeur standard pour une carte d'attaque simple (dégâts seulement)
+     * @param nomCarte Nom de la carte
+     * @param description Description de la carte
+     * @param degats Points de dégâts infligés
      */
     public CarteAttaque(String nomCarte, String description, int degats) {
-        super(TypeCarte.ATTAQUE, nomCarte, description, degats);
-        this.degats = degats;
+        // Correction: Appel du constructeur de CarteOffensive pour ATTAQUE_DIRECTE
+        // Dégâts subis mis à 0 par défaut.
+        super(nomCarte, description, degats, 0, TypeOffensif.ATTAQUE_DIRECTE); 
     }
     
     /**
-     * @brief Constructeur complet pour une carte d'attaque
+     * @brief Constructeur pour une carte d'attaque avec dégâts infligés et subis
+     * @param nomCarte Nom de la carte
+     * @param description Description de la carte
+     * @param degatsInfliges Points de dégâts infligés
+     * @param degatsSubis Points de dégâts subis par l'attaquant (anciennement popularitePerdue?)
+     *                    Renommé pour clarté, correspond à valeurSecondaire dans Carte.
      */
-    public CarteAttaque(String nomCarte, String description, int degats, int idCarte, int cout) {
-        super(TypeCarte.ATTAQUE, nomCarte, description, degats, cout);
-        this.degats = degats;
+    public CarteAttaque(String nomCarte, String description, int degatsInfliges, int degatsSubis) {
+         // Correction: Appel du constructeur de CarteOffensive pour ATTAQUE_DIRECTE
+        super(nomCarte, description, degatsInfliges, degatsSubis, TypeOffensif.ATTAQUE_DIRECTE);
     }
     
     /**
-     * @brief Récupère les points de dégâts de la carte
+     * @brief Constructeur pour une carte d'attaque avec coût
+     * @param nomCarte Nom de la carte
+     * @param description Description de la carte
+     * @param degatsInfliges Points de dégâts infligés
+     * @param degatsSubis Points de dégâts subis par l'attaquant
+     * @param cout Coût d'achat de la carte
      */
-    public int getDegats() {
-        return degats;
-    }
-    
-    /**
-     * @brief Définit les points de dégâts de la carte
-     */
-    public void setDegats(int degats) {
-        this.degats = degats;
-        setValeur(degats); // Synchroniser avec la valeur générique
+    public CarteAttaque(String nomCarte, String description, int degatsInfliges, int degatsSubis, int cout) {
+        // Correction: Appel du constructeur de CarteOffensive pour ATTAQUE_DIRECTE avec coût
+        super(nomCarte, description, degatsInfliges, degatsSubis, TypeOffensif.ATTAQUE_DIRECTE, cout);
     }
 }

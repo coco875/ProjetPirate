@@ -1,0 +1,11 @@
+# Note: L'ancien format avait or_perdu: 5. Le nouveau parseur pour 'tresor' ne gère que or_gagne.
+# Si la perte d'or est une mécanique souhaitée, il faudra ajuster le parseur ou créer un nouveau type/clé.
+type: tresor 
+titre: Impôt du Pirate
+description: Le capitaine demande une contribution pour financer les expéditions.
+# or_gagne: 0 # Techniquement, cette carte faisait perdre de l'or, pas en gagner.
+# Pour l'instant, on la laisse sans effet direct d'or via le parseur 'tresor'.
+# On pourrait la transformer en carte 'speciale' ou 'attaque' (avec degats_subis ou or_vole négatif?)
+# Ou modifier le parseur pour gérer 'or_perdu' pour le type 'tresor'.
+# Temporairement, on met or_gagne à 0.
+or_gagne: 0

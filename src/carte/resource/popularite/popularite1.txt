@@ -1,0 +1,5 @@
+type: popularite
+titre: Chansons de Marin
+description: Entonnez une chanson de marin qui remonte le moral de l'équipage.
+popularite_gagnee: 2
+degats_subis: 0

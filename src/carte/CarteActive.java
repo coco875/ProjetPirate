@@ -6,17 +6,17 @@ public class CarteActive extends Carte {
     private boolean estJouee;
     
     public CarteActive(TypeCarte type, String nomCarte, String description, int valeur, int cout) {
-        super(type, nomCarte, description, valeur, cout);
+        super(type, nomCarte, description, valeur, 0, cout); // valeurSecondaire = 0 par défaut
         this.estJouee = false;
     }
     
     public CarteActive(TypeCarte type, String nomCarte, String description, int valeur) {
-        super(type, nomCarte, description, valeur);
+        super(type, nomCarte, description, valeur, 0); // valeurSecondaire = 0 par défaut
         this.estJouee = false;
     }
     
     public CarteActive(TypeCarte type, String nomCarte, String description) {
-        super(type, nomCarte, description);
+        super(type, nomCarte, description); // Ce constructeur n'a pas besoin de valeur ni de valeurSecondaire
         this.estJouee = false;
     }
     

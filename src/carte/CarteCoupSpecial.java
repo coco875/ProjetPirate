@@ -1,64 +1,23 @@
 package carte;
 
 /**
- * @brief Classe représentant une carte de coup spécial
- * 
- * Cette classe étend la classe Carte pour représenter spécifiquement
- * les cartes qui permettent des coups spéciaux avec un coût particulier
- * (entité uniquement - pas de logique métier).
+ * @brief Classe représentant une carte coup spécial (hérite de CarteOffensive)
  */
-public class CarteCoupSpecial extends CarteActive {
-    /** Coût spécifique pour utiliser le coup spécial */
-    private int coutSpecial;
-
-    /**
-     * @brief Constructeur pour une carte de coup spécial avec type défini
-     * 
-     * @param coutSpecial Coût d'utilisation du coup spécial
-     * @param nomCarte Nom de la carte
-     * @param idCarte Identifiant de la carte
-     * @param type Type de la carte
-     */
-    public CarteCoupSpecial(int coutSpecial, String nomCarte, int idCarte, TypeCarte type) {
-        super(type, nomCarte, "Coup Spécial: " + nomCarte, coutSpecial);
-        this.coutSpecial = coutSpecial;
-    }
+public class CarteCoupSpecial extends CarteOffensive {
     
     /**
-     * @brief Constructeur pour une carte de coup spécial de type SPECIALE
-     * 
-     * @param coutSpecial Coût d'utilisation du coup spécial
+     * @brief Constructeur pour une carte coup spécial
      * @param nomCarte Nom de la carte
      * @param description Description de la carte
-     * @param idCarte Identifiant de la carte
+     * @param valeur Valeur de l'effet (peut être dégâts, soin, etc. selon l'implémentation)
+     * @param coutSpecial Coût en or pour activer l'effet spécial
      */
-    public CarteCoupSpecial(int coutSpecial, String nomCarte, String description, int idCarte) {
-        super(TypeCarte.SPECIALE, nomCarte, description, coutSpecial);
-        this.coutSpecial = coutSpecial;
+    public CarteCoupSpecial(String nomCarte, String description, int valeur, int coutSpecial) {
+        // Correction: Appel du constructeur approprié de CarteOffensive pour COUP_SPECIAL
+        super(nomCarte, description, valeur, coutSpecial); 
     }
-    
-    /**
-     * @brief Récupère le coût du coup spécial
-     * @return Coût du coup spécial
-     */
-    public int getCoutSpecial() {
-        return coutSpecial;
-    }
-    
-    /**
-     * @brief Définit le coût du coup spécial
-     * @param coutSpecial Nouveau coût du coup spécial
-     */
-    public void setCoutSpecial(int coutSpecial) {
-        this.coutSpecial = coutSpecial;
-        setValeur(coutSpecial); // Synchroniser avec la valeur générique
-    }
-    
-    /**
-     * @brief Récupère le nom de la carte
-     * @return Nom de la carte
-     */
-    public String getNom() {
-        return getNomCarte();
-    }
+
+    // Les méthodes get/set spécifiques à CarteCoupSpecial peuvent être ajoutées ici si nécessaire,
+    // mais la plupart des fonctionnalités sont héritées de CarteOffensive.
+    // Par exemple, getCoutSpecial() est déjà dans CarteOffensive.
 }

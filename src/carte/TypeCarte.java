@@ -1,8 +1,10 @@
 package carte;
 
+/**
+ * Énumération des types de cartes
+ */
 public enum TypeCarte {
-    POPULAIRE,
-    ATTAQUE,
-    SPECIALE,
-    PASSIVE
+    // Types principaux uniquement
+    OFFENSIVE,
+    STRATEGIQUE
 }

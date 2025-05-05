@@ -1,5 +1,6 @@
 package ProjetPirate;
 
+import joueur.Pirate; // Correction de l'import
 import boundary.BoundaryJeu;
 import controllers.ControlJeu;
 import controllers.ControlJoueur;
@@ -12,14 +13,16 @@ public class Main {
         ControlJeu controlJeu = new ControlJeu();
         
         // Initialisation du contrôleur de pioche
-        ControlPioche controlPioche = new ControlPioche();
-        
-        // Initialisation des contrôleurs de joueurs
-        ControlJoueur controlJoueur1 = new ControlJoueur(null, null, controlPioche);
-        ControlJoueur controlJoueur2 = new ControlJoueur(null, null, controlPioche);
-        
-        // Initialisation du contrôleur du marché
-        ControlMarche controlMarche = new ControlMarche(controlJoueur1, controlJoueur2, controlPioche);
+        ControlPioche controlPioche = controlJeu.getControlPioche();
+
+        // Créer les contrôleurs de joueurs (exemple)
+        controlJeu.setJoueur1("Joueur 1", new Pirate("Barbe Noire"));
+        controlJeu.setJoueur2("Joueur 2", new Pirate("Jack Sparrow"));
+        ControlJoueur controlJoueur1 = controlJeu.getJoueur(0);
+        ControlJoueur controlJoueur2 = controlJeu.getJoueur(1);
+
+        // Créer le contrôleur du marché en passant controlJeu
+        ControlMarche controlMarche = new ControlMarche(controlJoueur1, controlJoueur2, controlPioche, controlJeu);
 
         // Initialisation de la frontière principale
         BoundaryJeu boundaryJeu = new BoundaryJeu(controlJeu, controlMarche);

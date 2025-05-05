@@ -10,6 +10,7 @@ import carte.Carte;
 import controllers.ControlJeu;
 import controllers.ControlMarche;
 import joueur.Pirate;
+import joueur.Joueur; // Ajout de l'import
 
 /**
  * @brief Frontière gérant les interactions avec l'utilisateur via une interface graphique Swing
@@ -447,15 +448,16 @@ public class BoundaryJeuSwing extends JFrame {
      * @brief Gère l'action de piocher une carte
      */
     private void piocherCarte() {
-        Carte carte = controlJeu.piocherCarte(joueurActuel);
-        logArea.append(controlJeu.getJoueur(joueurActuel).getNom() + " a pioché une carte: " + carte.getNomCarte() + "\n");
-        
-        updatePlayerPanels();
-        
-        // Désactiver le bouton de pioche une fois qu'une carte a été piochée
+        Carte carte = controlJeu.piocherCarte();
+        if (carte != null) {
+            logArea.append(controlJeu.getJoueur(joueurActuel).getNom() + " a pioché : " + carte.getNomCarte() + "\n");
+            updatePlayerPanels();
+        } else {
+            logArea.append("La pioche est vide !\n");
+        }
         btnPiocher.setEnabled(false);
     }
-    
+
     /**
      * @brief Gère l'action de jouer une carte
      * 
@@ -463,28 +465,30 @@ public class BoundaryJeuSwing extends JFrame {
      * @param joueurId L'ID du joueur qui joue la carte
      */
     private void jouerCarte(Carte carte, int joueurId) {
-        if (joueurId != joueurActuel) {
-            return; // Ne devrait pas arriver, mais au cas où
+        if (joueurId != controlJeu.getJoueurActif()) {
+            logArea.append("Ce n'est pas votre tour !\n");
+            return;
         }
-        
-        // Jouer la carte
+
         int indexCarte = controlJeu.getJoueur(joueurId).getMain().indexOf(carte);
         if (indexCarte != -1) {
-            controlJeu.jouerCarte(joueurId, indexCarte);
-            logArea.append(controlJeu.getJoueur(joueurId).getNom() + " a joué la carte: " + carte.getNomCarte() + "\n");
-            
-            // Mettre à jour l'interface
-            updatePlayerPanels();
-            updateCardDisplay();
-            
-            // Vérifier si la partie est terminée
-            if (controlJeu.verifierVictoire()) {
-                partieTerminee();
-                return;
+            boolean succes = controlJeu.jouerCarte(indexCarte);
+            if (succes) {
+                logArea.append(controlJeu.getJoueur(joueurId).getNom() + " a joué la carte: " + carte.getNomCarte() + "\n");
+
+                updatePlayerPanels();
+                updateCardDisplay();
+
+                if (controlJeu.verifierVictoire() != 0) {
+                    partieTerminee();
+                    return;
+                }
+            } else {
+                logArea.append("Impossible de jouer cette carte.\n");
             }
         }
     }
-    
+
     /**
      * @brief Ouvre l'interface du marché
      */
@@ -494,27 +498,23 @@ public class BoundaryJeuSwing extends JFrame {
         dialogMarche.setLocationRelativeTo(this);
         dialogMarche.setLayout(new BorderLayout());
         
-        // Panneau pour afficher les cartes disponibles au marché
         JPanel panelCartesMarche = new JPanel();
         panelCartesMarche.setLayout(new BoxLayout(panelCartesMarche, BoxLayout.Y_AXIS));
         JScrollPane scrollPane = new JScrollPane(panelCartesMarche);
         dialogMarche.add(scrollPane, BorderLayout.CENTER);
         
-        // Panneau d'information
         JPanel panelInfo = new JPanel();
         panelInfo.setLayout(new FlowLayout(FlowLayout.CENTER));
         JLabel lblOr = new JLabel("Or disponible: " + controlJeu.getJoueur(joueurActuel).getOr());
         panelInfo.add(lblOr);
         dialogMarche.add(panelInfo, BorderLayout.NORTH);
         
-        // Bouton pour fermer le marché
         JButton btnFermer = new JButton("Fermer le marché");
         btnFermer.addActionListener(e -> dialogMarche.dispose());
         JPanel panelBoutons = new JPanel();
         panelBoutons.add(btnFermer);
         dialogMarche.add(panelBoutons, BorderLayout.SOUTH);
         
-        // Ajouter les cartes disponibles au marché
         List<Carte> cartesMarche = controlMarche.getCartesDisponibles();
         for (int i = 0; i < cartesMarche.size(); i++) {
             Carte carte = cartesMarche.get(i);
@@ -525,7 +525,6 @@ public class BoundaryJeuSwing extends JFrame {
             JLabel lblCarte = new JLabel(carte.getNomCarte() + " (" + carte.getType() + ", coût: " + carte.getCout() + ")");
             JButton btnAcheter = new JButton("Acheter");
             
-            // Désactiver le bouton si le joueur n'a pas assez d'or
             if (controlJeu.getJoueur(joueurActuel).getOr() < carte.getCout()) {
                 btnAcheter.setEnabled(false);
                 btnAcheter.setToolTipText("Pas assez d'or");
@@ -533,7 +532,7 @@ public class BoundaryJeuSwing extends JFrame {
             
             final int index = i;
             btnAcheter.addActionListener(e -> {
-                boolean achatReussi = controlMarche.acheterCarte(joueurActuel, index);
+                boolean achatReussi = controlMarche.acheterCarte(index);
                 if (achatReussi) {
                     logArea.append(controlJeu.getJoueur(joueurActuel).getNom() + " a acheté la carte: " + carte.getNomCarte() + "\n");
                     dialogMarche.dispose();
@@ -559,39 +558,39 @@ public class BoundaryJeuSwing extends JFrame {
      */
     private void finirTour() {
         logArea.append("Fin du tour de " + controlJeu.getJoueur(joueurActuel).getNom() + ".\n");
-        
-        // Gérer la taille de la main (doit être exactement 4 cartes)
+
         gererTailleMain();
-        
-        // Changer de joueur
-        joueurActuel = (joueurActuel == 1) ? 2 : 1;
-        
-        // Mettre à jour l'interface
+
+        controlJeu.passerAuJoueurSuivant();
+        joueurActuel = controlJeu.getJoueurActif();
+
         updatePlayerPanels();
         updateCardDisplay();
-        
-        // Réactiver les boutons pour le nouveau joueur
-        btnPiocher.setEnabled(true);
-        
+
+        activerBoutonsTour(true);
+
         logArea.append("C'est au tour de " + controlJeu.getJoueur(joueurActuel).getNom() + ".\n");
     }
-    
+
     /**
      * @brief Gère la taille de la main (doit être exactement 4 cartes)
      */
     private void gererTailleMain() {
-        int tailleCourante = controlJeu.getJoueur(joueurActuel).getMain().size();
-        
-        // Si le joueur a plus de 4 cartes, il doit en défausser
+        int joueurCourantIndex = controlJeu.getJoueurActif();
+        int tailleCourante = controlJeu.getJoueur(joueurCourantIndex).getMain().size();
+
         if (tailleCourante > 4) {
             int aDéfausser = tailleCourante - 4;
+            logArea.append(controlJeu.getJoueur(joueurCourantIndex).getNom() + " doit défausser " + aDéfausser + " carte(s).\n");
             for (int i = 0; i < aDéfausser; i++) {
-                List<Carte> main = controlJeu.getJoueur(joueurActuel).getMain();
+                List<Carte> main = controlJeu.getJoueur(joueurCourantIndex).getMain();
+                if (main.isEmpty()) break;
+
                 String[] options = new String[main.size()];
                 for (int j = 0; j < main.size(); j++) {
                     options[j] = main.get(j).getNomCarte();
                 }
-                
+
                 int choix = JOptionPane.showOptionDialog(this,
                     "Vous devez défausser " + (aDéfausser - i) + " carte(s). Choisissez une carte à défausser :",
                     "Défausse de carte",
@@ -600,57 +599,70 @@ public class BoundaryJeuSwing extends JFrame {
                     null,
                     options,
                     options[0]);
-                
+
                 if (choix != JOptionPane.CLOSED_OPTION) {
-                    controlJeu.defausserCarte(joueurActuel, choix);
-                    logArea.append(controlJeu.getJoueur(joueurActuel).getNom() + " a défaussé la carte: " + options[choix] + "\n");
+                    boolean defausseOk = controlJeu.defausserCarte(choix);
+                    if (defausseOk) {
+                        logArea.append(controlJeu.getJoueur(joueurCourantIndex).getNom() + " a défaussé la carte: " + options[choix] + "\n");
+                    } else {
+                        logArea.append("Erreur lors de la défausse.\n");
+                        i--;
+                    }
+                } else {
+                    logArea.append("Défausse annulée, défausse de la première carte par défaut.\n");
+                    controlJeu.defausserCarte(0);
                 }
+                updatePlayerPanels();
+            }
+        } else if (tailleCourante < 4) {
+            int aPiocher = 4 - tailleCourante;
+            logArea.append(controlJeu.getJoueur(joueurCourantIndex).getNom() + " doit piocher " + aPiocher + " carte(s).\n");
+            for (int i = 0; i < aPiocher; i++) {
+                Carte carte = controlJeu.piocherCarte();
+                if (carte != null) {
+                    logArea.append(controlJeu.getJoueur(joueurCourantIndex).getNom() + " a pioché une carte: " + carte.getNomCarte() + "\n");
+                } else {
+                    logArea.append("La pioche est vide ! Impossible de piocher plus.\n");
+                    break;
+                }
+                updatePlayerPanels();
             }
         }
-        // Si le joueur a moins de 4 cartes, il pioche jusqu'à en avoir 4
-        else if (tailleCourante < 4) {
-            for (int i = 0; i < 4 - tailleCourante; i++) {
-                Carte carte = controlJeu.piocherCarte(joueurActuel);
-                logArea.append(controlJeu.getJoueur(joueurActuel).getNom() + " a pioché une carte: " + carte.getNomCarte() + "\n");
-            }
-        }
-        
+
         updatePlayerPanels();
     }
-    
+
     /**
      * @brief Gère la fin de la partie
      */
     private void partieTerminee() {
         activerBoutonsTour(false);
         partieEnCours = false;
-        
-        // Déterminer le gagnant
+
+        int vainqueurIndex = controlJeu.verifierVictoire();
         String gagnant = "";
         String raisonVictoire = "";
-        
-        if (controlJeu.getJoueur(2).getPointsDeVie() <= 0 || controlJeu.getJoueur(1).getPopularite() >= 5) {
-            gagnant = controlJeu.getJoueur(1).getNom();
-            if (controlJeu.getJoueur(2).getPointsDeVie() <= 0) {
-                raisonVictoire = "a réduit les points de vie de son adversaire à 0";
-            } else {
-                raisonVictoire = "a atteint 5 points de popularité";
-            }
-        } else if (controlJeu.getJoueur(1).getPointsDeVie() <= 0 || controlJeu.getJoueur(2).getPopularite() >= 5) {
-            gagnant = controlJeu.getJoueur(2).getNom();
-            if (controlJeu.getJoueur(1).getPointsDeVie() <= 0) {
-                raisonVictoire = "a réduit les points de vie de son adversaire à 0";
-            } else {
-                raisonVictoire = "a atteint 5 points de popularité";
-            }
+
+        if (vainqueurIndex != 0) {
+            gagnant = controlJeu.getJoueur(vainqueurIndex - 1).getNom();
+            Joueur j1 = controlJeu.getJoueur(0).getJoueur();
+            Joueur j2 = controlJeu.getJoueur(1).getJoueur();
+            if (j1.getPointsDeVie() <= 0) raisonVictoire = j2.getNom() + " a réduit les points de vie de " + j1.getNom() + " à 0";
+            else if (j2.getPointsDeVie() <= 0) raisonVictoire = j1.getNom() + " a réduit les points de vie de " + j2.getNom() + " à 0";
+            else if (j1.getPopularite() >= 5) raisonVictoire = j1.getNom() + " a atteint 5 points de popularité";
+            else if (j2.getPopularite() >= 5) raisonVictoire = j2.getNom() + " a atteint 5 points de popularité";
+            else raisonVictoire = "Condition de victoire non déterminée (peut-être pioche vide ?)";
+        } else {
+            gagnant = "Personne (Égalité ou pioche vide)";
+            raisonVictoire = "La partie s'est terminée sans vainqueur clair.";
         }
-        
+
         logArea.append("\n=== Fin de la partie ===\n");
-        logArea.append("Le gagnant est : " + gagnant + " qui " + raisonVictoire + " !\n");
+        logArea.append("Le gagnant est : " + gagnant + ". Raison: " + raisonVictoire + " !\n");
         logArea.append("Félicitations !\n");
-        
+
         JOptionPane.showMessageDialog(this,
-            "Le gagnant est : " + gagnant + " qui " + raisonVictoire + " !\nFélicitations !",
+            "Le gagnant est : " + gagnant + ".\nRaison: " + raisonVictoire + " !\nFélicitations !",
             "Fin de la partie",
             JOptionPane.INFORMATION_MESSAGE);
     }

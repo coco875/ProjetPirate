@@ -2,12 +2,18 @@ package joueur;
 
 import carte.CarteCoupSpecial;
 
+/**
+ * Classe représentant un personnage pirate dans le jeu
+ */
 public class Pirate {
 	private String nom;
 	private String description;
 	private int popularite, vie;
 	private CarteCoupSpecial carteCoupSpeciale;
 
+	/**
+	 * Constructeur complet d'un pirate
+	 */
 	public Pirate(String nom, String description, int popularite, int vie) {
 		this.nom = nom;
 		this.description = description;
@@ -15,6 +21,9 @@ public class Pirate {
 		this.vie = vie;
 	}
 	
+	/**
+	 * Constructeur simplifié d'un pirate
+	 */
 	public Pirate(String nom) {
 		this.nom = nom;
 		this.description = ""; // Description par défaut
@@ -22,6 +31,8 @@ public class Pirate {
 		this.vie = 5; // Points de vie initiaux
 	}
 
+	// Getters et setters
+	
 	public String getDescription() {
 		return description;
 	}
