@@ -1,10 +1,10 @@
 package test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.After;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.AfterEach;
 
 import carte.*;
 import controllers.*;
@@ -29,7 +29,7 @@ public class TestGainOr {
     /**
      * Initialisation des objets nécessaires avant chaque test
      */
-    @Before
+    @BeforeEach
     public void setUp() {
         System.out.println("\n==== Début du test de gain d'or ====");
         controlJeu = new ControlJeu();
@@ -52,7 +52,7 @@ public class TestGainOr {
     /**
      * Nettoyage après les tests
      */
-    @After
+    @AfterEach
     public void tearDown() {
         System.out.println("==== Fin du test de gain d'or ====");
     }
@@ -67,19 +67,19 @@ public class TestGainOr {
         // Test 1: Vérifier le fonctionnement du gain d'or basique
         int orInitial = joueur1.getOr();
         joueur1.gagnerOr(10);
-        assertEquals("Le gain d'or simple ne fonctionne pas correctement", (long)(orInitial + 10), (long)joueur1.getOr());
+        assertEquals(orInitial + 10, joueur1.getOr(), "Le gain d'or simple ne fonctionne pas correctement");
         System.out.println("Gain d'or direct: " + orInitial + " + 10 = " + joueur1.getOr() + " ✓");
         
         // Test 2: Vérifier le gain d'or avec une valeur nulle
         orInitial = joueur2.getOr();
         joueur2.gagnerOr(0);
-        assertEquals("Le gain d'or avec une valeur nulle devrait laisser l'or inchangé", (long)orInitial, (long)joueur2.getOr());
+        assertEquals(orInitial, joueur2.getOr(), "Le gain d'or avec une valeur nulle devrait laisser l'or inchangé");
         System.out.println("Gain d'or nul: " + orInitial + " + 0 = " + joueur2.getOr() + " ✓");
         
         // Test 3: Vérifier le gain d'or avec une grande valeur
         orInitial = joueur1.getOr();
         joueur1.gagnerOr(1000);
-        assertEquals("Le gain d'or avec une grande valeur ne fonctionne pas correctement", (long)(orInitial + 1000), (long)joueur1.getOr());
+        assertEquals(orInitial + 1000, joueur1.getOr(), "Le gain d'or avec une grande valeur ne fonctionne pas correctement");
         System.out.println("Gain d'or grande valeur: " + orInitial + " + 1000 = " + joueur1.getOr() + " ✓");
     }
     
@@ -101,8 +101,8 @@ public class TestGainOr {
         int orInitial = joueur1.getOr();
         controlCartePlateau.appliquerEffetsCartesStrategiques();
         
-        assertEquals("Le gain d'or via une carte de trésor (CarteStrategique) ne fonctionne pas", 
-                     (long)(orInitial + 10), (long)joueur1.getOr());
+        assertEquals(orInitial + 10, joueur1.getOr(), 
+                     "Le gain d'or via une carte de trésor (CarteStrategique) ne fonctionne pas");
         System.out.println("Gain via CarteStrategique: " + orInitial + " + 10 = " + joueur1.getOr() + " ✓");
         
         // Test 2: Vérifier l'effet de la carte CarteTresor
@@ -115,8 +115,8 @@ public class TestGainOr {
         orInitial = joueur2.getOr();
         controlCartePlateau.appliquerEffetsCartesStrategiques();
         
-        assertEquals("Le gain d'or via une carte CarteTresor ne fonctionne pas", 
-                     (long)(orInitial + 15), (long)joueur2.getOr());
+        assertEquals(orInitial + 15, joueur2.getOr(), 
+                     "Le gain d'or via une carte CarteTresor ne fonctionne pas");
         System.out.println("Gain via CarteTresor: " + orInitial + " + 15 = " + joueur2.getOr() + " ✓");
         
         // Test 3: Vérifier plusieurs cartes trésor simultanément
@@ -131,8 +131,8 @@ public class TestGainOr {
         orInitial = joueur1.getOr();
         controlCartePlateau.appliquerEffetsCartesStrategiques();
         
-        assertEquals("Le gain d'or via plusieurs cartes trésor ne fonctionne pas", 
-                     (long)(orInitial + 25), (long)joueur1.getOr());
+        assertEquals(orInitial + 25, joueur1.getOr(),
+                     "Le gain d'or via plusieurs cartes trésor ne fonctionne pas");
         System.out.println("Gain via multiple CartesTresor: " + orInitial + " + 5 + 20 = " + joueur1.getOr() + " ✓");
     }
 
@@ -152,8 +152,8 @@ public class TestGainOr {
         int orInitial = joueur1.getOr();
         controlCartePlateau.appliquerEffetsCartesStrategiques();
         
-        assertEquals("La perte d'or via une carte de trésor ne fonctionne pas", 
-                     (long)(orInitial - 5), (long)joueur1.getOr());
+        assertEquals(orInitial - 5, joueur1.getOr(),
+                     "La perte d'or via une carte de trésor ne fonctionne pas");
         System.out.println("Perte d'or via carte: " + orInitial + " - 5 = " + joueur1.getOr() + " ✓");
         
         // Test 2: Méthode de perte d'or directe
@@ -161,16 +161,16 @@ public class TestGainOr {
         orInitial = joueur2.getOr();
         
         joueur2.perdreOr(3);
-        assertEquals("La méthode perdreOr ne fonctionne pas correctement",
-                     (long)(orInitial - 3), (long)joueur2.getOr());
+        assertEquals(orInitial - 3, joueur2.getOr(),
+                     "La méthode perdreOr ne fonctionne pas correctement");
         System.out.println("Perte d'or directe: " + orInitial + " - 3 = " + joueur2.getOr() + " ✓");
         
         // Test 3: Tenter de perdre plus d'or qu'on en possède
         orInitial = joueur2.getOr();
         joueur2.perdreOr(20); // Plus que les 7 or restants
 
-        assertEquals("Le joueur ne devrait pas pouvoir avoir un or négatif",
-                     (long)0, (long)joueur2.getOr());
+        assertEquals(0, joueur2.getOr(),
+                     "Le joueur ne devrait pas pouvoir avoir un or négatif");
         System.out.println("Tentative de perte excessive: " + orInitial + " → " + joueur2.getOr() + " (minimum 0) ✓");
     }
 
@@ -185,10 +185,10 @@ public class TestGainOr {
         CarteTresor carteTresor = new CarteTresor("Coffre d'or", "Un coffre rempli d'or", 10, 0, 0);
         
         // Vérifie que la carte a bien des attributs cohérents
-        assertEquals("L'or gagné devrait être 10", (int)10, (int)carteTresor.getOrGagne());
-        assertEquals("L'or perdu devrait être 0", (int)0, (int)carteTresor.getOrPerdu());
-        assertEquals("Le type de la carte devrait être TRESOR", 
-                     CarteStrategique.TypeStrategique.TRESOR, carteTresor.getTypeStrategique());
+        assertEquals(10, carteTresor.getOrGagne(), "L'or gagné devrait être 10");
+        assertEquals(0, carteTresor.getOrPerdu(), "L'or perdu devrait être 0");
+        assertEquals(CarteStrategique.TypeStrategique.TRESOR, carteTresor.getTypeStrategique(),
+                     "Le type de la carte devrait être TRESOR");
         System.out.println("Vérification attributs carte: Type=" + carteTresor.getTypeStrategique() + 
                           ", OrGagne=" + carteTresor.getOrGagne() + ", OrPerdu=" + carteTresor.getOrPerdu() + " ✓");
                      
@@ -196,8 +196,8 @@ public class TestGainOr {
         CarteTresor carteInvalide = new CarteTresor("Carte étrange", "Cette carte a des valeurs étranges", -5, -3, 0);
         
         // La carte devrait avoir correctement initialisé les valeurs même négatives
-        assertEquals("L'or gagné devrait être -5 même si c'est étrange", (int)-5, (int)carteInvalide.getOrGagne());
-        assertEquals("L'or perdu devrait être -3 même si c'est étrange", (int)-3, (int)carteInvalide.getOrPerdu());
+        assertEquals(-5, carteInvalide.getOrGagne(), "L'or gagné devrait être -5 même si c'est étrange");
+        assertEquals(-3, carteInvalide.getOrPerdu(), "L'or perdu devrait être -3 même si c'est étrange");
         System.out.println("Vérification attributs carte invalide: OrGagne=" + carteInvalide.getOrGagne() + 
                           ", OrPerdu=" + carteInvalide.getOrPerdu() + " ✓");
     }

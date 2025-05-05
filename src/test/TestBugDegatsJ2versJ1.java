@@ -1,6 +1,7 @@
 package test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import carte.CarteOffensive;
 import controllers.ControlCartePlateau;
@@ -13,24 +14,8 @@ import joueur.Joueur;
  */
 public class TestBugDegatsJ2versJ1 {
 
-    public static void main(String[] args) {
-        System.out.println("Test pour vérifier l'application des dégâts du joueur 2 vers le joueur 1");
-        
-        // Test d'une attaque simple
-        testAttaqueJ2versJ1();
-        
-        // Test de plusieurs attaques
-        testPartieComplete();
-        
-        System.out.println("Tous les tests ont réussi!");
-    }
-
-    /**
-     * Test simple: le joueur 2 joue une carte d'attaque directe
-     */
-    private static void testAttaqueJ2versJ1() {
-        System.out.println("--- Test d'attaque simple J2 vers J1 ---");
-        
+    @Test
+    public void testAttaqueJ2versJ1() {
         // Initialisation
         ControlJeu controlJeu = new ControlJeu();
         Joueur joueur1 = controlJeu.creerJoueur("Joueur1", "Jack Sparrow");
@@ -47,24 +32,16 @@ public class TestBugDegatsJ2versJ1 {
                                                      CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
         cCartePlateau.ajouterCarteOffensiveJ2(attaqueJ2);
         
-        System.out.println("Avant attaque: J1 PV=" + joueur1.getPointsDeVie() + ", J2 PV=" + joueur2.getPointsDeVie());
-        
         // Application des effets
         cCartePlateau.appliquerEffetsCartesOffensives();
         
-        System.out.println("Après attaque: J1 PV=" + joueur1.getPointsDeVie() + ", J2 PV=" + joueur2.getPointsDeVie());
-        
         // Vérifications
-        assertEquals("Le joueur 1 devrait avoir perdu 2 points de vie", 3, joueur1.getPointsDeVie());
-        assertEquals("Le joueur 2 ne devrait pas avoir perdu de points de vie", 5, joueur2.getPointsDeVie());
+        assertEquals(3, joueur1.getPointsDeVie(), "Le joueur 1 devrait avoir perdu 2 points de vie");
+        assertEquals(5, joueur2.getPointsDeVie(), "Le joueur 2 ne devrait pas avoir perdu de points de vie");
     }
 
-    /**
-     * Test simulant une partie avec des attaques des deux joueurs
-     */
-    private static void testPartieComplete() {
-        System.out.println("--- Test de partie complète avec attaques des deux joueurs ---");
-        
+    @Test
+    public void testPartieComplete() {
         // Initialisation
         ControlJeu controlJeu = new ControlJeu();
         Joueur joueur1 = controlJeu.creerJoueur("Joueur1", "Jack Sparrow");
@@ -84,15 +61,11 @@ public class TestBugDegatsJ2versJ1 {
         cCartePlateau.ajouterCarteOffensiveJ1(attaqueJ1);
         cCartePlateau.ajouterCarteOffensiveJ2(attaqueJ2);
         
-        System.out.println("Tour 1 - Avant: J1 PV=" + joueur1.getPointsDeVie() + ", J2 PV=" + joueur2.getPointsDeVie());
-        
         cCartePlateau.appliquerEffetsCartesOffensives();
         
-        System.out.println("Tour 1 - Après: J1 PV=" + joueur1.getPointsDeVie() + ", J2 PV=" + joueur2.getPointsDeVie());
-        
         // Vérifications après tour 1
-        assertEquals("Le joueur 1 devrait avoir 3 points de vie après le tour 1", 3, joueur1.getPointsDeVie());
-        assertEquals("Le joueur 2 devrait avoir 4 points de vie après le tour 1", 4, joueur2.getPointsDeVie());
+        assertEquals(3, joueur1.getPointsDeVie(), "Le joueur 1 devrait avoir 3 points de vie après le tour 1");
+        assertEquals(4, joueur2.getPointsDeVie(), "Le joueur 2 devrait avoir 4 points de vie après le tour 1");
         
         // Nettoyage pour le tour 2
         cCartePlateau.defausserCartesPlateau();
@@ -102,14 +75,10 @@ public class TestBugDegatsJ2versJ1 {
                                                          CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
         cCartePlateau.ajouterCarteOffensiveJ2(attaqueJ2Tour2);
         
-        System.out.println("Tour 2 - Avant: J1 PV=" + joueur1.getPointsDeVie() + ", J2 PV=" + joueur2.getPointsDeVie());
-        
         cCartePlateau.appliquerEffetsCartesOffensives();
         
-        System.out.println("Tour 2 - Après: J1 PV=" + joueur1.getPointsDeVie() + ", J2 PV=" + joueur2.getPointsDeVie());
-        
         // Vérifications après tour 2
-        assertEquals("Le joueur 1 devrait avoir 0 points de vie après le tour 2", 0, joueur1.getPointsDeVie());
-        assertEquals("Le joueur 2 devrait toujours avoir 4 points de vie après le tour 2", 4, joueur2.getPointsDeVie());
+        assertEquals(0, joueur1.getPointsDeVie(), "Le joueur 1 devrait avoir 0 points de vie après le tour 2");
+        assertEquals(4, joueur2.getPointsDeVie(), "Le joueur 2 devrait toujours avoir 4 points de vie après le tour 2");
     }
 }

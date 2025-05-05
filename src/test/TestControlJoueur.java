@@ -1,11 +1,7 @@
 package test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Assert;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,20 +25,9 @@ import joueur.Pirate;
  * @brief Test unitaire de la classe ControlJoueur
  */
 public class TestControlJoueur {
-    public static void main(String[] args) {
-        System.out.println("Exécution des tests de TestControlJoueur...");
-        testCreationControlJoueur();
-        testPiocher();
-        testInitialiserMain();
-        testJouerCarte();
-        testPerdrePointsDeVie();
-        testGagnerPopularite();
-        testRecevoirEffets();
-        testJouerTour();
-        System.out.println("Tests de TestControlJoueur terminés.");
-    }
     
-    private static void testCreationControlJoueur() {
+    @Test
+    public void testCreationControlJoueur() {
         // Création des objets nécessaires
         ControlJeu controlJeu = new ControlJeu();
         ControlPioche controlPioche = controlJeu.getControlPioche();
@@ -59,12 +44,12 @@ public class TestControlJoueur {
         controlJoueur2.setControlCartePlateau(controlCartePlateau);
 
         // Vérification
-        assertNotNull("Le contrôleur joueur ne devrait pas être null", controlJoueur);
-        assertEquals("Le joueur devrait être correctement assigné", joueur, controlJoueur.getJoueur());
-        System.out.println("Test de création de ControlJoueur réussi!");
+        assertNotNull(controlJoueur, "Le contrôleur joueur ne devrait pas être null");
+        assertEquals(joueur, controlJoueur.getJoueur(), "Le joueur devrait être correctement assigné");
     }
     
-    private static void testPiocher() {
+    @Test
+    public void testPiocher() {
         // Création des objets nécessaires
         ControlJeu controlJeu = new ControlJeu();
         ControlPioche controlPioche = controlJeu.getControlPioche();
@@ -78,16 +63,13 @@ public class TestControlJoueur {
         Carte cartePiochee = controlJoueur.piocher();
 
         // Vérifications
-        assertNotNull("La carte piochée ne devrait pas être null", cartePiochee);
-        assertEquals("La taille de la main devrait avoir augmenté de 1", 
-                   tailleInitiale + 1, joueur.getMain().size());
-        assertTrue("La main devrait contenir la carte piochée", 
-                 joueur.getMain().contains(cartePiochee));
-
-        System.out.println("Test de pioche réussi!");
+        assertNotNull(cartePiochee, "La carte piochée ne devrait pas être null");
+        assertEquals(tailleInitiale + 1, joueur.getMain().size(), "La taille de la main devrait avoir augmenté de 1");
+        assertTrue(joueur.getMain().contains(cartePiochee), "La main devrait contenir la carte piochée");
     }
     
-    private static void testInitialiserMain() {
+    @Test
+    public void testInitialiserMain() {
         // Création des objets
         ControlJeu controlJeu = new ControlJeu();
         ControlPioche controlPioche = controlJeu.getControlPioche();
@@ -98,13 +80,11 @@ public class TestControlJoueur {
         controlJoueur.initialiserMain();
 
         // Vérification - la méthode initialiserMain() pioche 5 cartes
-        assertEquals("La main devrait contenir 5 cartes après initialisation", 
-                   5, joueur.getMain().size());
-
-        System.out.println("Test d'initialisation de la main réussi!");
+        assertEquals(5, joueur.getMain().size(), "La main devrait contenir 5 cartes après initialisation");
     }
     
-    private static void testJouerCarte() {
+    @Test
+    public void testJouerCarte() {
         // Création des objets nécessaires
         ControlJeu controlJeu = new ControlJeu();
         ControlPioche controlPioche = controlJeu.getControlPioche();
@@ -124,16 +104,13 @@ public class TestControlJoueur {
 
         boolean resultat = controlJoueur1.jouerCarte(0);
 
-        assertTrue("La carte devrait pouvoir être jouée", resultat);
-        assertEquals("La taille de la main devrait avoir diminué de 1", 
-                   tailleInitiale - 1, controlJoueur1.getJoueur().getMain().size());
-        assertFalse("La carte ne devrait plus être dans la main du joueur", 
-                  controlJoueur1.getJoueur().getMain().contains(carteOffensive));
-
-        System.out.println("Test de jouer une carte réussi!");
+        assertTrue(resultat, "La carte devrait pouvoir être jouée");
+        assertEquals(tailleInitiale - 1, controlJoueur1.getJoueur().getMain().size(), "La taille de la main devrait avoir diminué de 1");
+        assertFalse(controlJoueur1.getJoueur().getMain().contains(carteOffensive), "La carte ne devrait plus être dans la main du joueur");
     }
     
-    private static void testPerdrePointsDeVie() {
+    @Test
+    public void testPerdrePointsDeVie() {
         // Création des objets nécessaires
         ControlJeu controlJeu = new ControlJeu();
         ControlPioche controlPioche = controlJeu.getControlPioche();
@@ -147,13 +124,11 @@ public class TestControlJoueur {
         controlJoueur.perdrePointsDeVie(2);
 
         // Vérification
-        Assert.assertEquals("Les points de vie devraient avoir diminué de 2", 
-                   (long)vieInitiale - 2, (long)joueur.getPointsDeVie());
-
-        System.out.println("Test de perdre des points de vie réussi!");
+        assertEquals(vieInitiale - 2, joueur.getPointsDeVie(), "Les points de vie devraient avoir diminué de 2");
     }
     
-    private static void testGagnerPopularite() {
+    @Test
+    public void testGagnerPopularite() {
         // Création des objets nécessaires
         ControlJeu controlJeu = new ControlJeu();
         ControlPioche controlPioche = controlJeu.getControlPioche();
@@ -167,13 +142,11 @@ public class TestControlJoueur {
         controlJoueur.gagnerPopularite(2);
 
         // Vérification
-        Assert.assertEquals("La popularité devrait avoir augmenté de 2", 
-                   (long)popInitiale + 2, (long)joueur.getPopularite());
-
-        System.out.println("Test de gagner de la popularité réussi!");
+        assertEquals(popInitiale + 2, joueur.getPopularite(), "La popularité devrait avoir augmenté de 2");
     }
     
-    private static void testRecevoirEffets() {
+    @Test
+    public void testRecevoirEffets() {
         // Création des objets nécessaires
         ControlJeu controlJeu = new ControlJeu();
         ControlPioche controlPioche = controlJeu.getControlPioche();
@@ -187,25 +160,20 @@ public class TestControlJoueur {
         // Recevoir des effets (degats, popularite)
         controlJoueur.recevoirEffets(2, 1);
 
-        Assert.assertEquals("Les points de vie devraient avoir diminué de 2", 
-                   (long)vieInitiale - 2, (long)joueur.getPointsDeVie());
-        Assert.assertEquals("La popularité devrait avoir augmenté de 1", 
-                   (long)popInitiale + 1, (long)joueur.getPopularite());
+        assertEquals(vieInitiale - 2, joueur.getPointsDeVie(), "Les points de vie devraient avoir diminué de 2");
+        assertEquals(popInitiale + 1, joueur.getPopularite(), "La popularité devrait avoir augmenté de 1");
 
         vieInitiale = joueur.getPointsDeVie();
         popInitiale = joueur.getPopularite();
 
         controlJoueur.recevoirEffets(-2, -1);
 
-        Assert.assertEquals("Les points de vie devraient avoir augmenté de 2", 
-                   (long)vieInitiale + 2, (long)joueur.getPointsDeVie());
-        Assert.assertEquals("La popularité devrait avoir diminué de 1", 
-                   (long)popInitiale - 1, (long)joueur.getPopularite());
-
-        System.out.println("Test de recevoir des effets réussi!");
+        assertEquals(vieInitiale + 2, joueur.getPointsDeVie(), "Les points de vie devraient avoir augmenté de 2");
+        assertEquals(popInitiale - 1, joueur.getPopularite(), "La popularité devrait avoir diminué de 1");
     }
     
-    private static void testJouerTour() {
+    @Test
+    public void testJouerTour() {
         // Création des objets nécessaires
         ControlJeu controlJeu = new ControlJeu();
         ControlPioche controlPioche = controlJeu.getControlPioche();
@@ -221,9 +189,6 @@ public class TestControlJoueur {
         controlJoueur1.jouerTour();
 
         // La méthode jouerTour pioche une carte PUIS en joue une. Le nombre de cartes ne change donc pas.
-        assertEquals("La main devrait avoir le même nombre de cartes après la pioche et le jeu du tour", 
-                 tailleAvant, controlJoueur1.getJoueur().getMain().size());
-
-        System.out.println("Test de jouer un tour (pioche et jeu) réussi!");
+        assertEquals(tailleAvant, controlJoueur1.getJoueur().getMain().size(), "La main devrait avoir le même nombre de cartes après la pioche et le jeu du tour");
     }
 }
