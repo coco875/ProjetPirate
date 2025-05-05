@@ -1,7 +1,7 @@
 package test;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 import carte.CarteCoupSpecial; // Utiliser CarteCoupSpecial qui hérite de CarteOffensive
 import controllers.ControlCarteSpeciale;
@@ -30,7 +30,7 @@ public class TestControlCarteSpeciale {
 		// Créer une carte spéciale (CarteCoupSpecial)
 		CarteCoupSpecial carte = new CarteCoupSpecial("Super Attaque", "Inflige 5 dégâts", 5, 3); // Nom, desc, valeur, coutSpecial
 		
-		assertFalse("La carte ne doit pas être jouée initialement", carte.estJouee());
+		assertFalse(carte.estJouee(), "La carte ne doit pas être jouée initialement");
 		
 		// Activer la carte (simule le jeu de la carte)
 		// Note: L'activation réelle se fait via ControlJoueur.jouerCarte, 
@@ -51,25 +51,19 @@ public class TestControlCarteSpeciale {
 		// controlCarteSpeciale.appliquerEffetsCartes(); 
 		
 		// Vérifier l'état après l'activation (si la carte a un état 'jouée')
-		// assertTrue("La carte doit être marquée comme jouée après activation", carte.estJouee()); 
+		// assertTrue(carte.estJouee(), "La carte doit être marquée comme jouée après activation"); 
 		// Note: La logique de 'estJouee' est dans CarteOffensive, pas directement gérée par ControlCarteSpeciale.
 		// Le test ici est limité sans connaître l'implémentation exacte des effets.
 		
 		// On peut vérifier si les effets sont appliqués (ex: perte de PV joueur 2)
 		// int pvJoueur2Avant = joueur2.getPointsDeVie();
 		// controlCarteSpeciale.appliquerEffetsCartes(); // Supposons que cela applique l'effet de 'carte'
-		// assertEquals("Joueur 2 devrait perdre 5 PV", pvJoueur2Avant - 5, joueur2.getPointsDeVie());
+		// assertEquals(pvJoueur2Avant - 5, joueur2.getPointsDeVie(), "Joueur 2 devrait perdre 5 PV");
 		
 		// Ce test nécessite une refonte car ControlCarteSpeciale ne gère pas directement l'activation
 		// ou l'application des effets des CarteCoupSpecial de cette manière.
 		// La logique est plutôt dans ControlJoueur et ControlCartePlateau.
 		// On laisse le test minimal pour vérifier l'instanciation.
-		assertNotNull("Le contrôleur ne doit pas être null", controlCarteSpeciale);
-	}
-
-	public static void main(String[] args) {
-		TestControlCarteSpeciale test = new TestControlCarteSpeciale();
-		test.testActiverCarteSpeciale();
-		System.out.println("TestControlCarteSpeciale: OK");
+		assertNotNull(controlCarteSpeciale, "Le contrôleur ne doit pas être null");
 	}
 }

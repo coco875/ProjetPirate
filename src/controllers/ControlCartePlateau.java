@@ -137,9 +137,9 @@ public class ControlCartePlateau {
         // Application des effets calculés
         System.out.println("DEBUG - Avant application: J1 PV=" + joueur1.getPointsDeVie() + ", J2 PV=" + joueur2.getPointsDeVie());
         
-        // Dégâts - utiliser perdrePV directement au lieu de recevoirEffets
-        joueur1.perdrePV(degatsJ2versJ1 + degatsSubisJ1);
-        joueur2.perdrePV(degatsJ1versJ2 + degatsSubisJ2);
+        // Dégâts - utiliser perdrePointsDeVie directement au lieu de recevoirEffets
+        joueur1.perdrePointsDeVie(degatsJ2versJ1 + degatsSubisJ1);
+        joueur2.perdrePointsDeVie(degatsJ1versJ2 + degatsSubisJ2);
         
         System.out.println("DEBUG - Après dégâts: J1 PV=" + joueur1.getPointsDeVie() + ", J2 PV=" + joueur2.getPointsDeVie());
         

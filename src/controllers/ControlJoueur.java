@@ -175,15 +175,8 @@ public class ControlJoueur {
     /**
      * Fait perdre des points de vie au joueur
      */
-    public void perdrePV(int pointsARetirer) {
-        joueur.perdrePV(pointsARetirer);
-    }
-    
-    /**
-     * Alias de perdrePV pour compatibilité
-     */
     public void perdrePointsDeVie(int pointsARetirer) {
-        perdrePV(pointsARetirer);
+        joueur.perdrePointsDeVie(pointsARetirer);
     }
     
     /**
@@ -232,7 +225,7 @@ public class ControlJoueur {
                 
                 if (carteOff.estAttaqueDirecte()) {
                     // Recevoir des dégâts d'une carte d'attaque
-                    perdrePV(carteOff.getDegatsInfliges());
+                    perdrePointsDeVie(carteOff.getDegatsInfliges());
                 }
             }
         }
@@ -245,7 +238,7 @@ public class ControlJoueur {
      */
     public void recevoirEffets(int degats, int popularite) {
         if (degats > 0) {
-            perdrePV(degats);
+            perdrePointsDeVie(degats);
         } else if (degats < 0) {
             gagnerPointsDeVie(-degats);
         }
