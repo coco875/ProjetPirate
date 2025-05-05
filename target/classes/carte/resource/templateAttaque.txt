@@ -1,0 +1,7 @@
+# Template pour une carte d'attaque
+type: attaque
+titre: Attaque Modèle
+description: Un modèle de carte d'attaque
+degats_infliges: 1
+degats_subis: 0
+# or_vole: 0  (Optionnel, si > 0, devient une carte de vol d'or)

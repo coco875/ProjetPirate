@@ -1,6 +1,54 @@
-Z:\ihm_pirate\ihm-pirate\src\main\java\com\mycompany\ihm_pirate\FramePlateau.java
-Z:\ihm_pirate\ihm-pirate\src\main\java\com\mycompany\ihm_pirate\Ihm_pirate.java
-Z:\ihm_pirate\ihm-pirate\src\main\java\com\mycompany\ihm_pirate\PanelImage.java
-Z:\ihm_pirate\ihm-pirate\src\main\java\com\mycompany\ihm_pirate\PanelJeu.java
-Z:\ihm_pirate\ihm-pirate\src\main\java\com\mycompany\ihm_pirate\PanelPirate.java
-Z:\ihm_pirate\ihm-pirate\src\main\java\com\mycompany\ihm_pirate\PanelPlateau.java
+Z:\Projet Pirate\ProjetPirate\src\boundary\BoundaryJeu.java
+Z:\Projet Pirate\ProjetPirate\src\boundary\BoundaryJeuSwing.java
+Z:\Projet Pirate\ProjetPirate\src\carte\Carte.java
+Z:\Projet Pirate\ProjetPirate\src\carte\CarteActive.java
+Z:\Projet Pirate\ProjetPirate\src\carte\CarteAttaque.java
+Z:\Projet Pirate\ProjetPirate\src\carte\CarteCoupSpecial.java
+Z:\Projet Pirate\ProjetPirate\src\carte\CarteOffensive.java
+Z:\Projet Pirate\ProjetPirate\src\carte\CartePassive.java
+Z:\Projet Pirate\ProjetPirate\src\carte\CartePopularite.java
+Z:\Projet Pirate\ProjetPirate\src\carte\CarteProbabilite.java
+Z:\Projet Pirate\ProjetPirate\src\carte\CarteSoin.java
+Z:\Projet Pirate\ProjetPirate\src\carte\CarteSpeciale.java
+Z:\Projet Pirate\ProjetPirate\src\carte\CarteStrategique.java
+Z:\Projet Pirate\ProjetPirate\src\carte\CarteTresor.java
+Z:\Projet Pirate\ProjetPirate\src\carte\Marche.java
+Z:\Projet Pirate\ProjetPirate\src\carte\ParserCarte.java
+Z:\Projet Pirate\ProjetPirate\src\carte\Ressource.java
+Z:\Projet Pirate\ProjetPirate\src\carte\TypeCarte.java
+Z:\Projet Pirate\ProjetPirate\src\controllers\ControlCartePlateau.java
+Z:\Projet Pirate\ProjetPirate\src\controllers\ControlCarteSpeciale.java
+Z:\Projet Pirate\ProjetPirate\src\controllers\ControlJeu.java
+Z:\Projet Pirate\ProjetPirate\src\controllers\ControlJoueur.java
+Z:\Projet Pirate\ProjetPirate\src\controllers\ControlMarche.java
+Z:\Projet Pirate\ProjetPirate\src\controllers\ControlPioche.java
+Z:\Projet Pirate\ProjetPirate\src\ihm\FramePlateau.java
+Z:\Projet Pirate\ProjetPirate\src\ihm\Ihm_pirate.java
+Z:\Projet Pirate\ProjetPirate\src\ihm\PanelImage.java
+Z:\Projet Pirate\ProjetPirate\src\ihm\PanelJeu.java
+Z:\Projet Pirate\ProjetPirate\src\ihm\PanelPirate.java
+Z:\Projet Pirate\ProjetPirate\src\ihm\PanelPlateau.java
+Z:\Projet Pirate\ProjetPirate\src\jeu\Defausse.java
+Z:\Projet Pirate\ProjetPirate\src\jeu\Jeu.java
+Z:\Projet Pirate\ProjetPirate\src\jeu\Pioche.java
+Z:\Projet Pirate\ProjetPirate\src\jeu\ZoneCarteSpeciale.java
+Z:\Projet Pirate\ProjetPirate\src\jeu\ZoneOffensive.java
+Z:\Projet Pirate\ProjetPirate\src\jeu\ZoneStrategique.java
+Z:\Projet Pirate\ProjetPirate\src\joueur\Joueur.java
+Z:\Projet Pirate\ProjetPirate\src\joueur\ParserPirate.java
+Z:\Projet Pirate\ProjetPirate\src\joueur\Pirate.java
+Z:\Projet Pirate\ProjetPirate\src\ProjetPirate\Main.java
+Z:\Projet Pirate\ProjetPirate\src\ProjetPirate\MainUI.java
+Z:\Projet Pirate\ProjetPirate\src\test\RunAllTests.java
+Z:\Projet Pirate\ProjetPirate\src\test\TestBoundaryJeu.java
+Z:\Projet Pirate\ProjetPirate\src\test\TestBugDegatsJ2versJ1.java
+Z:\Projet Pirate\ProjetPirate\src\test\TestCarte.java
+Z:\Projet Pirate\ProjetPirate\src\test\TestControlCartePlateau.java
+Z:\Projet Pirate\ProjetPirate\src\test\TestControlCarteSpeciale.java
+Z:\Projet Pirate\ProjetPirate\src\test\TestControlJeu.java
+Z:\Projet Pirate\ProjetPirate\src\test\TestControlJoueur.java
+Z:\Projet Pirate\ProjetPirate\src\test\TestControlMarche.java
+Z:\Projet Pirate\ProjetPirate\src\test\TestControlPioche.java
+Z:\Projet Pirate\ProjetPirate\src\test\TestGainOr.java
+Z:\Projet Pirate\ProjetPirate\src\test\TestJoueur.java
+Z:\Projet Pirate\ProjetPirate\src\test\TestPioche.java
