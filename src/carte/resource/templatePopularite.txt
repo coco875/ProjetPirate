@@ -1,5 +1,6 @@
-popularite
-templateP
-sunt in culpa qui officia deserunt mollit anim id est laborum.
-2
-1
+# Template pour une carte de popularité
+type: popularite
+titre: Popularité Modèle
+description: Un modèle de carte de popularité
+popularite_gagnee: 1
+degats_subis: 0

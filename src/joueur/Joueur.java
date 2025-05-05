@@ -4,18 +4,23 @@ import java.util.ArrayList;
 import java.util.List;
 import carte.Carte;
 
+/**
+ * Classe représentant un joueur dans le jeu des Pirates
+ */
 public class Joueur {
 
 	private String nom;
 	private Pirate pirate;
-	private Integer vie;
-	private Integer popularite;
+	private Integer vie;         // max 5
+	private Integer popularite;  // max 5
 	private Integer or;
 	private Integer nbCartes;
 	private List<Carte> main;
 	
-	
-	public Joueur(String  nom, Pirate pirate) {
+	/**
+	 * Constructeur d'un joueur
+	 */
+	public Joueur(String nom, Pirate pirate) {
 		this.nom = nom;
 		this.pirate = pirate;
 		
@@ -23,95 +28,144 @@ public class Joueur {
 		this.popularite = 0;
 		this.or = 0;
 		this.nbCartes = 0;
-		initialiserMain();
+		this.main = new ArrayList<Carte>(4);
 	}
 
-
-	public Integer getVie() {
+	// Getters et setters de base
+	
+	public int getPointsDeVie() {
 		return vie;
 	}
-
 
 	public void setVie(Integer vie) {
 		this.vie = vie;
 	}
 
-
-	public Integer getPopularite() {
+	public int getPopularite() {
 		return popularite;
 	}
-
 
 	public void setPopularite(Integer popularite) {
 		this.popularite = popularite;
 	}
 
-
 	public Integer getOr() {
 		return or;
 	}
-
 
 	public void setOr(Integer or) {
 		this.or = or;
 	}
 
-
 	public Integer getNbCartes() {
 		return nbCartes;
 	}
-
 
 	public void setNbCartes(Integer nbCartes) {
 		this.nbCartes = nbCartes;
 	}
 
-
 	public String getNom() {
 		return nom;
 	}
-
 
 	public Pirate getPirate() {
 		return pirate;
 	}
 	
-	public void ajouterCarte(Carte carte) {
-		//verifier nombre de cartes en main
-		if (main.size() >= 4) {
-			//d�fausser? ne pas ajouter? exception?
+	/**
+	 * Le joueur perd des points de vie
+	 */
+	public void perdrePV(int points) {
+		this.vie -= points;
+		if (this.vie < 0) {
+			this.vie = 0;
 		}
-		
-		main.add(carte);
 	}
 	
-	public void retirerCarte(Carte carte) throws IllegalStateException {
-		//verifier que carte est bien dans la main
+	/**
+	 * Le joueur gagne des points de vie
+	 */
+	public void gagnerPointsDeVie(int points) {
+		this.vie += points;
+		if (this.vie > 5) {
+			this.vie = 5;
+		}
+	}
+	
+	/**
+	 * Le joueur perd des points de popularité
+	 */
+	public void perdrePopularite(int points) {
+		this.popularite -= points;
+		if (this.popularite < 0) {
+			this.popularite = 0;
+		}
+	}
+	
+	/**
+	 * Le joueur gagne des points de popularité
+	 */
+	public void gagnerPopularite(int points) {
+		this.popularite += points;
+		if (this.popularite > 5) {
+			this.popularite = 5;
+		}
+	}
+	
+	/**
+	 * Le joueur perd de l'or
+	 * @return true si le joueur avait assez d'or, false sinon
+	 */
+	public boolean perdreOr(int montant) {
+		if (this.or >= montant) {
+			this.or -= montant;
+			return true;
+		}
+		return false;
+	}
+	
+	/**
+	 * Le joueur gagne de l'or
+	 */
+	public void gagnerOr(int montant) {
+		this.or += montant;
+	}
+	
+	/**
+	 * Méthode pour accéder au personnage (pour compatibilité)
+	 */
+	public Pirate getPersonnage() {
+		return this.pirate;
+	}
+	
+	// Méthodes de gestion de la main
+	
+	/**
+	 * Ajoute une carte à la main du joueur
+	 */
+	public void ajouterCarte(Carte carte) {
+		main.add(carte);
+		nbCartes = main.size();
+	}
+	
+	/**
+	 * Retire une carte de la main du joueur
+	 * @return true si la carte a été retirée, false sinon
+	 */
+	public boolean retirerCarte(Carte carte) {
 		if (main.contains(carte)) {
 			main.remove(carte);
-		} else {
-			throw new IllegalStateException("Carte absente dans la main");
+			nbCartes = main.size();
+			return true;
 		}
+		return false;
 	}
 	
-	public void jouerCarte(Carte carte) throws IllegalStateException {
-		//verifier que carte est bien dans la main
-		if (main.contains(carte)) {
-			//jouer sur plateau (controlPlateau)
-			//utiliser retirerCarte
-		} else {
-			throw new IllegalStateException("Carte absente dans la main");
-		}
-		
+	/**
+	 * Récupère la liste des cartes en main
+	 */
+	public List<Carte> getMain() {
+		return main;
 	}
-	
-	public void initialiserMain() {
-		this.main = new ArrayList<Carte>(4);
-		//on laisse le controller piocher pour nous
-	}
-
-	public void recevoirEffets(int vie, int pop) {
-		
-	}
-	
 }

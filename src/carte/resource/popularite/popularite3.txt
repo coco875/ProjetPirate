@@ -1,0 +1,5 @@
+type: popularite
+titre: Partage du Butin
+description: Partagez généreusement le butin avec votre équipage.
+popularite_gagnee: 2
+degats_subis: 1
