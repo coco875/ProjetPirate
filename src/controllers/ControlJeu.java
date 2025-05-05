@@ -8,9 +8,6 @@ import jeu.ZoneStrategique;
 import joueur.Joueur;
 import joueur.Pirate;
 
-import carte.Carte;
-import jeu.Jeu;
-
 /**
  * Contrôleur principal du jeu
  * Coordonne les différents aspects du jeu des Pirates
