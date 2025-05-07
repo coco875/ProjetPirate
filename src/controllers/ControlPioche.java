@@ -147,7 +147,7 @@ public class ControlPioche {
 			
 		}
 		
-		return new ArrayList();
+		return new ArrayList<Carte>();
 	}
 
 	/**
