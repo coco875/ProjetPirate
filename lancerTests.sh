@@ -19,18 +19,12 @@ if [ ! -d "lib" ]; then
     mkdir -p lib
 fi
 
-# Télécharger JUnit si nécessaire
-JUNIT_JAR="lib/junit-4.13.2.jar"
-HAMCREST_JAR="lib/hamcrest-core-1.3.jar"
+# Télécharger JUnit 5 si nécessaire
+JUNIT_PLATFORM="lib/junit-platform-console-standalone-1.9.2.jar"
 
-if [ ! -f "$JUNIT_JAR" ]; then
-    echo "Téléchargement de JUnit..."
-    curl -L https://repo1.maven.org/maven2/junit/junit/4.13.2/junit-4.13.2.jar -o "$JUNIT_JAR"
-fi
-
-if [ ! -f "$HAMCREST_JAR" ]; then
-    echo "Téléchargement de Hamcrest (dépendance de JUnit)..."
-    curl -L https://repo1.maven.org/maven2/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar -o "$HAMCREST_JAR"
+if [ ! -f "$JUNIT_PLATFORM" ]; then
+    echo "Téléchargement de JUnit 5..."
+    curl -L https://repo1.maven.org/maven2/org/junit/platform/junit-platform-console-standalone/1.9.2/junit-platform-console-standalone-1.9.2.jar -o "$JUNIT_PLATFORM"
 fi
 
 # Vérifier et traiter les caractères BOM dans les fichiers Java
@@ -48,7 +42,7 @@ done
 
 # Compiler l'ensemble du code source y compris les tests
 echo "Compilation du code source et des tests..."
-javac -d bin -sourcepath src -cp "$JUNIT_JAR:$HAMCREST_JAR" $(find src -name "*.java")
+javac -d bin -sourcepath src -cp "$JUNIT_PLATFORM" $(find src -name "*.java")
 
 # Vérifier si la compilation a réussi
 if [ $? -ne 0 ]; then
@@ -59,8 +53,8 @@ fi
 echo "Compilation terminée avec succès."
 echo "Lancement des tests..."
 
-# Exécuter les tests
-java -cp bin:"$JUNIT_JAR":"$HAMCREST_JAR" test.RunAllTests
+# Exécuter les tests avec JUnit 5
+java -jar "$JUNIT_PLATFORM" --class-path bin --scan-class-path
 
 # Vérifier le code de retour
 if [ $? -eq 0 ]; then

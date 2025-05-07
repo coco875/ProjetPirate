@@ -26,7 +26,7 @@ public class Joueur {
 		
 		this.vie = 5;
 		this.popularite = 0;
-		this.or = 0;
+		this.or = 3;  // Modifié de 0 à 3
 		this.nbCartes = 0;
 		this.main = new ArrayList<Carte>(4);
 	}
@@ -121,8 +121,11 @@ public class Joueur {
 		if (this.or >= montant) {
 			this.or -= montant;
 			return true;
+		} else {
+			// S'il n'y a pas assez d'or, on met l'or à 0 et on retourne false
+			this.or = 0;
+			return false;
 		}
-		return false;
 	}
 	
 	/**

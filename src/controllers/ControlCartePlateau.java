@@ -94,16 +94,18 @@ public class ControlCartePlateau {
         System.out.println("DEBUG - Traitement des cartes offensives J1: " + zoneOffensiveJ1.getCartesOffensives().size());
         for (CarteOffensive carte : zoneOffensiveJ1.getCartesOffensives()) {
             System.out.println("DEBUG - J1 joue: " + carte.getNomCarte() + " de type " + carte.getTypeOffensif());
+            Carte.EffetCarte effet = carte.effetCarte();
+            
             switch (carte.getTypeOffensif()) {
                 case ATTAQUE_DIRECTE:
-                    degatsJ1versJ2 += carte.getDegatsInfliges();
-                    degatsSubisJ1 += carte.getDegatsSubis();
-                    System.out.println("DEBUG - Carte Attaque: ajout " + carte.getDegatsInfliges() + 
-                                     " dégâts vers J2, " + carte.getDegatsSubis() + " dégâts subis par J1");
+                    degatsJ1versJ2 += effet.degatsInfliges;
+                    degatsSubisJ1 += effet.degatsSubis;
+                    System.out.println("DEBUG - Carte Attaque: ajout " + effet.degatsInfliges + 
+                                     " dégâts vers J2, " + effet.degatsSubis + " dégâts subis par J1");
                     break;
                 case SOIN:
-                    soinsJ1 += carte.getVieGagnee();
-                    System.out.println("DEBUG - Carte Soin: ajout " + carte.getVieGagnee() + " PV pour J1");
+                    soinsJ1 += effet.vieGagnee;
+                    System.out.println("DEBUG - Carte Soin: ajout " + effet.vieGagnee + " PV pour J1");
                     break;
                 default:
                     System.out.println("DEBUG - Type de carte non géré: " + carte.getTypeOffensif());
@@ -114,16 +116,18 @@ public class ControlCartePlateau {
         System.out.println("DEBUG - Traitement des cartes offensives J2: " + zoneOffensiveJ2.getCartesOffensives().size());
         for (CarteOffensive carte : zoneOffensiveJ2.getCartesOffensives()) {
             System.out.println("DEBUG - J2 joue: " + carte.getNomCarte() + " de type " + carte.getTypeOffensif());
+            Carte.EffetCarte effet = carte.effetCarte();
+            
             switch (carte.getTypeOffensif()) {
                 case ATTAQUE_DIRECTE:
-                    degatsJ2versJ1 += carte.getDegatsInfliges();
-                    degatsSubisJ2 += carte.getDegatsSubis();
-                    System.out.println("DEBUG - Carte Attaque: ajout " + carte.getDegatsInfliges() + 
-                                     " dégâts vers J1, " + carte.getDegatsSubis() + " dégâts subis par J2");
+                    degatsJ2versJ1 += effet.degatsInfliges;
+                    degatsSubisJ2 += effet.degatsSubis;
+                    System.out.println("DEBUG - Carte Attaque: ajout " + effet.degatsInfliges + 
+                                     " dégâts vers J1, " + effet.degatsSubis + " dégâts subis par J2");
                     break;
                 case SOIN:
-                    soinsJ2 += carte.getVieGagnee();
-                    System.out.println("DEBUG - Carte Soin: ajout " + carte.getVieGagnee() + " PV pour J2");
+                    soinsJ2 += effet.vieGagnee;
+                    System.out.println("DEBUG - Carte Soin: ajout " + effet.vieGagnee + " PV pour J2");
                     break;
                 default:
                     System.out.println("DEBUG - Type de carte non géré: " + carte.getTypeOffensif());
@@ -167,42 +171,38 @@ public class ControlCartePlateau {
         List<CarteStrategique> cartesStrategiquesJ2 = zoneStrategiqueJ2.getCartesStrategiques();
         
         for (CarteStrategique carte : cartesStrategiquesJ1) {
+            Carte.EffetCarte effet = carte.effetCarte();
+            
             switch (carte.getTypeStrategique()) {
                 case POPULARITE:
-                    int populariteGagnee = carte.getPopulariteGagnee();
-                    int degatsSubis = carte.getDegatsSubis();
-                    controlJoueur1.gagnerPopularite(populariteGagnee);
-                    controlJoueur1.recevoirEffets(degatsSubis, 0);
+                    controlJoueur1.gagnerPopularite(effet.populariteGagnee);
+                    controlJoueur1.perdrePointsDeVie(effet.degatsSubis);
                     break;
                 case TRESOR:
-                    int orGagne = carte.getOrGagne();
-                    int orPerdu = carte.getOrPerdu();
-                    if (orGagne > 0) {
-                        controlJoueur1.getJoueur().gagnerOr(orGagne);
+                    if (effet.orGagne > 0) {
+                        controlJoueur1.getJoueur().gagnerOr(effet.orGagne);
                     }
-                    if (orPerdu > 0) {
-                        controlJoueur1.getJoueur().perdreOr(orPerdu);
+                    if (effet.orPerdu > 0) {
+                        controlJoueur1.getJoueur().perdreOr(effet.orPerdu);
                     }
                     break;
             }
         }
 
         for (CarteStrategique carte : cartesStrategiquesJ2) {
+            Carte.EffetCarte effet = carte.effetCarte();
+            
             switch (carte.getTypeStrategique()) {
                 case POPULARITE:
-                    int populariteGagnee = carte.getPopulariteGagnee();
-                    int degatsSubis = carte.getDegatsSubis();
-                    controlJoueur2.gagnerPopularite(populariteGagnee);
-                    controlJoueur2.recevoirEffets(degatsSubis, 0);
+                    controlJoueur2.gagnerPopularite(effet.populariteGagnee);
+                    controlJoueur2.perdrePointsDeVie(effet.degatsSubis);
                     break;
                 case TRESOR:
-                    int orGagne = carte.getOrGagne();
-                    int orPerdu = carte.getOrPerdu();
-                    if (orGagne > 0) {
-                        controlJoueur2.getJoueur().gagnerOr(orGagne);
+                    if (effet.orGagne > 0) {
+                        controlJoueur2.getJoueur().gagnerOr(effet.orGagne);
                     }
-                    if (orPerdu > 0) {
-                        controlJoueur2.getJoueur().perdreOr(orPerdu);
+                    if (effet.orPerdu > 0) {
+                        controlJoueur2.getJoueur().perdreOr(effet.orPerdu);
                     }
                     break;
             }
