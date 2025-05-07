@@ -20,7 +20,7 @@ public class Pirate {
 		this.description = description;
 		this.popularite = popularite;
 		this.vie = vie;
-		this.cheminImage = "images/" + nom + ".jpg"; // Chemin d'accès par défaut basé sur le nom
+		this.cheminImage = "images/" + nom.toLowerCase().replaceAll("\\s+", "_") + ".jpg"; // Chemin d'accès par défaut basé sur le nom
 	}
 	
 	/**
@@ -31,18 +31,7 @@ public class Pirate {
 		this.description = ""; // Description par défaut
 		this.popularite = 0; // Popularité initiale
 		this.vie = 5; // Points de vie initiaux
-		this.cheminImage = "images/" + nom + ".jpg"; // Chemin d'accès par défaut basé sur le nom
-	}
-	
-	/**
-	 * Constructeur complet d'un pirate avec spécification du chemin d'image
-	 */
-	public Pirate(String nom, String description, int popularite, int vie, String cheminImage) {
-		this.nom = nom;
-		this.description = description;
-		this.popularite = popularite;
-		this.vie = vie;
-		this.cheminImage = cheminImage;
+		this.cheminImage = "images/" + nom.toLowerCase().replaceAll("\\s+", "_") + ".jpg"; // Chemin d'accès par défaut basé sur le nom
 	}
 
 	// Getters et setters

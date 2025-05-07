@@ -60,7 +60,13 @@ public class ParserPirate {
             description = descBuilder.toString().trim();
         }
         
-        return new Pirate(nom, description, popularite, vie, cheminImage);
+        // Création du pirate avec le constructeur disponible
+        Pirate pirate = new Pirate(nom, description, popularite, vie);
+        
+        // On définit le chemin d'image après la création
+        pirate.setCheminImage(cheminImage);
+        
+        return pirate;
     }
     
     /**

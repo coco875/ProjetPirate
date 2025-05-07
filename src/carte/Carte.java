@@ -78,14 +78,6 @@ public class Carte {
 		this(type, jsonCarte, "ID: " + idCarte, 0, 0, 10); // Valeurs et coût par défaut
 		this.id = idCarte;
 	}
-	
-	/**
-	 * Constructeur complet avec chemin d'image personnalisé
-	 */
-	public Carte(TypeCarte type, String nomCarte, String description, int valeur, int valeurSecondaire, int cout, String cheminImage) {
-		this(type, nomCarte, description, valeur, valeurSecondaire, cout);
-		this.cheminImage = cheminImage;
-	}
 
 	/**
 	 * Méthode centrale pour obtenir tous les effets d'une carte
