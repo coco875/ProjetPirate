@@ -27,3 +27,5 @@ replay_pid*
 /mavenproject1/target/
 /target/
 /coverage
+
+png_backup*
