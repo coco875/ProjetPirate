@@ -1,0 +1,3 @@
+Le plus redoutable pirate des Caraïbes, connu pour sa barbe sombre et son tempérament féroce.
+popularite: 8
+vie: 7

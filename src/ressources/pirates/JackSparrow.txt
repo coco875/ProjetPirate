@@ -1,0 +1,3 @@
+Capitaine excentrique du Black Pearl, connu pour sa chance insolente et son intelligence rusée.
+popularite: 10
+vie: 5

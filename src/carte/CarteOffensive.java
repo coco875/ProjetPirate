@@ -77,7 +77,7 @@ public class CarteOffensive extends Carte {
         CarteOffensive carte = new CarteOffensive(
             carteSoin.getNomCarte(),
             carteSoin.getDescription(),
-            carteSoin.getValeur() // Utilisation de getValeur() au lieu de getVieGagne()
+            carteSoin.getPointsDeSoin()
         );
         carte.setCout(carteSoin.getCout());
         return carte;
@@ -153,6 +153,14 @@ public class CarteOffensive extends Carte {
     public int getOrVole() {
         return 0; // Méthode conservée pour la compatibilité mais renvoie toujours 0
     }
+
+    public int getOrGagne() {
+        return 0; // Par défaut, les cartes offensives ne font pas gagner d'or
+    }
+    
+    public int getOrPerdu() {
+        return 0; // Par défaut, les cartes offensives ne font pas perdre d'or
+    }
     
     /**
      * Redéfinition de la méthode effetCarte pour les cartes offensives
@@ -178,6 +186,11 @@ public class CarteOffensive extends Carte {
                 effet.estSoin = true;
                 break;
         }
+        
+        // Ajout des autres effets potentiels
+        effet.orGagne = getOrGagne();
+        effet.orPerdu = getOrPerdu();
+        effet.orVole = getOrVole();
         
         return effet;
     }
