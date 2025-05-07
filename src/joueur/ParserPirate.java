@@ -24,6 +24,7 @@ public class ParserPirate {
         String description = "";
         int popularite = 0;
         int vie = 5; // Valeur par défaut
+        String cheminImage = "images/" + nom + ".jpg"; // Chemin par défaut
         
         try (BufferedReader lecteur = new BufferedReader(new FileReader(fichier))) {
             String ligne;
@@ -43,6 +44,8 @@ public class ParserPirate {
                     popularite = Integer.parseInt(ligne.substring("popularite:".length()).trim());
                 } else if (ligne.startsWith("vie:")) {
                     vie = Integer.parseInt(ligne.substring("vie:".length()).trim());
+                } else if (ligne.startsWith("image:")) {
+                    cheminImage = ligne.substring("image:".length()).trim();
                 } else {
                     // Si ce n'est pas une propriété spécifique, c'est la description
                     if (premiereLigne) {
@@ -57,7 +60,7 @@ public class ParserPirate {
             description = descBuilder.toString().trim();
         }
         
-        return new Pirate(nom, description, popularite, vie);
+        return new Pirate(nom, description, popularite, vie, cheminImage);
     }
     
     /**

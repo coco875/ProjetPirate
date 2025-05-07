@@ -2,6 +2,7 @@ package boundary;
 
 import java.util.List;
 import java.util.Scanner;
+import java.io.File;
 
 import carte.Carte;
 import carte.CarteOffensive;
@@ -12,6 +13,8 @@ import controllers.ControlPioche;
 import controllers.ControlMarche;
 import jeu.Pioche;
 import joueur.Joueur;
+import joueur.Pirate;
+import joueur.ParserPirate;
 
 /**
  * @brief Classe boundary pour l'interface en mode console
@@ -99,8 +102,48 @@ public class BoundaryJeu {
 	 * @return Nom du pirate
 	 */
 	protected String demanderNomPirate(int numeroJoueur) {
-		System.out.print("Nom du pirate du joueur " + numeroJoueur + " : ");
-		return scan.nextLine();
+		// Afficher la liste des pirates disponibles
+		List<Pirate> piratesDisponibles = getPiratesDisponibles();
+		
+		if (!piratesDisponibles.isEmpty()) {
+			System.out.println("\n=== Pirates disponibles ===");
+			for (int i = 0; i < piratesDisponibles.size(); i++) {
+				Pirate pirate = piratesDisponibles.get(i);
+				System.out.println((i + 1) + ") " + pirate.getNom());
+				System.out.println("   " + pirate.getDescription());
+				System.out.println("   Popularité: " + pirate.getPopularite() + ", Vie: " + pirate.getVie());
+				System.out.println();
+			}
+			
+			System.out.print("Choisissez un pirate pour le joueur " + numeroJoueur + " (1-" + piratesDisponibles.size() + ") : ");
+			int choix = -1;
+			while (choix < 1 || choix > piratesDisponibles.size()) {
+				try {
+					choix = Integer.parseInt(scan.nextLine().trim());
+					if (choix < 1 || choix > piratesDisponibles.size()) {
+						System.out.print("Choix invalide. Veuillez réessayer (1-" + piratesDisponibles.size() + ") : ");
+					}
+				} catch (NumberFormatException e) {
+					System.out.print("Veuillez entrer un nombre entre 1 et " + piratesDisponibles.size() + " : ");
+				}
+			}
+			
+			return piratesDisponibles.get(choix - 1).getNom();
+		} else {
+			// Si aucun pirate n'est disponible, revenir à la méthode originale
+			System.out.print("Nom du pirate du joueur " + numeroJoueur + " : ");
+			return scan.nextLine();
+		}
+	}
+	
+	/**
+	 * @brief Récupère la liste des pirates disponibles
+	 * 
+	 * @return Liste des pirates disponibles
+	 */
+	private List<Pirate> getPiratesDisponibles() {
+		File repertoirePirates = new File("src/ressources/pirates");
+		return ParserPirate.chargerPirates(repertoirePirates);
 	}
 	
 	/**

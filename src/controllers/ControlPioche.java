@@ -32,29 +32,29 @@ public class ControlPioche {
 		List<Carte> list = new ArrayList<>();
 		
 		// Vérifier si le répertoire existe
-		File resourceDir = new File("src/carte/resource");
+		File resourceDir = new File("src/ressources/cartes");
 		if (resourceDir.exists() && resourceDir.isDirectory()) {
 			// Charger les cartes du répertoire principal
 			list.addAll(chargerCartesDepuisRepertoire(resourceDir));
 			
 			// Charger les cartes des sous-répertoires
-			File attaqueDir = new File("src/carte/resource/attaque");
+			File attaqueDir = new File("src/ressources/cartes/attaque");
 			if (attaqueDir.exists() && attaqueDir.isDirectory()) {
 				list.addAll(chargerCartesDepuisRepertoire(attaqueDir));
 			}
 			
-			File populariteDir = new File("src/carte/resource/popularite");
+			File populariteDir = new File("src/ressources/cartes/popularite");
 			if (populariteDir.exists() && populariteDir.isDirectory()) {
 				list.addAll(chargerCartesDepuisRepertoire(populariteDir));
 				}
 			
 			// Ajout des nouveaux sous-répertoires pour les cartes de trésor et de soin
-			File tresorDir = new File("src/carte/resource/tresor");
+			File tresorDir = new File("src/ressources/cartes/tresor");
 			if (tresorDir.exists() && tresorDir.isDirectory()) {
 				list.addAll(chargerCartesDepuisRepertoire(tresorDir));
 			}
 			
-			File soinDir = new File("src/carte/resource/soin");
+			File soinDir = new File("src/ressources/cartes/soin");
 			if (soinDir.exists() && soinDir.isDirectory()) {
 				list.addAll(chargerCartesDepuisRepertoire(soinDir));
 			}
