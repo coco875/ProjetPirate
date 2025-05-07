@@ -78,8 +78,8 @@ public class ControlCartePlateau {
         System.out.println("DEBUG - Début appliquerEffetsCartesOffensives()");
         
         // Récupérer les objets Joueur pour un accès direct
-        Joueur joueur1 = controlJoueur1.getJoueur();
-        Joueur joueur2 = controlJoueur2.getJoueur();
+        //Joueur joueur1 = controlJoueur1.getJoueur();
+        //Joueur joueur2 = controlJoueur2.getJoueur();
         
         // Calcul des effets par type pour chaque joueur
         int degatsJ1versJ2 = 0;
@@ -139,28 +139,33 @@ public class ControlCartePlateau {
         System.out.println("DEBUG - J2: " + degatsJ1versJ2 + " dégâts subis, " + soinsJ2 + " soins");
         
         // Application des effets calculés
-        System.out.println("DEBUG - Avant application: J1 PV=" + joueur1.getPointsDeVie() + ", J2 PV=" + joueur2.getPointsDeVie());
+        System.out.println("DEBUG - Avant application: J1 PV=" + controlJoueur1.getPointsDeVie() + ", J2 PV=" + controlJoueur2.getPointsDeVie());
         
         // Dégâts - utiliser perdrePointsDeVie directement au lieu de recevoirEffets
-        joueur1.perdrePointsDeVie(degatsJ2versJ1 + degatsSubisJ1);
-        joueur2.perdrePointsDeVie(degatsJ1versJ2 + degatsSubisJ2);
+        //joueur1.perdrePointsDeVie(degatsJ2versJ1 + degatsSubisJ1);
+        //joueur2.perdrePointsDeVie(degatsJ1versJ2 + degatsSubisJ2);
         
-        System.out.println("DEBUG - Après dégâts: J1 PV=" + joueur1.getPointsDeVie() + ", J2 PV=" + joueur2.getPointsDeVie());
+        controlJoueur1.recevoirEffets(degatsJ2versJ1 + degatsSubisJ1, 0);
+        controlJoueur2.recevoirEffets(degatsJ1versJ2 + degatsSubisJ2, 0);
+        
+        System.out.println("DEBUG - Après dégâts: J1 PV=" + controlJoueur1.getPointsDeVie() + ", J2 PV=" + controlJoueur2.getPointsDeVie());
         
         // Soins - appliqués après les dégâts
         if (soinsJ1 > 0) {
             System.out.println("DEBUG - Application de " + soinsJ1 + " soins à J1");
-            joueur1.gagnerPointsDeVie(soinsJ1);
-            System.out.println("DEBUG - Après soins: J1 PV=" + joueur1.getPointsDeVie());
+            //joueur1.gagnerPointsDeVie(soinsJ1);
+            controlJoueur1.recevoirEffets(-soinsJ1, 0);
+            System.out.println("DEBUG - Après soins: J1 PV=" + controlJoueur1.getPointsDeVie());
         }
         if (soinsJ2 > 0) {
             System.out.println("DEBUG - Application de " + soinsJ2 + " soins à J2");
-            joueur2.gagnerPointsDeVie(soinsJ2);
-            System.out.println("DEBUG - Après soins: J2 PV=" + joueur2.getPointsDeVie());
+            //joueur2.gagnerPointsDeVie(soinsJ2);
+            controlJoueur2.recevoirEffets(-soinsJ2, 0);
+            System.out.println("DEBUG - Après soins: J2 PV=" + controlJoueur2.getPointsDeVie());
         }
         
-        System.out.println("DEBUG - Final: J1 PV=" + joueur1.getPointsDeVie() + " Or=" + joueur1.getOr());
-        System.out.println("DEBUG - Final: J2 PV=" + joueur2.getPointsDeVie() + " Or=" + joueur2.getOr());
+        System.out.println("DEBUG - Final: J1 PV=" + controlJoueur1.getPointsDeVie() + " Or=" + controlJoueur1.getOr());
+        System.out.println("DEBUG - Final: J2 PV=" +controlJoueur2.getPointsDeVie() + " Or=" + controlJoueur2.getOr());
     }
 
     /**

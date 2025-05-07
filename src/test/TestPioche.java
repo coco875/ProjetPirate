@@ -26,6 +26,8 @@ public class TestPioche {
 		// Récupération du contrôleur de joueur 1
 		ControlJoueur controlJoueur = controlJeu.getJoueur(0);
 		
+		
+		
 		System.out.println("=== Test d'initialisation de la main ===");
 		// Utilisation de piocher au lieu de initialiserMain
 		for (int i = 0; i < 3; i++) {

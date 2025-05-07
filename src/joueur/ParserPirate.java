@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.TooManyListenersException;
 
 /**
  * Classe permettant de charger des pirates à partir de fichiers texte
@@ -69,7 +71,7 @@ public class ParserPirate {
      * @param repertoire Le répertoire contenant les fichiers de pirates
      * @return Une liste de pirates chargés
      */
-    public static List<Pirate> chargerPirates(File repertoire) {
+    /*public static List<Pirate> chargerPirates(File repertoire) {
         List<Pirate> pirates = new ArrayList<>();
         
         if (repertoire.isDirectory()) {
@@ -84,8 +86,27 @@ public class ParserPirate {
                     }
                 }
             }
-        }
+        }*/
         
-        return pirates;
+    public static List<Pirate> chargerPirates(File repertoire) {
+
+    	if (repertoire.isDirectory()) {
+    		File[] fichiers = repertoire.listFiles((dir, nom) -> nom.endsWith(".txt"));
+    		
+    		if (fichiers != null) {
+    			return Arrays.stream(fichiers)
+    									.filter(File::isFile)
+    									.map(file -> { 
+    										try {
+	    										return chargerPirate(file);
+	    									} catch (Exception e) {
+	    										System.err.println("Erreur lors du chargement du pirate " + file + ": " + e.getMessage());
+	    									}
+	    									return null;
+    									})
+    									.toList();				    									
+    		}
+    	}
+    	return new ArrayList<Pirate>();
     }
 }
