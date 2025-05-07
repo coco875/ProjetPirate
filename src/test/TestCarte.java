@@ -22,7 +22,7 @@ public class TestCarte {
 		System.out.println(d.toString());
 		
 		// Test de chargement d'une carte depuis un fichier
-		Carte e = ParserCarte.lireCarte("src/carte/resource/templateAttaque.txt");
+		Carte e = ParserCarte.lireCarte("src/ressources/cartes/templateAttaque.txt");
 		System.out.println(e.toString());
 	}
 }

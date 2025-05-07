@@ -18,11 +18,11 @@ public class TestControlPioche {
     @Test
     public void testCartesChargees() throws Exception {
         // Test spécifique pour quelques cartes clés
-        testerCarte("src/carte/resource/attaque/attaque1.txt", "Canon Dévastateur", 2, 1, 0, 0, 0); // Attaque
-        testerCarte("src/carte/resource/popularite/popularite1.txt", "Chansons de Marin", 0, 0, 2, 0, 0); // Popularité
-        testerCarte("src/carte/resource/soin/soin1.txt", "Potion du Chirurgien", 0, 0, 0, 3, 0); // Soin
-        testerCarte("src/carte/resource/tresor/tresor1.txt", "Coffre au Trésor", 0, 0, 0, 0, 10); // Trésor (gain or)
-        testerCarte("src/carte/resource/tresor/tresor3.txt", "Vol de Butin", 0, 0, 0, 0, 0); // Anciennement vol d'or, maintenant attaque simple
+        testerCarte("src/ressources/cartes/attaque/attaque1.txt", "Canon Dévastateur", 2, 1, 0, 0, 0); // Attaque
+        testerCarte("src/ressources/cartes/popularite/popularite1.txt", "Chansons de Marin", 0, 0, 2, 0, 0); // Popularité
+        testerCarte("src/ressources/cartes/soin/soin1.txt", "Potion du Chirurgien", 0, 0, 0, 3, 0); // Soin
+        testerCarte("src/ressources/cartes/tresor/tresor1.txt", "Coffre au Trésor", 0, 0, 0, 0, 10); // Trésor (gain or)
+        testerCarte("src/ressources/cartes/tresor/tresor3.txt", "Vol de Butin", 0, 0, 0, 0, 0); // Anciennement vol d'or, maintenant attaque simple
     }
     
     @Test

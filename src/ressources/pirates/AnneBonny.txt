@@ -1,3 +1,4 @@
 Femme pirate irlandaise redoutable, maîtrisant l'épée aussi bien que la stratégie.
-popularite: 7
+popularite: 0
 vie: 6
+image: images/pirate3.jpg

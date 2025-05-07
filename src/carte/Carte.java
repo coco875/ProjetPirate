@@ -16,6 +16,7 @@ public class Carte {
 	private int orPerdu;            // Or perdu en jouant cette carte
 	private int orVole;             // Or volé à l'adversaire en jouant cette carte
 	private int vieGagne;           // Points de vie gagnés en jouant cette carte
+	private String cheminImage;     // Chemin d'accès à l'image de la carte
 
 	private static int compteurId = 0;
 	
@@ -55,6 +56,8 @@ public class Carte {
 		this.vieGagne = 0;
 		// Générer un ID unique par incrémentation
 		this.id = ++compteurId;
+		// Chemin d'image par défaut
+		this.cheminImage = "images/cartes/" + nomCarte.replaceAll("\\s+", "_").toLowerCase() + ".png";
 	}
 	
 	/**
@@ -77,6 +80,14 @@ public class Carte {
 	public Carte(String jsonCarte, int idCarte, TypeCarte type) {
 		this(type, jsonCarte, "ID: " + idCarte, 0, 0, 10); // Valeurs et coût par défaut
 		this.id = idCarte;
+	}
+	
+	/**
+	 * Constructeur complet avec chemin d'image personnalisé
+	 */
+	public Carte(TypeCarte type, String nomCarte, String description, int valeur, int valeurSecondaire, int cout, String cheminImage) {
+		this(type, nomCarte, description, valeur, valeurSecondaire, cout);
+		this.cheminImage = cheminImage;
 	}
 
 	/**
@@ -179,5 +190,21 @@ public class Carte {
 	
 	public String getNomCarte() {
 		return nomCarte;
+	}
+	
+	/**
+	 * Getter pour le chemin d'image
+	 * @return Le chemin d'accès à l'image de la carte
+	 */
+	public String getCheminImage() {
+		return cheminImage;
+	}
+	
+	/**
+	 * Setter pour le chemin d'image
+	 * @param cheminImage Le nouveau chemin d'accès à l'image
+	 */
+	public void setCheminImage(String cheminImage) {
+		this.cheminImage = cheminImage;
 	}
 }

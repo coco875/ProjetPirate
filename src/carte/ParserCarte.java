@@ -39,9 +39,12 @@ public class ParserCarte {
         String type = properties.getOrDefault("type", "").toLowerCase();
         String titre = properties.getOrDefault("titre", "Sans titre");
         String description = properties.getOrDefault("description", "");
+        String cheminImage = properties.getOrDefault("image", "images/cartes/" + titre.replaceAll("\\s+", "_").toLowerCase() + ".png");
 
         try {
             // Création de la carte selon son type
+            Carte carte = null;
+            
             switch (type) {
                 case "attaque":
                     int degatsInfliges = Integer.parseInt(properties.getOrDefault("degats_infliges", "0"));
@@ -53,25 +56,30 @@ public class ParserCarte {
                     }
                     
                     // Carte offensive d'attaque directe
-                    return new CarteOffensive(titre, description, degatsInfliges, degatsSubisAttaque, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+                    carte = new CarteOffensive(titre, description, degatsInfliges, degatsSubisAttaque, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+                    break;
                     
                 case "soin":
                     int vieGagnee = Integer.parseInt(properties.getOrDefault("vie_gagnee", "0"));
-                    return new CarteOffensive(titre, description, vieGagnee);
+                    carte = new CarteOffensive(titre, description, vieGagnee);
+                    break;
 
                 case "popularite":
                     int populariteGagnee = Integer.parseInt(properties.getOrDefault("popularite_gagnee", "0"));
                     int degatsSubisPop = Integer.parseInt(properties.getOrDefault("degats_subis", "0"));
-                    return new CarteStrategique(titre, description, populariteGagnee, degatsSubisPop);
+                    carte = new CarteStrategique(titre, description, populariteGagnee, degatsSubisPop);
+                    break;
 
                 case "tresor":
                     int orGagne = Integer.parseInt(properties.getOrDefault("or_gagne", "0"));
-                    return new CarteStrategique(titre, description, orGagne, 0, true);
+                    carte = new CarteStrategique(titre, description, orGagne, 0, true);
+                    break;
 
                 case "speciale":
                     // Gestion simplifiée des cartes spéciales
                     System.err.println("Avertissement: Type 'speciale' non entièrement géré dans le parseur pour: " + titre);
-                    return new CarteStrategique(titre, description, "Effet spécial non défini", 0);
+                    carte = new CarteStrategique(titre, description, "Effet spécial non défini", 0);
+                    break;
 
                 case "passive":
                     // Gestion des cartes passives
@@ -79,11 +87,20 @@ public class ParserCarte {
                     int valeurEffetPassif = Integer.parseInt(properties.getOrDefault("valeur_effet", "0"));
                     int dureePassif = Integer.parseInt(properties.getOrDefault("duree", "2"));
                     String effetPassif = properties.getOrDefault("effet", "Effet passif");
-                    return new CarteStrategique(titre, description, valeurEffetPassif, dureePassif, effetPassif);
+                    carte = new CarteStrategique(titre, description, valeurEffetPassif, dureePassif, effetPassif);
+                    break;
 
                 default:
                     throw new IllegalArgumentException("Type de carte inconnu: " + type + " dans " + filePath);
             }
+            
+            // Définir le chemin d'image pour la carte créée
+            if (carte != null) {
+                carte.setCheminImage(cheminImage);
+            }
+            
+            return carte;
+            
         } catch (NumberFormatException e) {
             throw new Exception("Erreur de format numérique dans le fichier: " + filePath, e);
         } catch (Exception e) {

@@ -9,6 +9,7 @@ public class Pirate {
 	private String nom;
 	private String description;
 	private int popularite, vie;
+	private String cheminImage; // Attribut pour le chemin d'accès à l'image du pirate
 	private CarteCoupSpecial carteCoupSpeciale;
 
 	/**
@@ -19,6 +20,7 @@ public class Pirate {
 		this.description = description;
 		this.popularite = popularite;
 		this.vie = vie;
+		this.cheminImage = "images/" + nom + ".jpg"; // Chemin d'accès par défaut basé sur le nom
 	}
 	
 	/**
@@ -29,6 +31,18 @@ public class Pirate {
 		this.description = ""; // Description par défaut
 		this.popularite = 0; // Popularité initiale
 		this.vie = 5; // Points de vie initiaux
+		this.cheminImage = "images/" + nom + ".jpg"; // Chemin d'accès par défaut basé sur le nom
+	}
+	
+	/**
+	 * Constructeur complet d'un pirate avec spécification du chemin d'image
+	 */
+	public Pirate(String nom, String description, int popularite, int vie, String cheminImage) {
+		this.nom = nom;
+		this.description = description;
+		this.popularite = popularite;
+		this.vie = vie;
+		this.cheminImage = cheminImage;
 	}
 
 	// Getters et setters
@@ -67,5 +81,13 @@ public class Pirate {
 	
 	public void setVie(int vie) {
 		this.vie = vie;
+	}
+	
+	public String getCheminImage() {
+		return cheminImage;
+	}
+	
+	public void setCheminImage(String cheminImage) {
+		this.cheminImage = cheminImage;
 	}
 }

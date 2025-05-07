@@ -1,3 +1,4 @@
 Le plus redoutable pirate des Caraïbes, connu pour sa barbe sombre et son tempérament féroce.
-popularite: 8
-vie: 7
+popularite: 0
+vie: 6
+image: images/davy.jpg
