@@ -17,10 +17,9 @@ public class PanelImage extends javax.swing.JPanel {
 
     private Image image;
     
-    public PanelImage(String nomImage) {
+    public PanelImage(String chemin) {
         initComponents();
-        String local_path = System.getProperty("user.dir");
-        File image_path = new File(local_path+"/images/" + nomImage + ".jpg");
+        File image_path = new File(chemin);
         try {
             image = ImageIO.read(image_path);
         } catch (IOException io) {

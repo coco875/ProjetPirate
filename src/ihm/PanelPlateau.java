@@ -20,7 +20,7 @@ public class PanelPlateau extends javax.swing.JPanel {
     
     public PanelPlateau(){
         String local_path = System.getProperty("user.dir");
-        File image_path = new File(local_path+"/images/plateau.jpg");
+        File image_path = new File(local_path+"/src/ressources/image_plateau/plateau.jpg");
         try {
             image = ImageIO.read(image_path);
         } catch (IOException io) {

@@ -27,12 +27,14 @@ public class PanelPirate extends javax.swing.JPanel {
     private static final List<Consumer<Boolean>> callbacks = new ArrayList<>();
     private static JLabel leftDescriptionLabel;
     private static JLabel rightDescriptionLabel;
+    private Pirate pirate;
     
-    public PanelPirate(String pirateName, boolean isLeftGroup) {
-        this.nomPirate = pirateName;
+    public PanelPirate(Pirate pirate, boolean isLeftGroup) {
+        this.pirate = pirate;
+        this.nomPirate = pirate.getNom();
         this.isLeftGroup = isLeftGroup;
         String local_path = System.getProperty("user.dir");
-        File image_path = new File(local_path+"/images/"+pirateName+".jpg");
+        File image_path = new File(local_path + "/" + pirate.getCheminImage());
         try {
             image = ImageIO.read(image_path);
         } catch (IOException io) {
@@ -86,14 +88,18 @@ public class PanelPirate extends javax.swing.JPanel {
         leftDescriptionLabel = leftLabel;
         rightDescriptionLabel = rightLabel;
     }
+    
+    public Pirate getPirate(){
+        return this.pirate;
+    }
 
     private static void updateDescriptionLabels() {
         SwingUtilities.invokeLater(() -> {
             if (selectedLeft != null && leftDescriptionLabel != null) {
-                leftDescriptionLabel.setText(selectedLeft.getDescription());
+                leftDescriptionLabel.setText("<html>" + selectedLeft.getDescription() + "</html>");
             }
             if (selectedRight != null && rightDescriptionLabel != null) {
-                rightDescriptionLabel.setText(selectedRight.getDescription());
+                rightDescriptionLabel.setText("<html>" + selectedRight.getDescription() + "</html>");
             }
         });
     }
@@ -141,18 +147,7 @@ public class PanelPirate extends javax.swing.JPanel {
     }
     
     public String getDescription() {
-        switch(this.nomPirate) { 
-            case "jack":
-                return "Jack Sparrow - Capitaine excentrique";
-            case "davy":
-                return "Davy Jones - Maître des profondeurs";
-            case "pirate3":
-                return "Barbe Noire - Terrible et impitoyable";
-            case "pirate4":
-                return "Capitaine Hook - Rusé et déterminé";
-            default:
-                return "Pirate inconnu";
-        }
+        return pirate.getNom() + " - " + pirate.getDescription();
     }
     public static PanelPirate getSelectedLeft() {
         return selectedLeft;
