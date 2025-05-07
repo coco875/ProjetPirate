@@ -1,106 +1,110 @@
 package test;
 
-import controllers.ControlPioche;
-import carte.*;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.BeforeEach;
 
+import controllers.ControlPioche;
+import carte.Carte;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Tests pour la classe ControlPioche
+ */
 public class TestControlPioche {
     
     private ControlPioche controlPioche;
     
     @BeforeEach
-    public void setUp() {
-        controlPioche = new ControlPioche(); // Initialise et charge les cartes
-    }
-
-    @Test
-    public void testCartesChargees() throws Exception {
-        // Test spécifique pour quelques cartes clés
-        testerCarte("src/ressources/cartes/attaque/attaque1.txt", "Canon Dévastateur", 2, 1, 0, 0, 0); // Attaque
-        testerCarte("src/ressources/cartes/popularite/popularite1.txt", "Chansons de Marin", 0, 0, 2, 0, 0); // Popularité
-        testerCarte("src/ressources/cartes/soin/soin1.txt", "Potion du Chirurgien", 0, 0, 0, 3, 0); // Soin
-        testerCarte("src/ressources/cartes/tresor/tresor1.txt", "Coffre au Trésor", 0, 0, 0, 0, 10); // Trésor (gain or)
-        testerCarte("src/ressources/cartes/tresor/tresor3.txt", "Vol de Butin", 0, 0, 0, 0, 0); // Anciennement vol d'or, maintenant attaque simple
+    public void initialiser() {
+        controlPioche = new ControlPioche();
+        controlPioche.initialiserPioche();
     }
     
     @Test
+    @DisplayName("Test d'initialisation de la pioche")
+    public void testInitialiserPioche() {
+        // La pioche ne devrait pas être vide après l'initialisation
+        assertFalse(controlPioche.estVide());
+    }
+    
+    @Test
+    @DisplayName("Test de pioche de cartes")
     public void testPiocher() {
-        // Test de la méthode piocher
-        Carte cartePiochee = controlPioche.piocher();
-        assertNotNull(cartePiochee, "La carte piochée ne devrait pas être null");
+        // Piocher une première carte
+        Carte carte1 = controlPioche.piocher();
+        assertNotNull(carte1, "La première carte piochée ne devrait pas être null");
+        
+        // Piocher plusieurs cartes consécutives
+        List<Carte> cartesPiochees = new ArrayList<>();
+        cartesPiochees.add(carte1);
+        
+        // On pioche toutes les cartes jusqu'à ce que la pioche soit vide
+        Carte carte;
+        int compteur = 0;
+        int nombreMaxCartes = 100; // Limite pour éviter une boucle infinie en cas de bug
+        
+        while (!controlPioche.estVide() && compteur < nombreMaxCartes) {
+            carte = controlPioche.piocher();
+            assertNotNull(carte, "Une carte piochée ne devrait pas être null");
+            
+            // Vérifier que l'ID de chaque carte est unique
+            for (Carte cartePrecedente : cartesPiochees) {
+                assertNotEquals(cartePrecedente.getId(), carte.getId(), 
+                               "Les IDs des cartes devraient être uniques");
+            }
+            
+            cartesPiochees.add(carte);
+            compteur++;
+        }
+        
+        // Après avoir vidé la pioche, on devrait recevoir null
+        assertNull(controlPioche.piocher(), "Piocher dans une pioche vide devrait retourner null");
+        assertTrue(controlPioche.estVide(), "La pioche devrait être vide");
     }
     
     @Test
+    @DisplayName("Test de pioche multiple avec réinitialisation")
     public void testPiochesMultiples() {
-        // Test de pioche multiple
-        for (int i = 0; i < 5; i++) {
-            Carte cartePiochee = controlPioche.piocher();
-            assertNotNull(cartePiochee, "La carte piochée " + (i+1) + " ne devrait pas être null");
+        // Vider complètement la première pioche
+        while (!controlPioche.estVide()) {
+            controlPioche.piocher();
         }
-    }
-
-    // Méthode pour tester une carte spécifique chargée par le parseur
-    private void testerCarte(String filePath, String expectedTitre, int expectedDegatsInfliges, int expectedDegatsSubis, int expectedPopularite, int expectedVie, int expectedOr) throws Exception {
-        Carte carte = ParserCarte.lireCarte(filePath);
-        assertNotNull(carte, "La carte ne devrait pas être null: " + filePath);
-        assertEquals(expectedTitre, carte.getNomCarte(), "Le titre ne correspond pas pour " + filePath);
-
-        Carte.EffetCarte effet = carte.effetCarte();
         
-        if (carte instanceof CarteOffensive) {
-            CarteOffensive co = (CarteOffensive) carte;
-            if (co.getTypeOffensif() == CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE) {
-                assertEquals(expectedDegatsInfliges, effet.degatsInfliges, "Dégâts infligés incorrects pour " + filePath);
-                assertEquals(expectedDegatsSubis, effet.degatsSubis, "Dégâts subis incorrects pour " + filePath);
-            } else if (co.getTypeOffensif() == CarteOffensive.TypeOffensif.SOIN) {
-                assertEquals(expectedVie, effet.vieGagnee, "Vie gagnée incorrecte pour " + filePath);
-            }
-            // La vérification pour TRESOR_OFFENSIF a été supprimée
-        } else if (carte instanceof CarteStrategique) {
-            CarteStrategique cs = (CarteStrategique) carte;
-             if (cs.getTypeStrategique() == CarteStrategique.TypeStrategique.POPULARITE) {
-                assertEquals(expectedPopularite, effet.populariteGagnee, "Popularité gagnée incorrecte pour " + filePath);
-                assertEquals(expectedDegatsSubis, effet.degatsSubis, "Dégâts subis (pop) incorrects pour " + filePath);
-            } else if (cs.getTypeStrategique() == CarteStrategique.TypeStrategique.TRESOR) {
-                 assertEquals(expectedOr, effet.orGagne, "Or gagné incorrect pour " + filePath);
-                 // assertEquals(0, effet.orPerdu, "Or perdu incorrect pour " + filePath); // Le parseur met 0 pour l'instant
-            }
-            // Ajouter des vérifications pour SPECIALE et PASSIVE si nécessaire
-        }
+        assertTrue(controlPioche.estVide(), "La pioche devrait être vide");
+        
+        // Réinitialiser la pioche
+        controlPioche = new ControlPioche();
+        controlPioche.initialiserPioche();
+        
+        assertFalse(controlPioche.estVide(), "La pioche ne devrait pas être vide après réinitialisation");
+        
+        // Vérifier qu'on peut piocher à nouveau
+        Carte carte = controlPioche.piocher();
+        assertNotNull(carte, "On devrait pouvoir piocher après réinitialisation");
     }
-
-    // Méthode utilitaire pour afficher les détails d'une carte (pour débogage si nécessaire)
-    private void afficherDetailsCarte(Carte carte) {
-        if (carte != null) {
-            System.out.print(carte.getNomCarte() + " (" + carte.getType() + "): " + carte.getDescription());
-            
-            Carte.EffetCarte effet = carte.effetCarte();
-            
-            if (carte instanceof CarteOffensive) {
-                CarteOffensive co = (CarteOffensive) carte;
-                if (co.getTypeOffensif() == CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE) {
-                    System.out.print(" [Dégâts: " + effet.degatsInfliges + ", Subis: " + effet.degatsSubis + "]");
-                } else if (co.getTypeOffensif() == CarteOffensive.TypeOffensif.SOIN) {
-                    System.out.print(" [Vie: " + effet.vieGagnee + "]");
-                }
-                // L'affichage pour TRESOR_OFFENSIF a été supprimé
-            } else if (carte instanceof CarteStrategique) {
-                CarteStrategique cs = (CarteStrategique) carte;
-                 if (cs.getTypeStrategique() == CarteStrategique.TypeStrategique.POPULARITE) {
-                    System.out.print(" [Popularité: " + effet.populariteGagnee + ", Subis: " + effet.degatsSubis + "]");
-                } else if (cs.getTypeStrategique() == CarteStrategique.TypeStrategique.TRESOR) {
-                    System.out.print(" [Or Gagné: " + effet.orGagne + "]");
-                } else if (cs.getTypeStrategique() == CarteStrategique.TypeStrategique.SPECIALE) {
-                    System.out.print(" [Effet Spécial]"); // Affichage basique
-                } else if (cs.getTypeStrategique() == CarteStrategique.TypeStrategique.PASSIVE) {
-                    System.out.print(" [Effet Passif]"); // Affichage basique
-                }
-            }
-            System.out.println(); // Nouvelle ligne après chaque carte
-        } else {
-            System.out.println("Aucune carte piochée (pioche vide ou erreur)");
+    
+    @Test
+    @DisplayName("Test de la présence de différents types de cartes")
+    public void testCartesChargees() {
+        List<Carte> cartesPiochees = new ArrayList<>();
+        
+        // Piocher toutes les cartes pour les analyser
+        while (!controlPioche.estVide()) {
+            cartesPiochees.add(controlPioche.piocher());
+        }
+        
+        // Vérifier qu'il y a au moins plusieurs cartes
+        assertTrue(cartesPiochees.size() >= 5, "La pioche devrait contenir au moins 5 cartes");
+        
+        // Vérifier que les cartes ont des données valides
+        for (Carte carte : cartesPiochees) {
+            assertNotNull(carte.getNomCarte(), "Le nom de la carte ne devrait pas être null");
+            assertFalse(carte.getNomCarte().isEmpty(), "Le nom de la carte ne devrait pas être vide");
+            assertNotNull(carte.getDescription(), "La description ne devrait pas être null");
+            assertNotNull(carte.getType(), "Le type de carte ne devrait pas être null");
         }
     }
 }

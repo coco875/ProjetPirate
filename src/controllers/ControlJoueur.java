@@ -227,11 +227,8 @@ public class ControlJoueur {
                 perdrePointsDeVie(effet.degatsInfliges);
             }
             
-            // On pourrait ajouter d'autres effets ici en utilisant les propriétés de EffetCarte
-            if (effet.orVole > 0) {
-                // Perte d'or due à un vol
-                perdreOr(effet.orVole);
-            }
+            // La fonctionnalité de vol d'or a été supprimée
+            // Toute référence à effet.orVole a été retirée
         }
     }
     

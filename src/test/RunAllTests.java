@@ -1,51 +1,52 @@
 package test;
 
+import org.junit.platform.launcher.Launcher;
+import org.junit.platform.launcher.LauncherDiscoveryRequest;
+import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
+import org.junit.platform.launcher.core.LauncherFactory;
+import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
+import org.junit.platform.launcher.listeners.TestExecutionSummary;
+import org.junit.platform.launcher.TestPlan;
+
+import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
+
 /**
  * Classe principale exécutant l'ensemble des tests unitaires du projet
  */
 public class RunAllTests {
     public static void main(String[] args) throws Exception {
-        System.out.println("Lancement de tous les tests...");
+        System.out.println("Lancement de tous les tests JUnit...");
 
-        // Test de la classe Carte
-        System.out.println("\nTestCarte:");
-        TestCarte.main(args);
+        // Créer un lanceur JUnit
+        SummaryGeneratingListener listener = new SummaryGeneratingListener();
+        LauncherDiscoveryRequest request = LauncherDiscoveryRequestBuilder.request()
+                .selectors(selectPackage("test"))
+                .build();
 
-        // Test de la classe Pioche
-        System.out.println("\nTestPioche:");
-        TestPioche.main(args);
+        Launcher launcher = LauncherFactory.create();
+        TestPlan testPlan = launcher.discover(request);
+        launcher.registerTestExecutionListeners(listener);
+        launcher.execute(request);
 
-        // Test de la classe Joueur
-        System.out.println("\nTestJoueur:");
-        // TestJoueur.main(args);
-
-        // Test de la classe ControlJeu
-        System.out.println("\nTestControlJeu:");
-        // TestControlJeu.main(args);
+        // Obtenir et afficher le résumé d'exécution
+        TestExecutionSummary summary = listener.getSummary();
+        System.out.println("\nRésultats des tests :");
+        System.out.println("Tests exécutés : " + summary.getTestsFoundCount());
+        System.out.println("Tests réussis : " + summary.getTestsSucceededCount());
+        System.out.println("Tests échoués : " + summary.getTestsFailedCount());
         
-        // Test de la classe ControlJoueur
-        System.out.println("\nTestControlJoueur:");
-        // TestControlJoueur.main(args);
-        
-        // Test de la classe ControlCartePlateau
-        System.out.println("\nTestControlCartePlateau:");
-        // TestControlCartePlateau.main(args);
-        
-        // Test de la classe ControlCarteSpeciale
-        System.out.println("\nTestControlCarteSpeciale:");
-        // TestControlCarteSpeciale.main(args);
-        
-        // Test de la classe ControlMarche
-        System.out.println("\nTestControlMarche:");
-        TestControlMarche.main(args);
-        
-        // Test de la classe ControlPioche
-        System.out.println("\nTestControlPioche:");
-        // TestControlPioche.main(args);
-        
-        // Test de la classe BoundaryJeu
-        System.out.println("\nTestBoundaryJeu:");
-        TestBoundaryJeu.main(args);
+        // Exécuter les anciens tests (s'ils ont une méthode main)
+        try {
+            System.out.println("\nLancement des tests avec méthode main :");
+            
+            System.out.println("\nTestPioche:");
+            TestPioche.main(args);
+            
+            System.out.println("\nTestControlMarche:");
+            TestControlMarche.main(args);
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'exécution des tests avec méthode main : " + e.getMessage());
+        }
 
         System.out.println("\nTous les tests ont été exécutés.");
     }
