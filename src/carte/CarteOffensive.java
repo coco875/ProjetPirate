@@ -77,7 +77,7 @@ public class CarteOffensive extends Carte {
         CarteOffensive carte = new CarteOffensive(
             carteSoin.getNomCarte(),
             carteSoin.getDescription(),
-            carteSoin.getVieGagne()
+            carteSoin.getValeur() // Utilisation de getValeur() au lieu de getVieGagne()
         );
         carte.setCout(carteSoin.getCout());
         return carte;
@@ -152,6 +152,34 @@ public class CarteOffensive extends Carte {
 
     public int getOrVole() {
         return 0; // Méthode conservée pour la compatibilité mais renvoie toujours 0
+    }
+    
+    /**
+     * Redéfinition de la méthode effetCarte pour les cartes offensives
+     */
+    @Override
+    public EffetCarte effetCarte() {
+        EffetCarte effet = new EffetCarte();
+        
+        switch (typeOffensif) {
+            case ATTAQUE_DIRECTE:
+                effet.degatsInfliges = getValeur();
+                effet.degatsSubis = getValeurSecondaire();
+                effet.estAttaque = true;
+                break;
+            case COUP_SPECIAL:
+                effet.degatsInfliges = getValeur();
+                effet.effetSpecial = "Coup spécial";
+                effet.estSpeciale = true;
+                effet.estAttaque = true;
+                break;
+            case SOIN:
+                effet.vieGagnee = getValeur();
+                effet.estSoin = true;
+                break;
+        }
+        
+        return effet;
     }
     
     /**

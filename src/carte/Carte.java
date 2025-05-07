@@ -81,46 +81,12 @@ public class Carte {
 
 	/**
 	 * Méthode centrale pour obtenir tous les effets d'une carte
-	 * Cette méthode remplace toutes les méthodes spécifiques
+	 * Cette méthode sera redéfinie par les classes dérivées
 	 * @return Un objet contenant tous les effets et caractéristiques de la carte
 	 */
 	public EffetCarte effetCarte() {
 		EffetCarte effet = new EffetCarte();
-		
-		// Calcul des effets en fonction du type de carte
-		if (this instanceof CarteOffensive) {
-			CarteOffensive carteOff = (CarteOffensive) this;
-			if (carteOff.estAttaqueDirecte()) {
-				effet.degatsInfliges = this.valeur;
-				effet.degatsSubis = this.valeurSecondaire;
-				effet.estAttaque = true;
-			} else if (carteOff.estSoin()) {
-				effet.vieGagnee = this.vieGagne;
-				effet.estSoin = true;
-			} else if (carteOff.estTresorOffensif()) {
-				effet.orVole = this.orVole;
-			}
-		} else if (this instanceof CarteStrategique) {
-			CarteStrategique carteStrat = (CarteStrategique) this;
-			if (carteStrat.estPopularite()) {
-				effet.populariteGagnee = this.valeur;
-				effet.degatsSubis = this.valeurSecondaire;
-				effet.estPopularite = true;
-			} else if (carteStrat.estTresor()) {
-				effet.orGagne = this.orGagne;
-				effet.orPerdu = this.orPerdu;
-				effet.estTresor = true;
-			} else if (carteStrat.estSpeciale()) {
-				effet.effetSpecial = carteStrat.getTypeEffet();
-				effet.dureeEffet = 1; // Par défaut, effet immédiat
-				effet.estSpeciale = true;
-			} else if (carteStrat.estPassive()) {
-				effet.effetSpecial = carteStrat.getTypeEffet();
-				effet.dureeEffet = carteStrat.getDuree();
-				effet.estPassive = true;
-			}
-		}
-		
+		// Implémentation de base qui peut être redéfinie par les sous-classes
 		return effet;
 	}
 
@@ -213,61 +179,5 @@ public class Carte {
 	
 	public String getNomCarte() {
 		return nomCarte;
-	}
-	
-	// Méthodes d'accès simplifiées utilisant effetCarte()
-	
-	public int getDegats() {
-		return effetCarte().degatsInfliges;
-	}
-	
-	public int getDegatsInfliges() {
-		return effetCarte().degatsInfliges;
-	}
-	
-	public int getDegatsSubis() {
-		return effetCarte().degatsSubis;
-	}
-	
-	public int getPopularite() {
-		return effetCarte().populariteGagnee;
-	}
-	
-	public int getDegatsSubisPopularite() {
-		return effetCarte().estPopularite ? effetCarte().degatsSubis : 0;
-	}
-	
-	// Getters et Setters pour les attributs monétaires et de vie
-	
-	public int getOrGagne() {
-		return orGagne;
-	}
-	
-	public void setOrGagne(int orGagne) {
-		this.orGagne = orGagne;
-	}
-	
-	public int getOrPerdu() {
-		return orPerdu;
-	}
-	
-	public void setOrPerdu(int orPerdu) {
-		this.orPerdu = orPerdu;
-	}
-	
-	public int getOrVole() {
-		return orVole;
-	}
-	
-	public void setOrVole(int orVole) {
-		this.orVole = orVole;
-	}
-	
-	public int getVieGagne() {
-		return vieGagne;
-	}
-	
-	public void setVieGagne(int vieGagne) {
-		this.vieGagne = vieGagne;
 	}
 }

@@ -47,23 +47,25 @@ public class TestControlPioche {
         assertNotNull(carte, "La carte ne devrait pas être null: " + filePath);
         assertEquals(expectedTitre, carte.getNomCarte(), "Le titre ne correspond pas pour " + filePath);
 
+        Carte.EffetCarte effet = carte.effetCarte();
+        
         if (carte instanceof CarteOffensive) {
             CarteOffensive co = (CarteOffensive) carte;
             if (co.getTypeOffensif() == CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE) {
-                assertEquals(expectedDegatsInfliges, co.getDegatsInfliges(), "Dégâts infligés incorrects pour " + filePath);
-                assertEquals(expectedDegatsSubis, co.getDegatsSubis(), "Dégâts subis incorrects pour " + filePath);
+                assertEquals(expectedDegatsInfliges, effet.degatsInfliges, "Dégâts infligés incorrects pour " + filePath);
+                assertEquals(expectedDegatsSubis, effet.degatsSubis, "Dégâts subis incorrects pour " + filePath);
             } else if (co.getTypeOffensif() == CarteOffensive.TypeOffensif.SOIN) {
-                assertEquals(expectedVie, co.getVieGagnee(), "Vie gagnée incorrecte pour " + filePath);
+                assertEquals(expectedVie, effet.vieGagnee, "Vie gagnée incorrecte pour " + filePath);
             }
             // La vérification pour TRESOR_OFFENSIF a été supprimée
         } else if (carte instanceof CarteStrategique) {
             CarteStrategique cs = (CarteStrategique) carte;
              if (cs.getTypeStrategique() == CarteStrategique.TypeStrategique.POPULARITE) {
-                assertEquals(expectedPopularite, cs.getPopulariteGagnee(), "Popularité gagnée incorrecte pour " + filePath);
-                assertEquals(expectedDegatsSubis, cs.getDegatsSubis(), "Dégâts subis (pop) incorrects pour " + filePath);
+                assertEquals(expectedPopularite, effet.populariteGagnee, "Popularité gagnée incorrecte pour " + filePath);
+                assertEquals(expectedDegatsSubis, effet.degatsSubis, "Dégâts subis (pop) incorrects pour " + filePath);
             } else if (cs.getTypeStrategique() == CarteStrategique.TypeStrategique.TRESOR) {
-                 assertEquals(expectedOr, cs.getOrGagne(), "Or gagné incorrect pour " + filePath);
-                 // assertEquals(0, cs.getOrPerdu(), "Or perdu incorrect pour " + filePath); // Le parseur met 0 pour l'instant
+                 assertEquals(expectedOr, effet.orGagne, "Or gagné incorrect pour " + filePath);
+                 // assertEquals(0, effet.orPerdu, "Or perdu incorrect pour " + filePath); // Le parseur met 0 pour l'instant
             }
             // Ajouter des vérifications pour SPECIALE et PASSIVE si nécessaire
         }
@@ -73,20 +75,23 @@ public class TestControlPioche {
     private void afficherDetailsCarte(Carte carte) {
         if (carte != null) {
             System.out.print(carte.getNomCarte() + " (" + carte.getType() + "): " + carte.getDescription());
+            
+            Carte.EffetCarte effet = carte.effetCarte();
+            
             if (carte instanceof CarteOffensive) {
                 CarteOffensive co = (CarteOffensive) carte;
                 if (co.getTypeOffensif() == CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE) {
-                    System.out.print(" [Dégâts: " + co.getDegatsInfliges() + ", Subis: " + co.getDegatsSubis() + "]");
+                    System.out.print(" [Dégâts: " + effet.degatsInfliges + ", Subis: " + effet.degatsSubis + "]");
                 } else if (co.getTypeOffensif() == CarteOffensive.TypeOffensif.SOIN) {
-                    System.out.print(" [Vie: " + co.getVieGagnee() + "]");
+                    System.out.print(" [Vie: " + effet.vieGagnee + "]");
                 }
                 // L'affichage pour TRESOR_OFFENSIF a été supprimé
             } else if (carte instanceof CarteStrategique) {
                 CarteStrategique cs = (CarteStrategique) carte;
                  if (cs.getTypeStrategique() == CarteStrategique.TypeStrategique.POPULARITE) {
-                    System.out.print(" [Popularité: " + cs.getPopulariteGagnee() + ", Subis: " + cs.getDegatsSubis() + "]");
+                    System.out.print(" [Popularité: " + effet.populariteGagnee + ", Subis: " + effet.degatsSubis + "]");
                 } else if (cs.getTypeStrategique() == CarteStrategique.TypeStrategique.TRESOR) {
-                    System.out.print(" [Or Gagné: " + cs.getOrGagne() + "]");
+                    System.out.print(" [Or Gagné: " + effet.orGagne + "]");
                 } else if (cs.getTypeStrategique() == CarteStrategique.TypeStrategique.SPECIALE) {
                     System.out.print(" [Effet Spécial]"); // Affichage basique
                 } else if (cs.getTypeStrategique() == CarteStrategique.TypeStrategique.PASSIVE) {

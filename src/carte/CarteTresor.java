@@ -1,12 +1,14 @@
 package carte;
 
 /**
- * @brief Classe représentant une carte de trésor (hérite de CarteStrategique)
+ * Classe représentant une carte de trésor (hérite de CarteStrategique)
  */
 public class CarteTresor extends CarteStrategique {
 
+    private int orVole; // Or volé à l'adversaire (non utilisé dans la version actuelle)
+
     /**
-     * @brief Constructeur standard pour une carte de trésor
+     * Constructeur standard pour une carte de trésor
      * @param nomCarte Nom de la carte
      * @param description Description de la carte
      * @param orGagne Or gagné en jouant la carte
@@ -14,15 +16,18 @@ public class CarteTresor extends CarteStrategique {
      * @param orVole Or volé à l'adversaire (non utilisé dans la version actuelle)
      */
     public CarteTresor(String nomCarte, String description, int orGagne, int orPerdu, int orVole) {
-        // Correction: Appel du constructeur approprié de CarteStrategique pour TRESOR
-        // en passant true comme 5ème paramètre au lieu de orVole
+        // Utilisation du constructeur de base de CarteStrategique pour carte trésor
         super(nomCarte, description, orGagne, orPerdu, true);
-        // Si orVole est nécessaire, définir cette propriété séparément
-        setOrVole(orVole);
+        this.orVole = orVole; // Stockage local pour l'orVole
+        
+        // Afficher un avertissement si orVole est utilisé
+        if (orVole > 0) {
+            System.out.println("Avertissement: L'attribut 'or_vole' est ignoré car la fonctionnalité de vol d'or a été supprimée. Carte: " + nomCarte);
+        }
     }
 
     /**
-     * @brief Constructeur complet pour une carte de trésor avec coût
+     * Constructeur complet pour une carte de trésor avec coût
      * @param nomCarte Nom de la carte
      * @param description Description de la carte
      * @param orGagne Or gagné
@@ -31,11 +36,51 @@ public class CarteTresor extends CarteStrategique {
      * @param cout Coût d'achat de la carte
      */
     public CarteTresor(String nomCarte, String description, int orGagne, int orPerdu, int orVole, int cout) {
-        // Correction: Appel du constructeur approprié de CarteStrategique pour TRESOR
+        // Utilisation du constructeur de base de CarteStrategique pour carte trésor avec coût
         super(nomCarte, description, orGagne, orPerdu, true, cout);
-        // Si orVole est nécessaire, définir cette propriété séparément
-        setOrVole(orVole);
+        this.orVole = orVole; // Stockage local pour l'orVole
+        
+        // Afficher un avertissement si orVole est utilisé
+        if (orVole > 0) {
+            System.out.println("Avertissement: L'attribut 'or_vole' est ignoré car la fonctionnalité de vol d'or a été supprimée. Carte: " + nomCarte);
+        }
     }
     
-    // Les méthodes getOrGagne, getOrPerdu, getOrVole sont héritées de Carte.
+    /**
+     * @return La valeur d'or volé (pour compatibilité avec le code existant)
+     */
+    public int getOrVole() {
+        return orVole;
+    }
+    
+    /**
+     * Redéfinition de la méthode effetCarte pour inclure l'or volé
+     */
+    @Override
+    public EffetCarte effetCarte() {
+        EffetCarte effet = super.effetCarte();
+        effet.orVole = this.orVole;
+        return effet;
+    }
+    
+    /**
+     * Représentation textuelle de la carte
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getNomCarte()).append("\n").append(getDescription());
+        
+        if (getOrGagne() > 0) {
+            sb.append("\nOr gagné: ").append(getOrGagne());
+        }
+        if (getOrPerdu() > 0) {
+            sb.append("\nOr perdu: ").append(getOrPerdu());
+        }
+        if (this.orVole > 0) {
+            sb.append("\nOr volé: ").append(this.orVole);
+        }
+        
+        return sb.toString();
+    }
 }

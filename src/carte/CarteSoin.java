@@ -31,10 +31,10 @@ public class CarteSoin extends CarteOffensive {
     }
     
     /**
-     * @brief Récupère les points de soin (alias pour getVieGagne)
+     * @brief Récupère les points de soin (utilise directement la valeur)
      * @return Points de soin
      */
     public int getPointsDeSoin() {
-        return getVieGagne(); // vieGagne est défini dans le constructeur super()
+        return getValeur(); // On utilise getValeur() au lieu de getVieGagne()
     }
 }

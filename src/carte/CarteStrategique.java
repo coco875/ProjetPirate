@@ -9,6 +9,9 @@ public class CarteStrategique extends Carte {
 	private int duree;                        // Durée d'effet en nombre de tours pour les cartes passives
 	private String effetSpecial;              // Description de l'effet spécial pour les cartes spéciales
 	private boolean estReutilisable;          // Indique si la carte peut être réutilisée
+	// Attributs spécifiques aux cartes trésor
+	private int tresorOrGagne;
+	private int tresorOrPerdu;
 	
 	/**
 	 * Types spécifiques de cartes stratégiques
@@ -94,8 +97,8 @@ public class CarteStrategique extends Carte {
 	public CarteStrategique(String nomCarte, String description, int orGagne, int orPerdu, boolean estTresor) {
 		super(TypeCarte.STRATEGIQUE, nomCarte, description, 0, 0);
 		this.typeStrategique = TypeStrategique.TRESOR;
-		setOrGagne(orGagne);
-		setOrPerdu(orPerdu);
+		this.tresorOrGagne = orGagne;
+		this.tresorOrPerdu = orPerdu;
 	}
 	
 	/**
@@ -105,8 +108,8 @@ public class CarteStrategique extends Carte {
 						boolean estTresor, int cout) {
 		super(TypeCarte.STRATEGIQUE, nomCarte, description, 0, 0, cout);
 		this.typeStrategique = TypeStrategique.TRESOR;
-		setOrGagne(orGagne);
-		setOrPerdu(orPerdu);
+		this.tresorOrGagne = orGagne;
+		this.tresorOrPerdu = orPerdu;
 	}
 	
 	// Méthodes de conversion depuis les anciens types
@@ -115,8 +118,8 @@ public class CarteStrategique extends Carte {
 		return new CarteStrategique(
 			cartePopularite.getNomCarte(),
 			cartePopularite.getDescription(),
-			cartePopularite.getPopularite(),
-			cartePopularite.getDegatsSubisPopularite(),
+			cartePopularite.getValeur(),  // Utilisation de getValeur() au lieu de getPopularite()
+			cartePopularite.getValeurSecondaire(),  // Utilisation de getValeurSecondaire() au lieu de getDegatsSubisPopularite()
 			cartePopularite.getCout()
 		);
 	}
@@ -188,6 +191,28 @@ public class CarteStrategique extends Carte {
 		this.estReutilisable = estReutilisable;
 	}
 	
+	// Accesseurs spécifiques selon le type
+	
+	public int getPopulariteGagnee() {
+		return getValeur();
+	}
+	
+	public int getDegatsSubis() {
+		return getValeurSecondaire();
+	}
+	
+	public String getTypeEffet() {
+		return this.effetSpecial;
+	}
+	
+	public int getOrGagne() {
+		return this.tresorOrGagne;
+	}
+	
+	public int getOrPerdu() {
+		return this.tresorOrPerdu;
+	}
+	
 	// Méthodes spécifiques
 	
 	/**
@@ -215,18 +240,41 @@ public class CarteStrategique extends Carte {
 		return this.typeStrategique == TypeStrategique.TRESOR;
 	}
 	
-	// Accesseurs spécifiques selon le type
-	
-	public int getPopulariteGagnee() {
-		return getValeur();
-	}
-	
-	public int getDegatsSubis() {
-		return getValeurSecondaire();
-	}
-	
-	public String getTypeEffet() {
-		return this.effetSpecial;
+	/**
+	 * Redéfinition de la méthode effetCarte pour les cartes stratégiques
+	 */
+	@Override
+	public EffetCarte effetCarte() {
+		EffetCarte effet = new EffetCarte();
+		
+		switch (typeStrategique) {
+			case POPULARITE:
+				effet.populariteGagnee = getValeur();
+				effet.degatsSubis = getValeurSecondaire();
+				effet.estPopularite = true;
+				break;
+			case PASSIVE:
+				// Correction: valeur n'existe pas dans EffetCarte, on utilise populariteGagnee
+				effet.populariteGagnee = getValeur();
+				effet.dureeEffet = getDuree();
+				effet.effetSpecial = getEffetSpecial();
+				effet.estPassive = true;
+				break;
+			case SPECIALE:
+				// Correction: valeur n'existe pas dans EffetCarte, on utilise populariteGagnee
+				effet.populariteGagnee = getValeur();
+				effet.effetSpecial = getEffetSpecial();
+				effet.estSpeciale = true;
+				break;
+			case TRESOR:
+				effet.orGagne = this.tresorOrGagne;
+				effet.orPerdu = this.tresorOrPerdu;
+				effet.orVole = 0; // pas de vol d'or
+				effet.estTresor = true;
+				break;
+		}
+		
+		return effet;
 	}
 	
 	/**

@@ -6,6 +6,7 @@ import java.util.List;
 import carte.Carte;
 import carte.CarteOffensive;
 import carte.CarteStrategique;
+import carte.TypeCarte;
 import joueur.Joueur;
 
 /**
@@ -105,27 +106,26 @@ public class ControlJoueur {
         }
         
         Carte carte = joueur.getMain().get(indexCarte);
+        Carte.EffetCarte effet = carte.effetCarte();
         
         // Détermine si ce contrôleur gère le joueur 1 ou 2
         boolean estJoueur1 = (this == controlJeu.getJoueur(0));
 
-        if (carte instanceof CarteOffensive) {
+        if (carte.getType() == TypeCarte.OFFENSIVE || effet.estAttaque || effet.estSoin) {
             // Jouer une carte offensive
-            CarteOffensive carteOff = (CarteOffensive) carte;
             if (estJoueur1) {
-                controlCartePlateau.ajouterCarteOffensiveJ1(carteOff);
+                controlCartePlateau.ajouterCarteOffensiveJ1((CarteOffensive)carte);
             } else {
-                controlCartePlateau.ajouterCarteOffensiveJ2(carteOff);
+                controlCartePlateau.ajouterCarteOffensiveJ2((CarteOffensive)carte);
             }
             joueur.retirerCarte(carte);
             return true;
-        } else if (carte instanceof CarteStrategique) {
+        } else if (carte.getType() == TypeCarte.STRATEGIQUE || effet.estPopularite || effet.estPassive || effet.estSpeciale || effet.estTresor) {
             // Jouer une carte stratégique
-            CarteStrategique carteStrat = (CarteStrategique) carte;
             if (estJoueur1) {
-                controlCartePlateau.ajouterCarteStrategiqueJ1(carteStrat);
+                controlCartePlateau.ajouterCarteStrategiqueJ1((CarteStrategique)carte);
             } else {
-                controlCartePlateau.ajouterCarteStrategiqueJ2(carteStrat);
+                controlCartePlateau.ajouterCarteStrategiqueJ2((CarteStrategique)carte);
             }
             joueur.retirerCarte(carte);
             return true;
@@ -220,13 +220,17 @@ public class ControlJoueur {
      */
     public void recevoirEffets(List<Carte> cartesAdversaire) {
         for (Carte carte : cartesAdversaire) {
-            if (carte instanceof CarteOffensive) {
-                CarteOffensive carteOff = (CarteOffensive) carte;
-                
-                if (carteOff.estAttaqueDirecte()) {
-                    // Recevoir des dégâts d'une carte d'attaque
-                    perdrePointsDeVie(carteOff.getDegatsInfliges());
-                }
+            Carte.EffetCarte effet = carte.effetCarte();
+            
+            if (effet.estAttaque) {
+                // Recevoir des dégâts d'une carte d'attaque
+                perdrePointsDeVie(effet.degatsInfliges);
+            }
+            
+            // On pourrait ajouter d'autres effets ici en utilisant les propriétés de EffetCarte
+            if (effet.orVole > 0) {
+                // Perte d'or due à un vol
+                perdreOr(effet.orVole);
             }
         }
     }

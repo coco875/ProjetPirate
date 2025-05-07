@@ -194,44 +194,49 @@ public class BoundaryJeu {
 	private void jouerCarte(Carte carte, ControlJoueur joueurActif) {
 		System.out.println("Description : " + carte.getDescription());
 		
-		// Détermine le type de carte et agit en conséquence
-		if (carte instanceof CarteOffensive) {
+		 // Utiliser effetCarte pour déterminer le type et les effets de la carte
+		Carte.EffetCarte effet = carte.effetCarte();
+		
+		if (effet.estAttaque) {
+			System.out.println("Vous attaquez ! Dégâts infligés : " + effet.degatsInfliges);
+			if (effet.degatsSubis > 0) {
+				System.out.println("Vous subissez " + effet.degatsSubis + " points de dégâts en retour.");
+			}
+			controlJeu.ajouterCarteOffensive((CarteOffensive)carte);
+		} else if (effet.estSoin) {
+			System.out.println("Vous vous soignez ! Points de vie gagnés : " + effet.vieGagnee);
+			controlJeu.ajouterCarteOffensive((CarteOffensive)carte);
+		} else if (effet.estSpeciale && carte instanceof CarteOffensive) {
+			// Pour les coups spéciaux offensifs
 			CarteOffensive carteOff = (CarteOffensive) carte;
-			
-			if (carteOff.estAttaqueDirecte()) {
-				System.out.println("Vous attaquez ! Dégâts infligés : " + carteOff.getDegatsInfliges());
-				System.out.println("Vous subissez " + carteOff.getDegatsSubis() + " points de dégâts en retour.");
-			} else if (carteOff.estSoin()) {
-				System.out.println("Vous vous soignez ! Points de vie gagnés : " + carteOff.getVieGagne());
-			} else if (carteOff.estCoupSpecial()) {
-				System.out.println("Vous utilisez un coup spécial ! Effet : " + carteOff.getValeur());
-				System.out.println("Coût : " + carteOff.getCoutSpecial() + " or");
-			} else if (carteOff.estTresorOffensif()) {
-				System.out.println("Vous volez " + carteOff.getOrVole() + " or à votre adversaire !");
-			}
-			
+			System.out.println("Vous utilisez un coup spécial ! Effet : " + carteOff.getValeur());
+			System.out.println("Coût : " + carteOff.getCoutSpecial() + " or");
 			controlJeu.ajouterCarteOffensive(carteOff);
-		} else if (carte instanceof CarteStrategique) {
-			CarteStrategique carteStrat = (CarteStrategique) carte;
-			
-			if (carteStrat.estPopularite()) {
-				System.out.println("Vous gagnez en popularité ! Points gagnés : " + carteStrat.getPopulariteGagnee());
-				System.out.println("Vous subissez " + carteStrat.getDegatsSubis() + " points de dégâts.");
-			} else if (carteStrat.estPassive()) {
-				System.out.println("Vous utilisez une carte passive ! Effet : " + carteStrat.getTypeEffet());
-				System.out.println("Durée : " + carteStrat.getDuree() + " tours");
-			} else if (carteStrat.estSpeciale()) {
-				System.out.println("Vous utilisez une carte spéciale ! Effet : " + carteStrat.getEffetSpecial());
-			} else if (carteStrat.estTresor()) {
-				if (carteStrat.getOrGagne() > 0) {
-					System.out.println("Vous gagnez " + carteStrat.getOrGagne() + " or !");
-				}
-				if (carteStrat.getOrPerdu() > 0) {
-					System.out.println("Vous perdez " + carteStrat.getOrPerdu() + " or !");
-				}
+		} else if (effet.estPopularite) {
+			System.out.println("Vous gagnez en popularité ! Points gagnés : " + effet.populariteGagnee);
+			if (effet.degatsSubis > 0) {
+				System.out.println("Vous subissez " + effet.degatsSubis + " points de dégâts.");
 			}
-			
-			controlJeu.ajouterCarteStrategique(carteStrat);
+			controlJeu.ajouterCarteStrategique((CarteStrategique)carte);
+		} else if (effet.estPassive) {
+			System.out.println("Vous utilisez une carte passive ! Effet : " + effet.effetSpecial);
+			System.out.println("Durée : " + effet.dureeEffet + " tours");
+			controlJeu.ajouterCarteStrategique((CarteStrategique)carte);
+		} else if (effet.estSpeciale && carte instanceof CarteStrategique) {
+			// Pour les cartes spéciales stratégiques
+			System.out.println("Vous utilisez une carte spéciale ! Effet : " + effet.effetSpecial);
+			controlJeu.ajouterCarteStrategique((CarteStrategique)carte);
+		} else if (effet.estTresor) {
+			if (effet.orGagne > 0) {
+				System.out.println("Vous gagnez " + effet.orGagne + " or !");
+			}
+			if (effet.orPerdu > 0) {
+				System.out.println("Vous perdez " + effet.orPerdu + " or !");
+			}
+			if (effet.orVole > 0) {
+				System.out.println("Vous volez " + effet.orVole + " or à votre adversaire !");
+			}
+			controlJeu.ajouterCarteStrategique((CarteStrategique)carte);
 		} else {
 			System.out.println("Type de carte non reconnu !");
 		}
