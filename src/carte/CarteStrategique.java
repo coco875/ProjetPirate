@@ -269,7 +269,6 @@ public class CarteStrategique extends Carte {
 			case TRESOR:
 				effet.orGagne = this.tresorOrGagne;
 				effet.orPerdu = this.tresorOrPerdu;
-				effet.orVole = 0; // pas de vol d'or
 				effet.estTresor = true;
 				break;
 		}

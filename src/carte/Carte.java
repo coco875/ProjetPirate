@@ -14,7 +14,6 @@ public class Carte {
 	private int cout;               // Coût de la carte pour l'achat au marché
 	private int orGagne;            // Or gagné en jouant cette carte
 	private int orPerdu;            // Or perdu en jouant cette carte
-	private int orVole;             // Or volé à l'adversaire en jouant cette carte
 	private int vieGagne;           // Points de vie gagnés en jouant cette carte
 	private String cheminImage;     // Chemin d'accès à l'image de la carte
 
@@ -28,7 +27,6 @@ public class Carte {
 		public int vieGagnee = 0;
 		public int orGagne = 0;
 		public int orPerdu = 0;
-		public int orVole = 0;
 		public String effetSpecial = null;
 		public int dureeEffet = 0;
 		public boolean estAttaque = false;
@@ -52,7 +50,6 @@ public class Carte {
 		// Valeurs par défaut pour les nouveaux attributs
 		this.orGagne = 0;
 		this.orPerdu = 0;
-		this.orVole = 0;
 		this.vieGagne = 0;
 		// Générer un ID unique par incrémentation
 		this.id = ++compteurId;
@@ -159,13 +156,10 @@ public class Carte {
 	    if (effet.orPerdu > 0) {
 	        sb.append("\nOr perdu: ").append(effet.orPerdu);
 	    }
-	    if (effet.orVole > 0) {
-	        sb.append("\nOr volé: ").append(effet.orVole);
-	    }
 	    if (effet.effetSpecial != null) {
 	        sb.append("\nEffet spécial: ").append(effet.effetSpecial);
 	        if (effet.dureeEffet > 1) {
-	            sb.append(" (Durée: ").append(effet.dureeEffet).append(" tours)");
+	            sb.append(" (").append(effet.dureeEffet).append(" tours)");
 	        }
 	    }
 	    

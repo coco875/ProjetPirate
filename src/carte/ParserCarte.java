@@ -50,9 +50,9 @@ public class ParserCarte {
                     int degatsInfliges = Integer.parseInt(properties.getOrDefault("degats_infliges", "0"));
                     int degatsSubisAttaque = Integer.parseInt(properties.getOrDefault("degats_subis", "0"));
                     
-                    // Vérification de l'attribut or_vole (maintenant ignoré)
+                    // Vérification de l'attribut or_vole (maintenant obsolète)
                     if (properties.containsKey("or_vole")) {
-                        System.out.println("Avertissement: L'attribut 'or_vole' est ignoré car la fonctionnalité de vol d'or a été supprimée. Carte: " + titre);
+                        System.out.println("Avertissement: L'attribut 'or_vole' est obsolète et sera ignoré. Carte: " + titre);
                     }
                     
                     // Carte offensive d'attaque directe

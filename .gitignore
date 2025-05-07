@@ -26,3 +26,4 @@ replay_pid*
 /.metadata/
 /mavenproject1/target/
 /target/
+/coverage

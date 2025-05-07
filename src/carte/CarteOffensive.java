@@ -190,7 +190,7 @@ public class CarteOffensive extends Carte {
         // Ajout des autres effets potentiels
         effet.orGagne = getOrGagne();
         effet.orPerdu = getOrPerdu();
-        effet.orVole = getOrVole();
+        // La ligne avec orVole a été supprimée car la fonctionnalité n'existe plus
         
         return effet;
     }

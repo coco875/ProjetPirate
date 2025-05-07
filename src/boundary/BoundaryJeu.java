@@ -276,9 +276,7 @@ public class BoundaryJeu {
 			if (effet.orPerdu > 0) {
 				System.out.println("Vous perdez " + effet.orPerdu + " or !");
 			}
-			if (effet.orVole > 0) {
-				System.out.println("Vous volez " + effet.orVole + " or à votre adversaire !");
-			}
+			// La fonctionnalité de vol d'or a été supprimée
 			controlJeu.ajouterCarteStrategique((CarteStrategique)carte);
 		} else {
 			System.out.println("Type de carte non reconnu !");
