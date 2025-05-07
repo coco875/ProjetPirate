@@ -100,14 +100,54 @@ fi
 # Générer le rapport de couverture HTML
 echo "Génération du rapport de couverture..."
 
-# Utiliser JaCoCo CLI pour générer un rapport HTML
-java -jar "$JACOCO_CLI" report "$JACOCO_EXEC" \
+# Utiliser Java avec les classes JaCoCo directement au lieu de la CLI
+java -cp "$JACOCO_CORE:$JACOCO_REPORT:lib/*" org.jacoco.cli.internal.Main report "$JACOCO_EXEC" \
   --classfiles bin \
   --sourcefiles src \
   --html coverage/html \
   --name "Rapport de couverture JeuPirate"
 
-echo "Rapport de couverture généré avec succès dans le dossier 'coverage/html'"
-echo "Vous pouvez ouvrir le fichier 'coverage/html/index.html' dans un navigateur pour consulter le rapport."
+# Si la méthode ci-dessus échoue, essayer une alternative
+if [ ! -d "coverage/html" ]; then
+    echo "Utilisation d'une méthode alternative pour générer le rapport..."
+    mkdir -p coverage/html
+    java -cp "$JACOCO_CORE:$JACOCO_REPORT:$JACOCO_AGENT:$JUNIT_PLATFORM" \
+      org.jacoco.report.JavaNames \
+      --encoding UTF-8 \
+      --destdir coverage/html \
+      --title "Rapport de couverture JeuPirate" \
+      --sourcefiles src \
+      --classfiles bin \
+      coverage/jacoco.exec
+fi
+
+# Vérifier si le rapport a été généré
+if [ -f "coverage/html/index.html" ]; then
+    echo "Rapport de couverture généré avec succès dans le dossier 'coverage/html'"
+    echo "Vous pouvez ouvrir le fichier 'coverage/html/index.html' dans un navigateur pour consulter le rapport."
+else
+    echo "Erreur: Échec de la génération du rapport de couverture."
+    echo "Le fichier de données jacoco.exec a été créé, mais la conversion en HTML a échoué."
+    
+    # Dernière tentative avec une autre approche
+    echo "Tentative avec une autre approche..."
+    
+    # Télécharger l'outil autonome si nécessaire
+    if [ ! -f "lib/jacococli.jar" ]; then
+        echo "Téléchargement de l'outil JaCoCo CLI autonome..."
+        curl -L https://repo1.maven.org/maven2/org/jacoco/org.jacoco.cli/0.8.10/org.jacoco.cli-0.8.10-nodeps.jar -o "lib/jacococli.jar"
+    fi
+    
+    java -jar lib/jacococli.jar report coverage/jacoco.exec \
+      --classfiles bin \
+      --sourcefiles src \
+      --html coverage/html
+    
+    if [ -f "coverage/html/index.html" ]; then
+        echo "Rapport de couverture généré avec succès dans le dossier 'coverage/html'"
+    else
+        echo "Échec complet. Essayez d'installer JaCoCo via Maven ou d'utiliser un IDE comme IntelliJ IDEA ou Eclipse pour générer le rapport."
+    fi
+fi
 
 exit 0
