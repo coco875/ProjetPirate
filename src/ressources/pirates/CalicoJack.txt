@@ -1,4 +1,4 @@
-Pirate anglais connu pour son pavillon noir à tête de mort et pour avoir eu dans son équipage Anne Bonny.
+﻿Pirate anglais connu pour son pavillon noir à tête de mort et pour avoir eu dans son équipage Anne Bonny.
 popularite: 0
 vie: 5
-image: images/pirate4.jpg
+image: src/ressources/image_pirate/CalicoJack.jpg

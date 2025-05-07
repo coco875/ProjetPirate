@@ -7,13 +7,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.awt.Dimension;
+import joueur.*;
+import boundary.*;
+import java.util.*;
 
 /**
  *
  * @author FNX4294A
  */
 public class FramePlateau extends javax.swing.JFrame {
-
+    private Pirate pirateJoueur1;
+    private Pirate pirateJoueur2;
     /**
      * Creates new form FramePlateau
      */
@@ -67,14 +71,14 @@ public class FramePlateau extends javax.swing.JFrame {
         
         panelPiratesJoueur1.setBounds(275, panelJoueur1.getY() + panelJoueur1.getHeight() + 75, 400, 400);
         panelPiratesJoueur2.setBounds(1225, panelJoueur2.getY() + panelJoueur2.getHeight() + 75, 400, 400);
-        labelDescriptionPirateGauche.setBounds(panelPiratesJoueur1.getX(), panelPiratesJoueur1.getY() + panelPiratesJoueur1.getHeight(), panelPiratesJoueur1.getWidth(), 50);
-        labelDescriptionPirateDroite.setBounds(panelPiratesJoueur2.getX(), panelPiratesJoueur2.getY() + panelPiratesJoueur2.getHeight(), panelPiratesJoueur2.getWidth(), 50);
+        labelDescriptionPirateGauche.setBounds(panelPiratesJoueur1.getX(), panelPiratesJoueur1.getY() + panelPiratesJoueur1.getHeight(), panelPiratesJoueur1.getWidth(), 150);
+        labelDescriptionPirateDroite.setBounds(panelPiratesJoueur2.getX(), panelPiratesJoueur2.getY() + panelPiratesJoueur2.getHeight(), panelPiratesJoueur2.getWidth(), 150);
     }
     
     
     private void setupFonts() {
         try {
-            Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("fonts/xbones.ttf")).deriveFont(30f);
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/ressources/fonts/xbones.ttf")).deriveFont(30f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);
 
@@ -100,12 +104,10 @@ public class FramePlateau extends javax.swing.JFrame {
     
     private void setupPanelsPirate() {
         //Groupe gauche
-        setupPirateGroup(panelPiratesJoueur1, new JPanel[]{jPanel3, jPanel4, jPanel5, jPanel6}, 
-                        new String[]{"jack", "davy", "pirate3", "pirate4"}, true);
+        setupPirateGroup(panelPiratesJoueur1, new JPanel[]{jPanel3, jPanel4, jPanel5, jPanel6}, true);
         
         //Groupe droit
-        setupPirateGroup(panelPiratesJoueur2, new JPanel[]{jPanel11, jPanel12, jPanel13, jPanel14}, 
-                        new String[]{"jack", "davy", "pirate3", "pirate4"}, false);
+        setupPirateGroup(panelPiratesJoueur2, new JPanel[]{jPanel11, jPanel12, jPanel13, jPanel14}, false);
     }
     
     
@@ -121,7 +123,8 @@ public class FramePlateau extends javax.swing.JFrame {
             boutonValider.setEnabled(enable);
         });
     }
-    private void setupPirateGroup(JPanel parent, JPanel[] fils, String[] noms, boolean isLeftGroup) {
+    private void setupPirateGroup(JPanel parent, JPanel[] fils, boolean isLeftGroup) {
+        java.util.List<Pirate> pirates = BoundaryJeu.getPiratesDisponibles();
         parent.setLayout(new BorderLayout());
         JPanel grid = new JPanel(new GridLayout(2, 2, 5, 5));
         grid.setOpaque(false);
@@ -129,7 +132,7 @@ public class FramePlateau extends javax.swing.JFrame {
         for (int i = 0; i < 4; i++) {
             fils[i].setLayout(new BorderLayout());
             fils[i].removeAll();
-            fils[i].add(new PanelPirate(noms[i], isLeftGroup), BorderLayout.CENTER);
+            fils[i].add(new PanelPirate(pirates.get(i), isLeftGroup), BorderLayout.CENTER);
             grid.add(fils[i]);
         }
         
@@ -141,15 +144,25 @@ public class FramePlateau extends javax.swing.JFrame {
     }
     
     private void setupDescriptionLabels() {
-        labelDescriptionPirateGauche = new JLabel(" ", JLabel.CENTER);
-        labelDescriptionPirateDroite = new JLabel(" ", JLabel.CENTER);
+        try{
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/ressources/fonts/xbones.ttf")).deriveFont(30f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+            
+            labelDescriptionPirateGauche.setFont(customFont.deriveFont(25f));
+            labelDescriptionPirateDroite.setFont(customFont.deriveFont(25f));
+        }catch (FontFormatException | IOException e) {
+            e.printStackTrace(); // ou gérer autrement
+        }
+        
+        
+        labelDescriptionPirateGauche = new JLabel("<html> </html>", JLabel.CENTER);
+        labelDescriptionPirateDroite = new JLabel("<html> </html>", JLabel.CENTER);
         
         labelDescriptionPirateGauche.setForeground(Color.BLACK);
         labelDescriptionPirateDroite.setForeground(Color.BLACK);
         
-        labelDescriptionPirateGauche.setFont(new Font("Arial", Font.BOLD, 16));
-        labelDescriptionPirateDroite.setFont(new Font("Arial", Font.BOLD, 16));
-
+      
       
         panelPiratesJoueur1.add(labelDescriptionPirateGauche, BorderLayout.SOUTH);
         panelPiratesJoueur2.add(labelDescriptionPirateDroite, BorderLayout.SOUTH);
@@ -157,8 +170,8 @@ public class FramePlateau extends javax.swing.JFrame {
     
     private void setupImagesPirates() {
         //Création des panels
-        panelImagePirate1 = new PanelImage("Jack");
-        panelImagePirate2 = new PanelImage("Davy");
+        panelImagePirate1 = new PanelImage(pirateJoueur1.getCheminImage());
+        panelImagePirate2 = new PanelImage(pirateJoueur2.getCheminImage());
 
         Dimension size = new Dimension(125, 125);
         panelImagePirate1.setPreferredSize(size); 
@@ -197,7 +210,7 @@ public class FramePlateau extends javax.swing.JFrame {
     }
     
     private void setupCartesMain(JPanel main1, JPanel main2){   
-        Dimension sizeCarte = new Dimension(130, 184);
+        Dimension sizeCarte = new Dimension(130, 170);
         
         JPanel[] panelCarteJoueur1 = new JPanel[5];
         JPanel[] panelCarteJoueur2 = new JPanel[5];
@@ -966,6 +979,9 @@ public class FramePlateau extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void boutonValiderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boutonValiderActionPerformed
+
+        pirateJoueur1 = PanelPirate.getSelectedLeft().getPirate();
+        pirateJoueur2 = PanelPirate.getSelectedRight().getPirate();
         setupPlateauJeu();
         setupImagesPirates();
         setupMain();

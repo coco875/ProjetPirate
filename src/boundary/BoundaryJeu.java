@@ -141,7 +141,7 @@ public class BoundaryJeu {
 	 * 
 	 * @return Liste des pirates disponibles
 	 */
-	private List<Pirate> getPiratesDisponibles() {
+	public static List<Pirate> getPiratesDisponibles() {
 		File repertoirePirates = new File("src/ressources/pirates");
 		return ParserPirate.chargerPirates(repertoirePirates);
 	}
