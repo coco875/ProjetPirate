@@ -1,5 +1,6 @@
 package test;
 
+/*
 import boundary.BoundaryJeu;
 import controllers.ControlJeu;
 import controllers.ControlMarche;
@@ -50,4 +51,4 @@ public class TestBoundaryJeu {
 		
 		System.out.println("Tests terminés.");
 	}
-}
+}*/

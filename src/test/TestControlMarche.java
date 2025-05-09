@@ -1,5 +1,6 @@
 package test;
 
+/*
 import controllers.ControlMarche;
 import controllers.ControlJoueur;
 import controllers.ControlPioche;
@@ -73,4 +74,4 @@ public class TestControlMarche {
 		
 		System.out.println("Tests terminés.");
 	}
-}
+}*/

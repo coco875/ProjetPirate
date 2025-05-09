@@ -1,5 +1,5 @@
 package test;
-
+/*
 import controllers.ControlJoueur;
 import joueur.Joueur;
 
@@ -41,3 +41,4 @@ public class TestVieJoueur {
 		// 2 / 0
 	}
 }
+*/

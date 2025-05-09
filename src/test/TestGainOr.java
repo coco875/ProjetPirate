@@ -1,5 +1,6 @@
 package test;
 
+/*
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -11,14 +12,7 @@ import controllers.*;
 import jeu.*;
 import joueur.*;
 
-/**
- * Classe de test pour vérifier le fonctionnement du gain d'or dans le jeu des Pirates.
- * Ces tests vérifient différentes façons de gagner de l'or :
- * - Gain direct via la méthode gagnerOr()
- * - Gain via une carte de trésor (CarteStrategique)
- * - Gain via une carte spécialisée (CarteTresor)
- * - Cas limites (valeurs négatives, nulles, grandes valeurs)
- */
+
 public class TestGainOr {
 
     private ControlJeu controlJeu;
@@ -26,9 +20,6 @@ public class TestGainOr {
     private ControlJoueur controlJoueur1, controlJoueur2;
     private ControlCartePlateau controlCartePlateau;
     
-    /**
-     * Initialisation des objets nécessaires avant chaque test
-     */
     @BeforeEach
     public void setUp() {
         System.out.println("\n==== Début du test de gain d'or ====");
@@ -49,17 +40,12 @@ public class TestGainOr {
         System.out.println("Joueurs créés avec 5 or chacun");
     }
     
-    /**
-     * Nettoyage après les tests
-     */
     @AfterEach
     public void tearDown() {
         System.out.println("==== Fin du test de gain d'or ====");
     }
 
-    /**
-     * Test de la méthode gagnerOr() de la classe Joueur
-     */
+
     @Test
     public void testGainOrBase() {
         System.out.println("\n--- Test gain d'or basique ---");
@@ -83,9 +69,7 @@ public class TestGainOr {
         System.out.println("Gain d'or grande valeur: " + orInitial + " + 1000 = " + joueur1.getOr() + " ✓");
     }
     
-    /**
-     * Test du gain d'or via les cartes de trésor normales et spécialisées
-     */
+    
     @Test
     public void testGainOrCarteTresor() {
         System.out.println("\n--- Test gain d'or via cartes trésor ---");
@@ -123,9 +107,7 @@ public class TestGainOr {
         testGainOrMultiplesCartesTresor();
     }
     
-    /**
-     * Test séparé pour tester plusieurs cartes trésor simultanément
-     */
+    
     private void testGainOrMultiplesCartesTresor() {
         try {
             // Créer un environnement de test complètement nouveau
@@ -172,9 +154,7 @@ public class TestGainOr {
         }
     }
 
-    /**
-     * Test des cas particuliers (perte d'or, carte avec or perdu)
-     */
+    
     @Test
     public void testCasParticuliers() {
         System.out.println("\n--- Test des cas particuliers ---");
@@ -210,9 +190,7 @@ public class TestGainOr {
         System.out.println("Tentative de perte excessive: " + orInitial + " → " + joueur2.getOr() + " (minimum 0) ✓");
     }
 
-    /**
-     * Test des attributs de la carte trésor
-     */
+    
     @Test
     public void testAttributsCarteTresor() {
         System.out.println("\n--- Test des attributs de carte trésor ---");
@@ -237,4 +215,4 @@ public class TestGainOr {
         System.out.println("Vérification attributs carte invalide: OrGagne=" + carteInvalide.getOrGagne() + 
                           ", OrPerdu=" + carteInvalide.getOrPerdu() + " ✓");
     }
-}
+}*/

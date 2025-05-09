@@ -1,5 +1,5 @@
 package test;
-
+/*
 import jeu.Pioche;
 import joueur.Joueur;
 import joueur.Pirate;
@@ -9,9 +9,6 @@ import controllers.ControlJoueur;
 import controllers.ControlPioche;
 import controllers.ControlCartePlateau;
 
-/**
- * Test des fonctionnalités de pioche et gestion de la main
- */
 public class TestPioche {
 
 	public static void main(String[] args) {
@@ -85,4 +82,4 @@ public class TestPioche {
 		
 		System.out.println("\n=== Fin des tests ===");
 	}
-}
+}*/

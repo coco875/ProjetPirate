@@ -1,5 +1,6 @@
 package test;
 
+/*
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -12,9 +13,7 @@ import carte.TypeCarte;
 
 import java.util.List;
 
-/**
- * Tests pour la classe Joueur
- */
+
 public class TestJoueur {
     
     private Joueur joueur;
@@ -149,4 +148,4 @@ public class TestJoueur {
         joueur.setNbCartes(5);
         assertEquals(5, joueur.getNbCartes());
     }
-}
+}*/

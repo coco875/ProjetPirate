@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import joueur.*;
 import boundary.*;
 import java.util.*;
+import controllers.*;
 
 /**
  *
@@ -18,6 +19,7 @@ import java.util.*;
 public class FramePlateau extends javax.swing.JFrame {
     private Pirate pirateJoueur1;
     private Pirate pirateJoueur2;
+    private ControlJeu controlJeu;
     /**
      * Creates new form FramePlateau
      */
@@ -986,6 +988,11 @@ public class FramePlateau extends javax.swing.JFrame {
         setupImagesPirates();
         setupMain();
         setupZones();
+        controlJeu = new ControlJeu();
+        controlJeu.initialiserJeu();
+        controlJeu.creerJoueur(pirateJoueur1);
+        controlJeu.creerJoueur(pirateJoueur2);
+        
     }//GEN-LAST:event_boutonValiderActionPerformed
 
     /**
