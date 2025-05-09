@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 
 import jeu.ZoneOffensive;
 import carte.CarteOffensive;
-import carte.TypeCarte;
 import carte.CarteOffensive.TypeOffensif;
 
 import java.util.List;
@@ -37,7 +36,7 @@ public class TestZoneOffensive {
     public void testAjouterCarte() {
         // Créer quelques cartes de test
         CarteOffensive carte1 = new CarteOffensive("Épée", "Une épée tranchante", 3, 1, TypeOffensif.ATTAQUE_DIRECTE);
-        CarteOffensive carte2 = new CarteOffensive("Potion", "Une potion de soin", 2, 0, TypeOffensif.SOIN);
+        CarteOffensive carte2 = new CarteOffensive("Potion", "Une potion de soin", 2);
         
         // Ajouter les cartes à la zone
         zoneOffensive.ajouterCarte(carte1);
@@ -55,7 +54,7 @@ public class TestZoneOffensive {
     public void testViderZone() {
         // Ajouter des cartes à la zone
         CarteOffensive carte1 = new CarteOffensive("Épée", "Une épée tranchante", 3, 1, TypeOffensif.ATTAQUE_DIRECTE);
-        CarteOffensive carte2 = new CarteOffensive("Potion", "Une potion de soin", 2, 0, TypeOffensif.SOIN);
+        CarteOffensive carte2 = new CarteOffensive("Potion", "Une potion de soin", 2);
         zoneOffensive.ajouterCarte(carte1);
         zoneOffensive.ajouterCarte(carte2);
         
