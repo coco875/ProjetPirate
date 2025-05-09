@@ -47,7 +47,7 @@ public class ControlJeu {
         controlJoueurs[1].setControlCarteSpeciale(controlCarteSpeciale);
         
         controlMarche = new ControlMarche(controlJoueurs[0], controlJoueurs[1], controlPioche, this);
-        
+        distribuerCartesInitiales();
         // Les contrôleurs de joueurs seront créés lors de la création des joueurs
     }
     

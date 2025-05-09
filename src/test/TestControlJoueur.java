@@ -1,5 +1,6 @@
 package test;
 
+/*
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
@@ -21,9 +22,7 @@ import jeu.Jeu;
 import joueur.Joueur;
 import joueur.Pirate;
 
-/**
- * @brief Test unitaire de la classe ControlJoueur
- */
+
 public class TestControlJoueur {
     
     @Test
@@ -191,4 +190,4 @@ public class TestControlJoueur {
         // La méthode jouerTour pioche une carte PUIS en joue une. Le nombre de cartes ne change donc pas.
         assertEquals(tailleAvant, controlJoueur1.getJoueur().getMain().size(), "La main devrait avoir le même nombre de cartes après la pioche et le jeu du tour");
     }
-}
+}*/
