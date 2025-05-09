@@ -28,7 +28,7 @@ done
 
 # Compiler le code source
 echo "Compilation du code source..."
-javac -d bin -sourcepath src src/ProjetPirate/Main.java src/ProjetPirate/MainUI.java
+javac -d bin -sourcepath src src/ProjetPirate/Main.java
 
 # Vérifier si la compilation a réussi
 if [ $? -ne 0 ]; then
@@ -42,11 +42,11 @@ echo "Lancement de l'interface console..."
 # Vérifier si le dossier lib existe pour les dépendances JSON
 if [ -d "lib" ]; then
     # Lancer avec les dépendances JSON
-    java -XX:+ShowCodeDetailsInExceptionMessages -cp bin:lib ProjetPirate.MainUI console
+    java -XX:+ShowCodeDetailsInExceptionMessages -cp bin:lib ProjetPirate.Main
 else
     # Lancer sans les dépendances JSON (fonctionnalités de sauvegarde désactivées)
     echo "Note: Dossier 'lib' non trouvé. Les fonctionnalités de sauvegarde/chargement seront désactivées."
-    java -XX:+ShowCodeDetailsInExceptionMessages -cp bin ProjetPirate.MainUI console
+    java -XX:+ShowCodeDetailsInExceptionMessages -cp bin ProjetPirate.Main
 fi
 
 exit 0

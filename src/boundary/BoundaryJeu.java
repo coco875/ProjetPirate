@@ -64,8 +64,6 @@ public class BoundaryJeu {
 	 * @brief Démarre le jeu
 	 */
 	public void demarrerJeu() {
-		// Initialisation des contrôleurs
-		controlJeu.initialiserJeu();
 		
 		// Premier joueur
 		Pirate nomPirate1 = demanderPirate(1);
@@ -74,23 +72,14 @@ public class BoundaryJeu {
 		// Deuxième joueur
 		Pirate nomPirate2 = demanderPirate(2);
 		controlJeu.creerJoueur(nomPirate2);
+
+		controlJeu.initialiserJeu();
 		
 		// Distribution des cartes initiales
 		controlJeu.distribuerCartesInitiales();
 		
 		// Démarrage de la partie
 		jouerPartie();
-	}
-	
-	/**
-	 * @brief Demande le nom d'un joueur
-	 * 
-	 * @param numeroJoueur Numéro du joueur
-	 * @return Nom du joueur
-	 */
-	protected String demanderNomJoueur(int numeroJoueur) {
-		System.out.print("Nom du joueur " + numeroJoueur + " : ");
-		return scan.nextLine();
 	}
 	
 	/**
