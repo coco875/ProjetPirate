@@ -68,14 +68,12 @@ public class BoundaryJeu {
 		controlJeu.initialiserJeu();
 		
 		// Premier joueur
-		String nomJoueur1 = demanderNomJoueur(1);
-		String nomPirate1 = demanderNomPirate(1);
-		controlJeu.creerJoueur(nomJoueur1, nomPirate1);
+		Pirate nomPirate1 = demanderPirate(1);
+		controlJeu.creerJoueur(nomPirate1);
 		
 		// Deuxième joueur
-		String nomJoueur2 = demanderNomJoueur(2);
-		String nomPirate2 = demanderNomPirate(2);
-		controlJeu.creerJoueur(nomJoueur2, nomPirate2);
+		Pirate nomPirate2 = demanderPirate(2);
+		controlJeu.creerJoueur(nomPirate2);
 		
 		// Distribution des cartes initiales
 		controlJeu.distribuerCartesInitiales();
@@ -101,7 +99,7 @@ public class BoundaryJeu {
 	 * @param numeroJoueur Numéro du joueur
 	 * @return Nom du pirate
 	 */
-	protected String demanderNomPirate(int numeroJoueur) {
+	protected Pirate demanderPirate(int numeroJoueur) {
 		// Afficher la liste des pirates disponibles
 		List<Pirate> piratesDisponibles = getPiratesDisponibles();
 		
@@ -128,11 +126,12 @@ public class BoundaryJeu {
 				}
 			}
 			
-			return piratesDisponibles.get(choix - 1).getNom();
+			return piratesDisponibles.get(choix - 1);
 		} else {
 			// Si aucun pirate n'est disponible, revenir à la méthode originale
 			System.out.print("Nom du pirate du joueur " + numeroJoueur + " : ");
-			return scan.nextLine();
+			//return scan.nextLine();
+			return null;
 		}
 	}
 	

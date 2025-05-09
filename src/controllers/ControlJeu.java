@@ -37,6 +37,16 @@ public class ControlJeu {
     public void initialiserJeu() {
         // Initialisation de la pioche
         controlPioche.initialiserPioche();
+
+        controlCartePlateau = new ControlCartePlateau(controlJoueurs[0], controlJoueurs[1]);
+        controlJoueurs[0].setControlCartePlateau(controlCartePlateau);
+        controlJoueurs[1].setControlCartePlateau(controlCartePlateau);
+        
+        controlCarteSpeciale = new ControlCarteSpeciale(controlJoueurs[0], controlJoueurs[1]);
+        controlJoueurs[0].setControlCarteSpeciale(controlCarteSpeciale);
+        controlJoueurs[1].setControlCarteSpeciale(controlCarteSpeciale);
+        
+        controlMarche = new ControlMarche(controlJoueurs[0], controlJoueurs[1], controlPioche, this);
         
         // Les contrôleurs de joueurs seront créés lors de la création des joueurs
     }
@@ -44,30 +54,17 @@ public class ControlJeu {
     /**
      * Crée le joueur 1 (pour tests)
      */
-    public void setJoueur1(String nom, Pirate pirate) {
-        Joueur joueur = new Joueur(nom, pirate);
+    public void setJoueur1(Pirate pirate) {
+        Joueur joueur = new Joueur(pirate);
         controlJoueurs[0] = new ControlJoueur(joueur, this, controlPioche);
     }
     
     /**
      * Crée le joueur 2 (pour tests)
      */
-    public void setJoueur2(String nom, Pirate pirate) {
-        Joueur joueur = new Joueur(nom, pirate);
+    public void setJoueur2(Pirate pirate) {
+        Joueur joueur = new Joueur(pirate);
         controlJoueurs[1] = new ControlJoueur(joueur, this, controlPioche);
-        
-        // Initialiser le plateau si les deux joueurs sont créés
-        if (controlJoueurs[0] != null && controlJoueurs[1] != null) {
-            controlCartePlateau = new ControlCartePlateau(controlJoueurs[0], controlJoueurs[1]);
-            controlJoueurs[0].setControlCartePlateau(controlCartePlateau);
-            controlJoueurs[1].setControlCartePlateau(controlCartePlateau);
-            
-            controlCarteSpeciale = new ControlCarteSpeciale(controlJoueurs[0], controlJoueurs[1]);
-            controlJoueurs[0].setControlCarteSpeciale(controlCarteSpeciale);
-            controlJoueurs[1].setControlCarteSpeciale(controlCarteSpeciale);
-            
-            controlMarche = new ControlMarche(controlJoueurs[0], controlJoueurs[1], controlPioche, this);
-        }
     }
     
     /**
@@ -76,30 +73,15 @@ public class ControlJeu {
      * @param nomPirate Nom du pirate
      * @return Le joueur créé
      */
-    public Joueur creerJoueur(String nomJoueur, String nomPirate) {
+    public void creerJoueur(Pirate pirate) {
         // Créer le joueur
-        Joueur joueur = new Joueur(nomJoueur, new Pirate(nomPirate));
+        Joueur joueur = new Joueur(pirate);
         
         // Déterminer l'index du joueur (0 pour le premier, 1 pour le second)
         int indexJoueur = (controlJoueurs[0] == null) ? 0 : 1;
         
         // Créer le contrôleur de joueur
         controlJoueurs[indexJoueur] = new ControlJoueur(joueur, this, controlPioche);
-        
-        // Si les deux joueurs sont créés, initialiser le plateau
-        if (controlJoueurs[0] != null && controlJoueurs[1] != null) {
-            controlCartePlateau = new ControlCartePlateau(controlJoueurs[0], controlJoueurs[1]);
-            controlJoueurs[0].setControlCartePlateau(controlCartePlateau);
-            controlJoueurs[1].setControlCartePlateau(controlCartePlateau);
-            
-            controlCarteSpeciale = new ControlCarteSpeciale(controlJoueurs[0], controlJoueurs[1]);
-            controlJoueurs[0].setControlCarteSpeciale(controlCarteSpeciale);
-            controlJoueurs[1].setControlCarteSpeciale(controlCarteSpeciale);
-            
-            controlMarche = new ControlMarche(controlJoueurs[0], controlJoueurs[1], controlPioche, this);
-        }
-        
-        return joueur;
     }
     
     /**

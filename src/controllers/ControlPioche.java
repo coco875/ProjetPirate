@@ -133,6 +133,7 @@ public class ControlPioche {
 			return Arrays.stream(files)
 										.filter(File::isFile)
 										.map(File::toString)
+										.filter(file -> file.endsWith(".txt"))
 										.map(file -> {
 											try {
 												return ParserCarte.lireCarte(file);

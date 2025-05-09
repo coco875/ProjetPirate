@@ -10,31 +10,25 @@ Note: ControlCartePlateau::appliquerEffetsCartes() appelle des méthodes des Jou
 sequenceDiagram
     actor Joueur1
     participant BoundaryJeu
+
     participant ControlJeu
     participant ControlCartePlateau
     participant ControlJoueur1
     participant ControlJoueur2
     participant Joueur2
+    participant Carte
+    participant Effet 
     participant CarteOffensive
     participant ZoneOffensive
     
 	Joueur1->>BoundaryJeu: jouer carte (index)
     BoundaryJeu->>BoundaryJeu: jouerCarte()
     activate BoundaryJeu
-    BoundaryJeu->>CarteOffensive: estAttaquedirecte()
-    activate CarteOffensive
-    CarteOffensive-->>BoundaryJeu: true
-    deactivate CarteOffensive
-
-    BoundaryJeu->>CarteOffensive: getDegatsInfliges()
-    activate CarteOffensive
-    CarteOffensive-->>BoundaryJeu: 2
-    deactivate CarteOffensive
-
-    BoundaryJeu->>CarteOffensive: getDegatsSubis()
-    activate CarteOffensive
-    CarteOffensive-->>BoundaryJeu: 1
-    deactivate CarteOffensive
+    BoundaryJeu->>Carte: effetCarte()
+    activate Carte
+    Carte-->>BoundaryJeu: effet
+    deactivate Carte
+    Note right of BoundaryJeu: BoundaryJeu accède aux <br/>attributs de effet
 
     BoundaryJeu-->>Joueur1: Vous attaquez ! Dégâts infligés : 2
     BoundaryJeu-->>Joueur1: Vous subissez 1 points de dégâts en retour.
@@ -67,20 +61,25 @@ sequenceDiagram
 
     activate ControlCartePlateau
 
-    ControlCartePlateau->>ControlJoueur1: getJoueur()
-    activate ControlJoueur1
-    ControlJoueur1-->>ControlCartePlateau: Joueur
-    deactivate ControlJoueur1
+    loop foreach carte
 
-    ControlCartePlateau->>ControlJoueur2: getJoueur()
-    activate ControlJoueur2
-    ControlJoueur2-->>ControlCartePlateau: Joueur
-    deactivate ControlJoueur2
+        ControlCartePlateau->>ZoneOffensive: getCartesOffensives()
+        activate ZoneOffensive
+        ZoneOffensive-->>ControlCartePlateau: carte
+        deactivate ZoneOffensive
 
-    ControlCartePlateau->>ZoneOffensive: getCartesOffensives()
-    activate ZoneOffensive
-    ZoneOffensive-->>ControlCartePlateau: carte
-    deactivate ZoneOffensive
+        ControlCartePlateau->>Carte: effetCarte()
+        activate Carte
+        Carte-->>ControlCartePlateau: effet
+        deactivate Carte
+
+        ControlCartePlateau->>Carte: getTypeOffensif()
+        activate Carte
+        Carte-->>ControlCartePlateau: ATTAQUE_DIRECTE
+        deactivate Carte
+
+        Note right of ControlCartePlateau: CCartePlateau accède <br/>aux attributs de effet
+    end
 
     ControlCartePlateau->>ControlJoueur2: recevoirEffets()
     activate ControlJoueur2
