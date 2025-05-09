@@ -124,17 +124,6 @@ public class CarteStrategique extends Carte {
 		);
 	}
 	
-	public static CarteStrategique fromCartePassive(CartePassive cartePassive) {
-		return new CarteStrategique(
-			cartePassive.getNomCarte(),
-			cartePassive.getDescription(),
-			cartePassive.getValeur(),
-			cartePassive.getDuree(),
-			cartePassive.getTypeEffet(),
-			cartePassive.getCout()
-		);
-	}
-	
 	public static CarteStrategique fromCarteSpeciale(CarteSpeciale carteSpeciale) {
 		return new CarteStrategique(
 			carteSpeciale.getNomCarte(),

@@ -271,6 +271,14 @@ public class ControlCartePlateau {
         return defausse;
     }
 
+    /**
+     * Récupère les contrôleurs des joueurs
+     * @return Tableau des deux contrôleurs de joueurs [controlJoueur1, controlJoueur2]
+     */
+    public ControlJoueur[] getJoueurs() {
+        return new ControlJoueur[] {controlJoueur1, controlJoueur2};
+    }
+
     private void defausserCartes(List<?> cartes) {
         for (Object carteObj : cartes) {
             if (carteObj instanceof Carte) { // Check if the object is a Carte

@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 
 import carte.Carte;
-import carte.CartePassive;
 import carte.CartePopularite;
 import carte.CarteSoin;
 import carte.CarteSpeciale;
@@ -28,19 +27,6 @@ public class TestCarteStrategique {
         assertEquals(TypeStrategique.POPULARITE, carte.getTypeStrategique());
         assertEquals(3, carte.getValeur());
         assertEquals(1, carte.getValeurSecondaire());
-    }
-    
-    @Test
-    @DisplayName("Test de la création d'une carte stratégique passive")
-    public void testCreationCartePassive() {
-        CarteStrategique carte = new CarteStrategique("Bouclier", "Protection contre attaques", 2, 3, "Protection");
-        
-        assertEquals("Bouclier", carte.getNomCarte());
-        assertEquals("Protection contre attaques", carte.getDescription());
-        assertEquals(TypeStrategique.PASSIVE, carte.getTypeStrategique());
-        assertEquals(2, carte.getValeur());
-        assertEquals(3, carte.getDuree());
-        assertEquals("Protection", carte.getTypeEffet());
     }
     
     @Test
@@ -78,20 +64,6 @@ public class TestCarteStrategique {
         assertEquals(TypeStrategique.POPULARITE, carteStrategique.getTypeStrategique());
         assertEquals(3, carteStrategique.getValeur());
         assertEquals(1, carteStrategique.getValeurSecondaire());
-    }
-    
-    @Test
-    @DisplayName("Test de conversion d'une carte passive")
-    public void testFromCartePassive() {
-        CartePassive cartePassive = new CartePassive("Bouclier", "Protection contre attaques", 2, 3, "Protection");
-        CarteStrategique carteStrategique = CarteStrategique.fromCartePassive(cartePassive);
-        
-        assertEquals("Bouclier", carteStrategique.getNomCarte());
-        assertEquals("Protection contre attaques", carteStrategique.getDescription());
-        assertEquals(TypeStrategique.PASSIVE, carteStrategique.getTypeStrategique());
-        assertEquals(2, carteStrategique.getValeur());
-        assertEquals(3, carteStrategique.getDuree());
-        assertEquals("Protection", carteStrategique.getTypeEffet());
     }
     
     @Test

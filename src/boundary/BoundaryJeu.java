@@ -75,9 +75,6 @@ public class BoundaryJeu {
 
 		controlJeu.initialiserJeu();
 		
-		// Distribution des cartes initiales
-		controlJeu.distribuerCartesInitiales();
-		
 		// Démarrage de la partie
 		jouerPartie();
 	}

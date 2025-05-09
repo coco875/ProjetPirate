@@ -109,23 +109,28 @@ public class ControlJoueur {
         Carte.EffetCarte effet = carte.effetCarte();
         
         // Détermine si ce contrôleur gère le joueur 1 ou 2
-        boolean estJoueur1 = (this == controlJeu.getJoueur(0));
+        boolean estJoueur1 = false;
+        if (controlJeu != null && controlJeu.getJoueur(0) != null) {
+            estJoueur1 = (this.joueur == controlJeu.getJoueur(0).getJoueur());
+        } else {
+            // Dans le contexte des tests, on considère toujours controlJoueur1 comme joueur 1
+            estJoueur1 = (this == controlCartePlateau.getJoueurs()[0]);
+        }
 
+        // Correction dans la méthode jouerCarte pour s'assurer que les cartes sont bien ajoutées aux zones
         if (carte.getType() == TypeCarte.OFFENSIVE || effet.estAttaque || effet.estSoin) {
-            // Jouer une carte offensive
             if (estJoueur1) {
-                controlCartePlateau.ajouterCarteOffensiveJ1((CarteOffensive)carte);
+                controlCartePlateau.ajouterCarteOffensiveJ1((CarteOffensive) carte);
             } else {
-                controlCartePlateau.ajouterCarteOffensiveJ2((CarteOffensive)carte);
+                controlCartePlateau.ajouterCarteOffensiveJ2((CarteOffensive) carte);
             }
             joueur.retirerCarte(carte);
             return true;
         } else if (carte.getType() == TypeCarte.STRATEGIQUE || effet.estPopularite || effet.estPassive || effet.estSpeciale || effet.estTresor) {
-            // Jouer une carte stratégique
             if (estJoueur1) {
-                controlCartePlateau.ajouterCarteStrategiqueJ1((CarteStrategique)carte);
+                controlCartePlateau.ajouterCarteStrategiqueJ1((CarteStrategique) carte);
             } else {
-                controlCartePlateau.ajouterCarteStrategiqueJ2((CarteStrategique)carte);
+                controlCartePlateau.ajouterCarteStrategiqueJ2((CarteStrategique) carte);
             }
             joueur.retirerCarte(carte);
             return true;
