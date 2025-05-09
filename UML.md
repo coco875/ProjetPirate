@@ -68,7 +68,7 @@ classDiagram
         + demarrerJeu() void
         + fermer() void
         # demanderNomJoueur(int) String
-        # demanderNomPirate(int) String
+        # demanderPirate(int) String
         - jouerCarte(Carte, ControlJoueur) void
         - demanderContinuerIteration() boolean
         - afficherResultatFinal() void

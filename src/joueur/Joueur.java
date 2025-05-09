@@ -8,8 +8,6 @@ import carte.Carte;
  * Classe représentant un joueur dans le jeu des Pirates
  */
 public class Joueur {
-
-	private String nom;
 	private Pirate pirate;
 	private Integer vie;         // max 5
 	private Integer popularite;  // max 5
@@ -20,8 +18,7 @@ public class Joueur {
 	/**
 	 * Constructeur d'un joueur
 	 */
-	public Joueur(String nom, Pirate pirate) {
-		this.nom = nom;
+	public Joueur(Pirate pirate) {
 		this.pirate = pirate;
 		
 		this.vie = 5;
@@ -66,7 +63,7 @@ public class Joueur {
 	}
 
 	public String getNom() {
-		return nom;
+		return pirate.getNom();
 	}
 
 	public Pirate getPirate() {
