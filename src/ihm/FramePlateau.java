@@ -9,6 +9,7 @@ import java.io.*;
 import java.awt.Dimension;
 import joueur.*;
 import boundary.*;
+import carte.Carte;
 import java.util.*;
 import controllers.*;
 
@@ -20,6 +21,8 @@ public class FramePlateau extends javax.swing.JFrame {
     private Pirate pirateJoueur1;
     private Pirate pirateJoueur2;
     private ControlJeu controlJeu;
+    java.util.List<Carte> listeCartesJoueur1;
+    java.util.List<Carte> listeCartesJoueur2;
     /**
      * Creates new form FramePlateau
      */
@@ -197,9 +200,15 @@ public class FramePlateau extends javax.swing.JFrame {
     }
     
     private void setupMain(){
-        Dimension sizeMain = new Dimension(750, 200);
+        Dimension sizeMain = new Dimension(750, 170);
         panelMainJoueur1.setBounds(585, 880, sizeMain.width, sizeMain.height);
         panelMainJoueur2.setBounds(585, 0, sizeMain.width, sizeMain.height);
+        
+        panelMainJoueur1.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        panelMainJoueur2.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        
+        panelMainJoueur1.setOpaque(false);
+        panelMainJoueur2.setOpaque(false);
         
         panelJeu.add(panelMainJoueur1);
         panelJeu.add(panelMainJoueur2);
@@ -212,33 +221,14 @@ public class FramePlateau extends javax.swing.JFrame {
     }
     
     private void setupCartesMain(JPanel main1, JPanel main2){   
-        Dimension sizeCarte = new Dimension(130, 170);
         
-        JPanel[] panelCarteJoueur1 = new JPanel[5];
-        JPanel[] panelCarteJoueur2 = new JPanel[5];
-
-        panelCarteJoueur1[0] = panelCarte1Joueur1;
-        panelCarteJoueur1[1] = panelCarte2Joueur1;
-        panelCarteJoueur1[2] = panelCarte3Joueur1;
-        panelCarteJoueur1[3] = panelCarte4Joueur1;
-        panelCarteJoueur1[4] = panelCarte5Joueur1;
-
-        panelCarteJoueur2[0] = panelCarte1Joueur2;
-        panelCarteJoueur2[1] = panelCarte2Joueur2;
-        panelCarteJoueur2[2] = panelCarte3Joueur2;
-        panelCarteJoueur2[3] = panelCarte4Joueur2;
-        panelCarteJoueur2[4] = panelCarte5Joueur2;
         
-        int margeGauche = 10;
-        int espaceEntreCartes = 20;
-
-        for (int i = 0; i < 5; i++) {
-            int x = margeGauche + i * (sizeCarte.width + espaceEntreCartes);
-
-            panelCarteJoueur1[i].setBounds(x, 10, sizeCarte.width, sizeCarte.height);
-            main1.add(panelCarteJoueur1[i]);
-            panelCarteJoueur2[i].setBounds(x, 10, sizeCarte.width, sizeCarte.height);
-            main2.add(panelCarteJoueur2[i]);
+        for(Carte carte : listeCartesJoueur1){
+            panelMainJoueur1.add(new PanelCarte(carte));
+        }
+        
+        for(Carte carte : listeCartesJoueur2){
+            panelMainJoueur2.add(new PanelCarte(carte));
         }
        
         
@@ -315,17 +305,7 @@ public class FramePlateau extends javax.swing.JFrame {
         panelImagePirate1 = new javax.swing.JPanel();
         panelImagePirate2 = new javax.swing.JPanel();
         panelMainJoueur2 = new javax.swing.JPanel();
-        panelCarte4Joueur2 = new javax.swing.JPanel();
-        panelCarte5Joueur2 = new javax.swing.JPanel();
-        panelCarte3Joueur2 = new javax.swing.JPanel();
-        panelCarte2Joueur2 = new javax.swing.JPanel();
-        panelCarte1Joueur2 = new javax.swing.JPanel();
         panelMainJoueur1 = new javax.swing.JPanel();
-        panelCarte1Joueur1 = new javax.swing.JPanel();
-        panelCarte2Joueur1 = new javax.swing.JPanel();
-        panelCarte3Joueur1 = new javax.swing.JPanel();
-        panelCarte4Joueur1 = new javax.swing.JPanel();
-        panelCarte5Joueur1 = new javax.swing.JPanel();
         panelZoneStrategiqueJoueur1 = new javax.swing.JPanel();
         panelZoneOffensiveJoueur1 = new javax.swing.JPanel();
         panelZoneStrategiqueJoueur2 = new javax.swing.JPanel();
@@ -651,206 +631,29 @@ public class FramePlateau extends javax.swing.JFrame {
         panelMainJoueur2.setBackground(new java.awt.Color(0, 255, 255));
         panelMainJoueur2.setForeground(new java.awt.Color(255, 0, 0));
 
-        panelCarte4Joueur2.setBackground(new java.awt.Color(255, 0, 0));
-
-        javax.swing.GroupLayout panelCarte4Joueur2Layout = new javax.swing.GroupLayout(panelCarte4Joueur2);
-        panelCarte4Joueur2.setLayout(panelCarte4Joueur2Layout);
-        panelCarte4Joueur2Layout.setHorizontalGroup(
-            panelCarte4Joueur2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 41, Short.MAX_VALUE)
-        );
-        panelCarte4Joueur2Layout.setVerticalGroup(
-            panelCarte4Joueur2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 78, Short.MAX_VALUE)
-        );
-
-        panelCarte5Joueur2.setBackground(new java.awt.Color(255, 0, 0));
-
-        javax.swing.GroupLayout panelCarte5Joueur2Layout = new javax.swing.GroupLayout(panelCarte5Joueur2);
-        panelCarte5Joueur2.setLayout(panelCarte5Joueur2Layout);
-        panelCarte5Joueur2Layout.setHorizontalGroup(
-            panelCarte5Joueur2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 53, Short.MAX_VALUE)
-        );
-        panelCarte5Joueur2Layout.setVerticalGroup(
-            panelCarte5Joueur2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 70, Short.MAX_VALUE)
-        );
-
-        panelCarte3Joueur2.setBackground(new java.awt.Color(255, 0, 0));
-
-        javax.swing.GroupLayout panelCarte3Joueur2Layout = new javax.swing.GroupLayout(panelCarte3Joueur2);
-        panelCarte3Joueur2.setLayout(panelCarte3Joueur2Layout);
-        panelCarte3Joueur2Layout.setHorizontalGroup(
-            panelCarte3Joueur2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 41, Short.MAX_VALUE)
-        );
-        panelCarte3Joueur2Layout.setVerticalGroup(
-            panelCarte3Joueur2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 78, Short.MAX_VALUE)
-        );
-
-        panelCarte2Joueur2.setBackground(new java.awt.Color(255, 0, 0));
-
-        javax.swing.GroupLayout panelCarte2Joueur2Layout = new javax.swing.GroupLayout(panelCarte2Joueur2);
-        panelCarte2Joueur2.setLayout(panelCarte2Joueur2Layout);
-        panelCarte2Joueur2Layout.setHorizontalGroup(
-            panelCarte2Joueur2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 41, Short.MAX_VALUE)
-        );
-        panelCarte2Joueur2Layout.setVerticalGroup(
-            panelCarte2Joueur2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 78, Short.MAX_VALUE)
-        );
-
-        panelCarte1Joueur2.setBackground(new java.awt.Color(255, 0, 0));
-
-        javax.swing.GroupLayout panelCarte1Joueur2Layout = new javax.swing.GroupLayout(panelCarte1Joueur2);
-        panelCarte1Joueur2.setLayout(panelCarte1Joueur2Layout);
-        panelCarte1Joueur2Layout.setHorizontalGroup(
-            panelCarte1Joueur2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 41, Short.MAX_VALUE)
-        );
-        panelCarte1Joueur2Layout.setVerticalGroup(
-            panelCarte1Joueur2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 78, Short.MAX_VALUE)
-        );
-
         javax.swing.GroupLayout panelMainJoueur2Layout = new javax.swing.GroupLayout(panelMainJoueur2);
         panelMainJoueur2.setLayout(panelMainJoueur2Layout);
         panelMainJoueur2Layout.setHorizontalGroup(
             panelMainJoueur2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelMainJoueur2Layout.createSequentialGroup()
-                .addGap(37, 37, 37)
-                .addComponent(panelCarte1Joueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelCarte2Joueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(panelCarte3Joueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(panelCarte4Joueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(panelCarte5Joueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50))
+            .addGap(0, 346, Short.MAX_VALUE)
         );
         panelMainJoueur2Layout.setVerticalGroup(
             panelMainJoueur2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelMainJoueur2Layout.createSequentialGroup()
-                .addGroup(panelMainJoueur2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelMainJoueur2Layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
-                        .addGroup(panelMainJoueur2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(panelCarte1Joueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(panelCarte2Joueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(panelCarte3Joueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(panelCarte4Joueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(panelMainJoueur2Layout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(panelCarte5Joueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(34, Short.MAX_VALUE))
+            .addGap(0, 126, Short.MAX_VALUE)
         );
 
         panelMainJoueur1.setBackground(new java.awt.Color(0, 255, 255));
         panelMainJoueur1.setForeground(new java.awt.Color(255, 0, 0));
 
-        panelCarte1Joueur1.setBackground(new java.awt.Color(255, 0, 0));
-
-        javax.swing.GroupLayout panelCarte1Joueur1Layout = new javax.swing.GroupLayout(panelCarte1Joueur1);
-        panelCarte1Joueur1.setLayout(panelCarte1Joueur1Layout);
-        panelCarte1Joueur1Layout.setHorizontalGroup(
-            panelCarte1Joueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 26, Short.MAX_VALUE)
-        );
-        panelCarte1Joueur1Layout.setVerticalGroup(
-            panelCarte1Joueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 50, Short.MAX_VALUE)
-        );
-
-        panelCarte2Joueur1.setBackground(new java.awt.Color(255, 0, 0));
-
-        javax.swing.GroupLayout panelCarte2Joueur1Layout = new javax.swing.GroupLayout(panelCarte2Joueur1);
-        panelCarte2Joueur1.setLayout(panelCarte2Joueur1Layout);
-        panelCarte2Joueur1Layout.setHorizontalGroup(
-            panelCarte2Joueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 38, Short.MAX_VALUE)
-        );
-        panelCarte2Joueur1Layout.setVerticalGroup(
-            panelCarte2Joueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-
-        panelCarte3Joueur1.setBackground(new java.awt.Color(255, 0, 0));
-
-        javax.swing.GroupLayout panelCarte3Joueur1Layout = new javax.swing.GroupLayout(panelCarte3Joueur1);
-        panelCarte3Joueur1.setLayout(panelCarte3Joueur1Layout);
-        panelCarte3Joueur1Layout.setHorizontalGroup(
-            panelCarte3Joueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 36, Short.MAX_VALUE)
-        );
-        panelCarte3Joueur1Layout.setVerticalGroup(
-            panelCarte3Joueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 60, Short.MAX_VALUE)
-        );
-
-        panelCarte4Joueur1.setBackground(new java.awt.Color(255, 0, 0));
-
-        javax.swing.GroupLayout panelCarte4Joueur1Layout = new javax.swing.GroupLayout(panelCarte4Joueur1);
-        panelCarte4Joueur1.setLayout(panelCarte4Joueur1Layout);
-        panelCarte4Joueur1Layout.setHorizontalGroup(
-            panelCarte4Joueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 33, Short.MAX_VALUE)
-        );
-        panelCarte4Joueur1Layout.setVerticalGroup(
-            panelCarte4Joueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 54, Short.MAX_VALUE)
-        );
-
-        panelCarte5Joueur1.setBackground(new java.awt.Color(255, 0, 0));
-
-        javax.swing.GroupLayout panelCarte5Joueur1Layout = new javax.swing.GroupLayout(panelCarte5Joueur1);
-        panelCarte5Joueur1.setLayout(panelCarte5Joueur1Layout);
-        panelCarte5Joueur1Layout.setHorizontalGroup(
-            panelCarte5Joueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 41, Short.MAX_VALUE)
-        );
-        panelCarte5Joueur1Layout.setVerticalGroup(
-            panelCarte5Joueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 58, Short.MAX_VALUE)
-        );
-
         javax.swing.GroupLayout panelMainJoueur1Layout = new javax.swing.GroupLayout(panelMainJoueur1);
         panelMainJoueur1.setLayout(panelMainJoueur1Layout);
         panelMainJoueur1Layout.setHorizontalGroup(
             panelMainJoueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelMainJoueur1Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(panelCarte1Joueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(panelCarte2Joueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(panelCarte3Joueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelCarte4Joueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(panelCarte5Joueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(7, Short.MAX_VALUE))
+            .addGap(0, 231, Short.MAX_VALUE)
         );
         panelMainJoueur1Layout.setVerticalGroup(
             panelMainJoueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelMainJoueur1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(panelMainJoueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(panelMainJoueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(panelCarte4Joueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(panelMainJoueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(panelMainJoueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(panelCarte1Joueur1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(panelCarte2Joueur1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(panelCarte3Joueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(panelMainJoueur1Layout.createSequentialGroup()
-                        .addGap(6, 6, 6)
-                        .addComponent(panelCarte5Joueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(16, Short.MAX_VALUE))
+            .addGap(0, 86, Short.MAX_VALUE)
         );
 
         panelZoneStrategiqueJoueur1.setBackground(new java.awt.Color(51, 255, 255));
@@ -984,15 +787,19 @@ public class FramePlateau extends javax.swing.JFrame {
 
         pirateJoueur1 = PanelPirate.getSelectedLeft().getPirate();
         pirateJoueur2 = PanelPirate.getSelectedRight().getPirate();
+        controlJeu = new ControlJeu();
+        controlJeu.creerJoueur(pirateJoueur1);
+        controlJeu.creerJoueur(pirateJoueur2);
+        controlJeu.initialiserJeu();
+        ControlJoueur controlJoueur1 = controlJeu.getJoueur(0);
+        listeCartesJoueur1 = controlJoueur1.getMain();
+        ControlJoueur controlJoueur2 = controlJeu.getJoueur(1);
+        listeCartesJoueur2 = controlJoueur2.getMain();
+        
         setupPlateauJeu();
         setupImagesPirates();
         setupMain();
         setupZones();
-        controlJeu = new ControlJeu();
-        controlJeu.initialiserJeu();
-        controlJeu.creerJoueur(pirateJoueur1);
-        controlJeu.creerJoueur(pirateJoueur2);
-        
     }//GEN-LAST:event_boutonValiderActionPerformed
 
     /**
@@ -1045,16 +852,6 @@ public class FramePlateau extends javax.swing.JFrame {
     private javax.swing.JLabel labelDescriptionPirateGauche;
     private javax.swing.JLabel labelJoueur1;
     private javax.swing.JLabel labelJoueur2;
-    private javax.swing.JPanel panelCarte1Joueur1;
-    private javax.swing.JPanel panelCarte1Joueur2;
-    private javax.swing.JPanel panelCarte2Joueur1;
-    private javax.swing.JPanel panelCarte2Joueur2;
-    private javax.swing.JPanel panelCarte3Joueur1;
-    private javax.swing.JPanel panelCarte3Joueur2;
-    private javax.swing.JPanel panelCarte4Joueur1;
-    private javax.swing.JPanel panelCarte4Joueur2;
-    private javax.swing.JPanel panelCarte5Joueur1;
-    private javax.swing.JPanel panelCarte5Joueur2;
     private javax.swing.JPanel panelChoix;
     private javax.swing.JPanel panelChoixDesPirates;
     private javax.swing.JPanel panelConteneur;
