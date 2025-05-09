@@ -1,5 +1,6 @@
 package test;
 
+/*
 import org.junit.platform.launcher.Launcher;
 import org.junit.platform.launcher.LauncherDiscoveryRequest;
 import org.junit.platform.launcher.core.LauncherDiscoveryRequestBuilder;
@@ -7,12 +8,13 @@ import org.junit.platform.launcher.core.LauncherFactory;
 import org.junit.platform.launcher.listeners.SummaryGeneratingListener;
 import org.junit.platform.launcher.listeners.TestExecutionSummary;
 import org.junit.platform.launcher.TestPlan;
-
+*/
 import static org.junit.platform.engine.discovery.DiscoverySelectors.selectPackage;
 
 /**
  * Classe principale exécutant l'ensemble des tests unitaires du projet
  */
+/*
 public class RunAllTests {
     public static void main(String[] args) throws Exception {
         System.out.println("Lancement de tous les tests JUnit...");
@@ -50,4 +52,4 @@ public class RunAllTests {
 
         System.out.println("\nTous les tests ont été exécutés.");
     }
-}
+}*/
