@@ -171,4 +171,23 @@ public class Joueur {
 	public List<Carte> getMain() {
 		return main;
 	}
+	
+	/**
+	 * Vide la main du joueur
+	 * @return Les cartes qui étaient dans la main
+	 */
+	public List<Carte> viderMain() {
+		List<Carte> ancienneMain = new ArrayList<>(main);
+		main.clear();
+		nbCartes = 0;
+		return ancienneMain;
+	}
+	
+	/**
+	 * Ajoute une carte spécifique à la main du joueur
+	 * @param carte La carte à ajouter
+	 */
+	public void ajouterCarteEnMain(Carte carte) {
+		ajouterCarte(carte);
+	}
 }

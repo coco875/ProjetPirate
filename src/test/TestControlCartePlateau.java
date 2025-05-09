@@ -33,6 +33,28 @@ public class TestControlCartePlateau {
     }
     
     @Test
+    public void testSetJoueurs() {
+        // Création des objets nécessaires
+        ControlPioche cPioche = new ControlPioche();
+        ControlJoueur cJoueur1 = new ControlJoueur(null, null, cPioche);
+        ControlJoueur cJoueur2 = new ControlJoueur(null, null, cPioche);
+        ControlJoueur cJoueur3 = new ControlJoueur(null, null, cPioche);
+        ControlJoueur cJoueur4 = new ControlJoueur(null, null, cPioche);
+        
+        // Création du contrôleur
+        ControlCartePlateau cCartePlateau = new ControlCartePlateau(cJoueur1, cJoueur2);
+        
+        // Modification des joueurs
+        cCartePlateau.setJoueurs(cJoueur3, cJoueur4);
+        
+        // On teste indirectement via l'ajout de cartes, puisque les joueurs sont des attributs privés
+        CarteOffensive carteOffensive = new CarteOffensive("Test", "", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+        cCartePlateau.ajouterCarteOffensiveJ1(carteOffensive);
+        cCartePlateau.appliquerEffetsCartesOffensives();
+        // Le test passe si aucune exception n'est levée
+    }
+    
+    @Test
     public void testAjouterCarteOffensive() {
         // Création des objets nécessaires
         ControlPioche cPioche = new ControlPioche();
@@ -58,6 +80,15 @@ public class TestControlCartePlateau {
                   "La zone offensive J1 devrait contenir la carte ajoutée");
         assertEquals(0, cCartePlateau.getZoneOffensiveJ2().getCartesOffensives().size(),
                     "La zone offensive J2 ne devrait pas contenir de carte");
+        
+        // Ajout de la carte pour joueur 2
+        CarteOffensive carteOffensive2 = new CarteOffensive("Sabre", "Un sabre tranchant", 3, 1,
+                                                         CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+        cCartePlateau.ajouterCarteOffensiveJ2(carteOffensive2);
+        assertEquals(1, cCartePlateau.getZoneOffensiveJ2().getCartesOffensives().size(), 
+                    "La zone offensive J2 devrait contenir 1 carte");
+        assertTrue(cCartePlateau.getZoneOffensiveJ2().getCartesOffensives().contains(carteOffensive2),
+                  "La zone offensive J2 devrait contenir la carte ajoutée");
     }
     
     @Test
@@ -85,6 +116,14 @@ public class TestControlCartePlateau {
                   "La zone stratégique J1 devrait contenir la carte ajoutée");
         assertEquals(0, cCartePlateau.getZoneStrategiqueJ2().getCartesStrategiques().size(),
                     "La zone stratégique J2 ne devrait pas contenir de carte");
+        
+        // Ajout de la carte pour joueur 2
+        CarteStrategique carteStrat2 = new CarteStrategique("Danse", "Une danse entraînante", 3, 1);
+        cCartePlateau.ajouterCarteStrategiqueJ2(carteStrat2);
+        assertEquals(1, cCartePlateau.getZoneStrategiqueJ2().getCartesStrategiques().size(),
+                    "La zone stratégique J2 devrait contenir 1 carte");
+        assertTrue(cCartePlateau.getZoneStrategiqueJ2().getCartesStrategiques().contains(carteStrat2),
+                  "La zone stratégique J2 devrait contenir la carte ajoutée");
     }
     
     @Test
@@ -145,6 +184,34 @@ public class TestControlCartePlateau {
         assertEquals(orInitialJ2, joueur2.getOr(), "Or J2 incorrect");
     }
     
+    // Test pour les cas particuliers des cartes offensives
+    @Test
+    public void testEffetsCartesOffensivesTypesNonGeres() {
+        // Création des objets nécessaires via ControlJeu
+        ControlJeu controlJeu = new ControlJeu();
+        
+        // Créer les joueurs via ControlJeu
+        Joueur joueur1 = controlJeu.creerJoueur("TestJoueur1", "Jack Sparrow");
+        Joueur joueur2 = controlJeu.creerJoueur("TestJoueur2", "Barbe Noire");
+        
+        // Récupérer les contrôleurs des joueurs et du plateau
+        ControlJoueur cJoueur1 = controlJeu.getJoueur(0);
+        ControlJoueur cJoueur2 = controlJeu.getJoueur(1);
+        ControlCartePlateau cCartePlateau = controlJeu.getControlCartePlateau();
+
+        // Création d'une carte offensive avec un type "inconnu"
+        // Cette solution est un peu hackée, mais c'est une façon d'atteindre le 'default' de switch
+        CarteOffensive carteOffensiveSpeciale = new CarteOffensive("Test", "Carte test", 1, 0, null);
+        
+        // Ajout des cartes spéciales
+        cCartePlateau.ajouterCarteOffensiveJ1(carteOffensiveSpeciale);
+        
+        // Application des effets
+        cCartePlateau.appliquerEffetsCartesOffensives();
+        
+        // Le test passe si aucune exception n'est levée lors de l'application des effets
+    }
+    
     @Test
     public void testAppliquerEffetsCartesStrategiques() {
         // Création des objets nécessaires via ControlJeu
@@ -179,6 +246,10 @@ public class TestControlCartePlateau {
         CarteStrategique popJ2 = new CarteStrategique("Danse", "", 1, 0); // Constructeur Popularité
         cCartePlateau.ajouterCarteStrategiqueJ2(popJ2);
         
+        // Ajouter une carte trésor avec perte d'or pour J2
+        CarteStrategique tresorPerteJ2 = new CarteStrategique("Malédiction", "", 0, 2, true);
+        cCartePlateau.ajouterCarteStrategiqueJ2(tresorPerteJ2);
+        
         // Application des effets
         cCartePlateau.appliquerEffetsCartesStrategiques();
         
@@ -195,8 +266,8 @@ public class TestControlCartePlateau {
         assertEquals(popInitialeJ2 + 1, joueur2.getPopularite(), "Popularité J2 incorrecte");
         // Dégâts subis: 0 (popJ2)
         assertEquals(vieInitialeJ2, joueur2.getPointsDeVie(), "PV J2 incorrects");
-        // Or gagné: 0
-        assertEquals(orInitialJ2, joueur2.getOr(), "Or J2 incorrect");
+        // Or perdu: 2 (tresorPerteJ2)
+        assertEquals(orInitialJ2 - 2, joueur2.getOr(), "Or J2 incorrect");
     }
     
     @Test
@@ -214,16 +285,29 @@ public class TestControlCartePlateau {
         cJoueur2.setControlCartePlateau(cCartePlateau);
         
         // Ajout de cartes
-        CarteOffensive carteOffensive = new CarteOffensive("Épée", "Une épée tranchante", 2, 2,
+        CarteOffensive carteOffensive1 = new CarteOffensive("Épée", "Une épée tranchante", 2, 2,
                                                          CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
-        CarteStrategique carteStrat = new CarteStrategique("Chanson", "Une chanson entraînante", 2, 2);
-        cCartePlateau.ajouterCarteOffensiveJ1(carteOffensive);
-        cCartePlateau.ajouterCarteStrategiqueJ2(carteStrat);
+        CarteStrategique carteStrat1 = new CarteStrategique("Chanson", "Une chanson entraînante", 2, 2);
+        CarteOffensive carteOffensive2 = new CarteOffensive("Sabre", "Un sabre tranchant", 3, 1,
+                                                          CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+        CarteStrategique carteStrat2 = new CarteStrategique("Danse", "Une danse entraînante", 3, 1);
+        
+        cCartePlateau.ajouterCarteOffensiveJ1(carteOffensive1);
+        cCartePlateau.ajouterCarteStrategiqueJ1(carteStrat1);
+        cCartePlateau.ajouterCarteOffensiveJ2(carteOffensive2);
+        cCartePlateau.ajouterCarteStrategiqueJ2(carteStrat2);
+        
+        // Vérification avant défausse
+        assertEquals(1, cCartePlateau.getZoneOffensiveJ1().getCartesOffensives().size());
+        assertEquals(1, cCartePlateau.getZoneStrategiqueJ1().getCartesStrategiques().size());
+        assertEquals(1, cCartePlateau.getZoneOffensiveJ2().getCartesOffensives().size());
+        assertEquals(1, cCartePlateau.getZoneStrategiqueJ2().getCartesStrategiques().size());
+        assertEquals(0, cCartePlateau.getDefausse().getNombreCartes());
         
         // Défausse des cartes
         cCartePlateau.defausserCartesPlateau();
         
-        // Vérification
+        // Vérification après défausse
         assertEquals(0, cCartePlateau.getZoneOffensiveJ1().getCartesOffensives().size(),
                     "La zone offensive J1 devrait être vide après défausse");
         assertEquals(0, cCartePlateau.getZoneOffensiveJ2().getCartesOffensives().size(),
@@ -232,5 +316,9 @@ public class TestControlCartePlateau {
                     "La zone stratégique J1 devrait être vide après défausse");
         assertEquals(0, cCartePlateau.getZoneStrategiqueJ2().getCartesStrategiques().size(),
                     "La zone stratégique J2 devrait être vide après défausse");
+        
+        // Vérification que les cartes sont bien dans la défausse
+        assertEquals(4, cCartePlateau.getDefausse().getNombreCartes(),
+                    "La défausse devrait contenir toutes les cartes du plateau");
     }
 }

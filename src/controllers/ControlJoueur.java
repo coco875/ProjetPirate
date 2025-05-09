@@ -264,6 +264,22 @@ public class ControlJoueur {
         }
     }
     
+    /**
+     * Vide la main du joueur et retourne les cartes qui étaient en main
+     * @return Les cartes qui étaient dans la main du joueur
+     */
+    public List<Carte> viderMain() {
+        return joueur.viderMain();
+    }
+    
+    /**
+     * Ajoute une carte spécifique à la main du joueur
+     * @param carte La carte à ajouter
+     */
+    public void ajouterCarteEnMain(Carte carte) {
+        joueur.ajouterCarteEnMain(carte);
+    }
+
     // Getters
     
     public String getNom() {

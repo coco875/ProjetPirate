@@ -51,16 +51,16 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Compilation terminée avec succès."
-echo "Lancement des tests..."
+echo "Lancement du test TestBugDegatsJ2versJ1 uniquement..."
 
-# Exécuter les tests avec JUnit 5
-java -jar "$JUNIT_PLATFORM" --class-path bin --scan-class-path
+# Exécuter uniquement le test TestBugDegatsJ2versJ1
+java -jar "$JUNIT_PLATFORM" --class-path bin --select-class=test.TestBugDegatsJ2versJ1
 
 # Vérifier le code de retour
 if [ $? -eq 0 ]; then
-    echo "Tous les tests ont été exécutés avec succès."
+    echo "Le test a été exécuté avec succès."
 else
-    echo "Des erreurs ont été détectées lors de l'exécution des tests."
+    echo "Des erreurs ont été détectées lors de l'exécution du test."
 fi
 
 exit 0

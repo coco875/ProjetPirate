@@ -2,7 +2,10 @@ package controllers;
 
 import carte.CarteOffensive;
 import carte.CarteStrategique;
+import carte.Carte;
 import jeu.Jeu;
+import jeu.Pioche;
+import jeu.Defausse;
 import jeu.ZoneOffensive; // Renamed from ZoneAttaque
 import jeu.ZoneStrategique;
 import joueur.Joueur;
@@ -356,5 +359,154 @@ public class ControlJeu {
             return controlJoueurs[joueurActif].defausserCarte(indexCarte);
         }
         return false;
+    }
+    
+    /**
+     * Renvoie le contrôleur de cartes spéciales
+     * @return Contrôleur de cartes spéciales
+     */
+    public ControlCarteSpeciale getControlCarteSpeciale() {
+        return controlCarteSpeciale;
+    }
+    
+    /**
+     * Renvoie le nombre de joueurs créés
+     * @return Nombre de joueurs créés
+     */
+    public int getNombreJoueurs() {
+        int nbJoueurs = 0;
+        for (ControlJoueur controlJoueur : controlJoueurs) {
+            if (controlJoueur != null) {
+                nbJoueurs++;
+            }
+        }
+        return nbJoueurs;
+    }
+    
+    /**
+     * Renvoie le nom du joueur à l'index spécifié
+     * @param indexJoueur Index du joueur (0 ou 1)
+     * @return Nom du joueur ou null si l'index est invalide
+     */
+    public String getNomJoueur(int indexJoueur) {
+        if (indexJoueur >= 0 && indexJoueur < controlJoueurs.length && controlJoueurs[indexJoueur] != null) {
+            return controlJoueurs[indexJoueur].getJoueur().getNom();
+        }
+        return null;
+    }
+    
+    /**
+     * Renvoie les points de vie du joueur à l'index spécifié
+     * @param indexJoueur Index du joueur (0 ou 1)
+     * @return Points de vie du joueur ou 0 si l'index est invalide
+     */
+    public int getPointsDeVieJoueur(int indexJoueur) {
+        if (indexJoueur >= 0 && indexJoueur < controlJoueurs.length && controlJoueurs[indexJoueur] != null) {
+            return controlJoueurs[indexJoueur].getJoueur().getPointsDeVie();
+        }
+        return 0;
+    }
+    
+    /**
+     * Initialise une nouvelle partie
+     * Distribue les cartes initiales aux joueurs et initialise le marché
+     */
+    public void initialiserPartie() {
+        // Initialiser la pioche
+        controlPioche.initialiserPioche();
+        
+        // Distribuer les cartes initiales aux joueurs
+        distribuerCartesInitiales();
+        
+        // Initialiser le marché si disponible
+        if (controlMarche != null) {
+            controlMarche.initialiserMarche();
+        }
+        
+        // Réinitialiser le joueur actif
+        joueurActif = 0;
+    }
+    
+    /**
+     * Version étendue de jouerCarte qui permet de spécifier le joueur et le type de carte
+     * @param indexJoueur Index du joueur (0 ou 1)
+     * @param indexCarte Index de la carte dans la main du joueur
+     * @param estOffensive True si c'est une carte offensive, false si c'est une carte stratégique
+     * @return True si la carte a été jouée avec succès, false sinon
+     */
+    public boolean jouerCarte(int indexJoueur, int indexCarte, boolean estOffensive) {
+        // Vérifier que l'index du joueur est valide
+        if (indexJoueur < 0 || indexJoueur >= controlJoueurs.length || controlJoueurs[indexJoueur] == null) {
+            return false;
+        }
+        
+        // Sauvegarder le joueur actif actuel
+        int ancienJoueurActif = joueurActif;
+        
+        // Définir temporairement le joueur actif
+        joueurActif = indexJoueur;
+        
+        // Jouer la carte
+        boolean resultat = controlJoueurs[indexJoueur].jouerCarte(indexCarte);
+        
+        // Restaurer le joueur actif
+        joueurActif = ancienJoueurActif;
+        
+        return resultat;
+    }
+    
+    /**
+     * Termine le tour du joueur spécifié
+     * @param indexJoueur Index du joueur (0 ou 1)
+     */
+    public void finirTourJoueur(int indexJoueur) {
+        // Vérifier que l'index du joueur est valide
+        if (indexJoueur < 0 || indexJoueur >= controlJoueurs.length || controlJoueurs[indexJoueur] == null) {
+            return;
+        }
+        
+        // Appliquer les effets des cartes du plateau
+        appliquerEffetsCartes();
+        
+        // Passer au joueur suivant
+        passerAuJoueurSuivant();
+    }
+    
+    /**
+     * Vérifie si la partie est terminée et renvoie le joueur gagnant
+     * @return Index du joueur gagnant (0 ou 1), -1 si partie en cours ou match nul
+     */
+    public int verifierFinJeu() {
+        if (!verifierFinPartie()) {
+            return -1; // Partie en cours
+        }
+        
+        Joueur vainqueur = determinerVainqueur();
+        
+        if (vainqueur == null) {
+            return -1; // Match nul
+        }
+        
+        if (vainqueur == controlJoueurs[0].getJoueur()) {
+            return 0; // Joueur 1 gagne
+        } else {
+            return 1; // Joueur 2 gagne
+        }
+    }
+    
+    /**
+     * Renvoie la pioche du jeu
+     * @return La pioche
+     */
+    public Pioche getPioche() {
+        return controlPioche.getPioche();
+    }
+    
+    /**
+     * Renvoie la défausse du jeu
+     * @return La défausse
+     */
+    public Defausse getDefausse() {
+        return controlPioche.getDefausse();
     }
 }
