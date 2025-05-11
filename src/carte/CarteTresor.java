@@ -5,27 +5,19 @@ package carte;
  */
 public class CarteTresor extends CarteStrategique {
 
-    /**
-     * Constructeur standard pour une carte de trésor
-     * @param nomCarte Nom de la carte
-     * @param description Description de la carte
-     * @param orGagne Or gagné en jouant la carte
-     */
-    public CarteTresor(String nomCarte, String description, int orGagne) {
-        // Utilisation du constructeur de base de CarteStrategique pour carte trésor
-        super(nomCarte, description, orGagne, true);
+    private int orGagne;
+    
+    public CarteTresor(String nomCarte, String description, String cheminImage, int cout, int orGagne) {
+        super(nomCarte, description, TypeStrategique.TRESOR, cheminImage, cout);
+        this.orGagne = orGagne;
     }
 
-    /**
-     * Constructeur complet pour une carte de trésor avec coût
-     * @param nomCarte Nom de la carte
-     * @param description Description de la carte
-     * @param orGagne Or gagné
-     * @param cout Coût d'achat de la carte
-     */
-    public CarteTresor(String nomCarte, String description, int orGagne, int cout) {
-        // Utilisation du constructeur de base de CarteStrategique pour carte trésor avec coût
-        super(nomCarte, description, orGagne, true, cout);
+    public CarteTresor(String nomCarte, String description, int cout, int orGagne) {
+        this(nomCarte, description, null, cout, orGagne);
+    }
+
+    public CarteTresor(String nomCarte, String description, int orGagne) {
+        this(nomCarte, description, null, 10, orGagne);
     }
     
     /**
@@ -33,21 +25,8 @@ public class CarteTresor extends CarteStrategique {
      */
     @Override
     public EffetCarte effetCarte() {
-        return super.effetCarte();
-    }
-    
-    /**
-     * Représentation textuelle de la carte
-     */
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append(getNomCarte()).append("\n").append(getDescription());
-        
-        if (getOrGagne() > 0) {
-            sb.append("\nOr gagné: ").append(getOrGagne());
-        }
-        
-        return sb.toString();
+        EffetCarte effet = new EffetCarte();
+        effet.orGagne = this.orGagne;
+        return effet;
     }
 }

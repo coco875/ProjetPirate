@@ -9,16 +9,9 @@ import org.junit.jupiter.api.io.TempDir;
 
 import controllers.ControlPioche;
 import carte.Carte;
-import carte.CarteAttaque;
-import carte.CarteSoin;
-import carte.CartePopularite;
-import carte.CarteTresor;
-import carte.CarteSpeciale;
 import carte.TypeCarte;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;

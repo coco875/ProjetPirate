@@ -3,15 +3,9 @@ package controllers;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 import java.util.Arrays;
 
 import carte.Carte;
-import carte.CarteAttaque;
-import carte.CartePopularite;
-import carte.CarteSoin;
-import carte.CarteSpeciale;
-import carte.CarteTresor;
 import carte.ParserCarte;
 import jeu.Pioche;
 

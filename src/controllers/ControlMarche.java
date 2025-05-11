@@ -7,7 +7,6 @@ import java.util.Random;
 import carte.Carte;
 import carte.CarteAttaque;
 import carte.CartePopularite;
-import carte.CarteSpeciale;
 import carte.Marche;
 import joueur.Joueur;
 
@@ -138,7 +137,7 @@ public class ControlMarche {
         
         // Retirer la carte de la main du joueur et lui donner de l'or
         joueur.retirerCarte(carteVendre);
-        int valeurVente = carteVendre.getValeur() / 2; // La valeur de vente est la moitié de la valeur de la carte
+        int valeurVente = carteVendre.getCout() / 2; // La valeur de vente est la moitié de la valeur de la carte
         if (valeurVente <= 0) valeurVente = 1; // Minimum 1 or
         
         joueur.setOr(joueur.getOr() + valeurVente);

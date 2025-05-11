@@ -104,7 +104,7 @@ public class TestControlJeu {
 	    controlJeu.initialiserJeu();
 	    
 	    // Créer une carte offensive et stratégique pour les tests
-	    CarteOffensive carteOff = new CarteOffensive("Épée", "Une épée tranchante", 2, 1, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+	    CarteOffensive carteOff = new CarteOffensive("Épée", "Une épée tranchante", 2, 1, CarteOffensive.TypeOffensif.ATTAQUE);
 	    CarteStrategique carteStrat = new CarteStrategique("Chanson", "Une chanson entrainante", 2, 1);
 	    
 	    // Joueur 1 actif - ajouter les cartes
@@ -119,7 +119,7 @@ public class TestControlJeu {
 	                "La carte stratégique devrait être ajoutée à la zone du joueur 1");
 	    
 	    // Joueur 2 actif - ajouter d'autres cartes
-	    CarteOffensive carteOff2 = new CarteOffensive("Canon", "Un canon puissant", 3, 0, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+	    CarteOffensive carteOff2 = new CarteOffensive("Canon", "Un canon puissant", 3, 0, CarteOffensive.TypeOffensif.ATTAQUE);
 	    CarteStrategique carteStrat2 = new CarteStrategique("Trésor", "Un coffre d'or", 5, 0, true);
 	    
 	    controlJeu.setJoueurActif(1);
@@ -163,7 +163,7 @@ public class TestControlJeu {
 	    controlJeu.initialiserJeu();
 	    
 	    // Créer et ajouter des cartes avec des effets mesurables
-	    CarteOffensive carteAttaque = new CarteOffensive("Épée", "Une épée tranchante", 2, 0, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+	    CarteOffensive carteAttaque = new CarteOffensive("Épée", "Une épée tranchante", 2, 0, CarteOffensive.TypeOffensif.ATTAQUE);
 	    controlJeu.setJoueurActif(0);
 	    controlJeu.ajouterCarteOffensive(carteAttaque);
 	    
@@ -185,7 +185,7 @@ public class TestControlJeu {
 	    controlJeu.initialiserJeu();
 	    
 	    // Ajouter des cartes sur le plateau
-	    CarteOffensive carteOff1 = new CarteOffensive("Épée", "Une épée tranchante", 2, 1, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+	    CarteOffensive carteOff1 = new CarteOffensive("Épée", "Une épée tranchante", 2, 1, CarteOffensive.TypeOffensif.ATTAQUE);
 	    CarteStrategique carteStrat1 = new CarteStrategique("Chanson", "Une chanson entrainante", 2, 1);
 	    
 	    controlJeu.setJoueurActif(0);
@@ -299,7 +299,7 @@ public class TestControlJeu {
 	    assertFalse(controlJeu.jouerCarte(10), "Jouer une carte avec un index invalide devrait retourner false");
 	    
 	    // Essayer de jouer une carte réelle (ajouter une carte à la main du joueur)
-	    CarteOffensive carte = new CarteOffensive("Épée Test", "Une épée pour test", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+	    CarteOffensive carte = new CarteOffensive("Épée Test", "Une épée pour test", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE);
 	    controlJeu.getJoueur(0).getJoueur().ajouterCarte(carte);
 	    int indexCarte = controlJeu.getJoueur(0).getJoueur().getMain().size() - 1;
 	    
@@ -375,7 +375,7 @@ public class TestControlJeu {
 	    int cartesJ2 = controlJeu.getJoueur(1).getJoueur().getMain().size();
 	    
 	    // Ajouter des cartes sur le plateau pour vérifier la défausse
-	    CarteOffensive carteOff = new CarteOffensive("Test", "Carte de test", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+	    CarteOffensive carteOff = new CarteOffensive("Test", "Carte de test", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE);
 	    controlJeu.setJoueurActif(0);
 	    controlJeu.ajouterCarteOffensive(carteOff);
 	    

@@ -97,15 +97,15 @@ public class ControlCartePlateau {
             Carte.EffetCarte effet = carte.effetCarte();
             
             switch (carte.getTypeOffensif()) {
-                case ATTAQUE_DIRECTE:
+                case ATTAQUE:
                     degatsJ1versJ2 += effet.degatsInfliges;
                     degatsSubisJ1 += effet.degatsSubis;
                     System.out.println("DEBUG - Carte Attaque: ajout " + effet.degatsInfliges + 
                                      " dégâts vers J2, " + effet.degatsSubis + " dégâts subis par J1");
                     break;
                 case SOIN:
-                    soinsJ1 += effet.vieGagnee;
-                    System.out.println("DEBUG - Carte Soin: ajout " + effet.vieGagnee + " PV pour J1");
+                    soinsJ1 += effet.vieGagne;
+                    System.out.println("DEBUG - Carte Soin: ajout " + effet.vieGagne + " PV pour J1");
                     break;
                 default:
                     System.out.println("DEBUG - Type de carte non géré: " + carte.getTypeOffensif());
@@ -119,15 +119,15 @@ public class ControlCartePlateau {
             Carte.EffetCarte effet = carte.effetCarte();
             
             switch (carte.getTypeOffensif()) {
-                case ATTAQUE_DIRECTE:
+                case ATTAQUE:
                     degatsJ2versJ1 += effet.degatsInfliges;
                     degatsSubisJ2 += effet.degatsSubis;
                     System.out.println("DEBUG - Carte Attaque: ajout " + effet.degatsInfliges + 
                                      " dégâts vers J1, " + effet.degatsSubis + " dégâts subis par J2");
                     break;
                 case SOIN:
-                    soinsJ2 += effet.vieGagnee;
-                    System.out.println("DEBUG - Carte Soin: ajout " + effet.vieGagnee + " PV pour J2");
+                    soinsJ2 += effet.vieGagne;
+                    System.out.println("DEBUG - Carte Soin: ajout " + effet.vieGagne + " PV pour J2");
                     break;
                 default:
                     System.out.println("DEBUG - Type de carte non géré: " + carte.getTypeOffensif());
@@ -185,10 +185,7 @@ public class ControlCartePlateau {
                     break;
                 case TRESOR:
                     if (effet.orGagne > 0) {
-                        controlJoueur1.getJoueur().gagnerOr(effet.orGagne);
-                    }
-                    if (effet.orPerdu > 0) {
-                        controlJoueur1.getJoueur().perdreOr(effet.orPerdu);
+                        controlJoueur1.gagnerOr(effet.orGagne);
                     }
                     break;
             }
@@ -204,10 +201,7 @@ public class ControlCartePlateau {
                     break;
                 case TRESOR:
                     if (effet.orGagne > 0) {
-                        controlJoueur2.getJoueur().gagnerOr(effet.orGagne);
-                    }
-                    if (effet.orPerdu > 0) {
-                        controlJoueur2.getJoueur().perdreOr(effet.orPerdu);
+                        controlJoueur2.gagnerOr(effet.orGagne);
                     }
                     break;
             }

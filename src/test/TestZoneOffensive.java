@@ -36,7 +36,7 @@ public class TestZoneOffensive {
     @DisplayName("Test d'ajout de cartes dans la zone offensive")
     public void testAjouterCarte() {
         // Créer quelques cartes de test
-        CarteOffensive carte1 = new CarteOffensive("Épée", "Une épée tranchante", 3, 1, TypeOffensif.ATTAQUE_DIRECTE);
+        CarteOffensive carte1 = new CarteOffensive("Épée", "Une épée tranchante", 3, 1, TypeOffensif.ATTAQUE);
         CarteOffensive carte2 = new CarteOffensive("Potion", "Une potion de soin", 2, 0, TypeOffensif.SOIN);
         
         // Ajouter les cartes à la zone
@@ -54,7 +54,7 @@ public class TestZoneOffensive {
     @DisplayName("Test de vidage de la zone offensive")
     public void testViderZone() {
         // Ajouter des cartes à la zone
-        CarteOffensive carte1 = new CarteOffensive("Épée", "Une épée tranchante", 3, 1, TypeOffensif.ATTAQUE_DIRECTE);
+        CarteOffensive carte1 = new CarteOffensive("Épée", "Une épée tranchante", 3, 1, TypeOffensif.ATTAQUE);
         CarteOffensive carte2 = new CarteOffensive("Potion", "Une potion de soin", 2, 0, TypeOffensif.SOIN);
         zoneOffensive.ajouterCarte(carte1);
         zoneOffensive.ajouterCarte(carte2);

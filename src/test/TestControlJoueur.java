@@ -60,7 +60,7 @@ public class TestControlJoueur {
         assertEquals(joueur1, controlJoueur1.getJoueur(), "Le joueur devrait être correctement assigné");
         
         // Vérifier que le contrôleur de plateau est bien assigné
-        assertDoesNotThrow(() -> controlJoueur1.jouerCarte(new CarteOffensive("Test", "", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE)), 
+        assertDoesNotThrow(() -> controlJoueur1.jouerCarte(new CarteOffensive("Test", "", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE)), 
                           "Le controlCartePlateau devrait être correctement configuré");
     }
     
@@ -400,7 +400,7 @@ public class TestControlJoueur {
         List<Carte> cartesAdversaire = new ArrayList<>();
         
         // Créer une carte qui a estAttaque = false
-        Carte carteNonAttaque = new CarteOffensive("Test", "Une carte de test", 0, 0, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE) {
+        Carte carteNonAttaque = new CarteOffensive("Test", "Une carte de test", 0, 0, CarteOffensive.TypeOffensif.ATTAQUE) {
             @Override
             public EffetCarte effetCarte() {
                 EffetCarte effet = new EffetCarte();
@@ -558,7 +558,7 @@ public class TestControlJoueur {
         // Tester pour joueur 1
         
         // Test pour une carte offensive sans aucun attribut estAttaque ou estSoin
-        CarteOffensive carteOffensiveNeutre = new CarteOffensive("Test Neutre", "Carte test", 0, 0, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE) {
+        CarteOffensive carteOffensiveNeutre = new CarteOffensive("Test Neutre", "Carte test", 0, 0, CarteOffensive.TypeOffensif.ATTAQUE) {
             @Override
             public EffetCarte effetCarte() {
                 EffetCarte effet = super.effetCarte();
@@ -686,7 +686,7 @@ public class TestControlJoueur {
         assertTrue(resultatTresor, "La carte avec estTresor devrait être jouée");
         
         // 4. Carte avec estSoin = true
-        CarteOffensive carteSoin = new CarteOffensive("Carte Soin", "Test", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE) {
+        CarteOffensive carteSoin = new CarteOffensive("Carte Soin", "Test", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE) {
             @Override
             public EffetCarte effetCarte() {
                 EffetCarte effet = new EffetCarte();
@@ -809,7 +809,7 @@ public class TestControlJoueur {
         // Créer des cartes qui activent différentes branches des conditions if/else if complexes
         
         // 1. Carte avec TypeCarte.OFFENSIVE, mais effets tous à false
-        CarteOffensive carteOffensiveType = new CarteOffensive("Offensive Type", "Test", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE) {
+        CarteOffensive carteOffensiveType = new CarteOffensive("Offensive Type", "Test", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE) {
             @Override
             public TypeCarte getType() {
                 return TypeCarte.OFFENSIVE;

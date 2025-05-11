@@ -6,7 +6,6 @@ import org.junit.jupiter.api.DisplayName;
 
 import carte.Carte;
 import carte.CartePopularite;
-import carte.CarteSpeciale;
 import carte.CarteTresor;
 import carte.CarteStrategique;
 import carte.TypeCarte;
@@ -141,50 +140,6 @@ public class TestCarteStrategique {
         assertEquals(CarteStrategique.TypeStrategique.TRESOR, carte.getTypeStrategique());
         assertEquals(10, carte.getOrGagne());
         assertEquals(25, carte.getCout());
-    }
-    
-    @Test
-    @DisplayName("Test de conversion d'une carte popularité")
-    public void testFromCartePopularite() {
-        CartePopularite cartePopularite = new CartePopularite("Discours", "Un discours inspirant", 3, 1, 5);
-        CarteStrategique carteStrategique = CarteStrategique.fromCartePopularite(cartePopularite);
-        
-        assertEquals("Discours", carteStrategique.getNomCarte());
-        assertEquals("Un discours inspirant", carteStrategique.getDescription());
-        assertEquals(TypeCarte.STRATEGIQUE, carteStrategique.getType());
-        assertEquals(CarteStrategique.TypeStrategique.POPULARITE, carteStrategique.getTypeStrategique());
-        assertEquals(3, carteStrategique.getPopulariteGagnee());
-        assertEquals(1, carteStrategique.getDegatsSubis());
-        assertEquals(5, carteStrategique.getCout());
-    }
-    
-    @Test
-    @DisplayName("Test de conversion d'une carte spéciale")
-    public void testFromCarteSpeciale() {
-        CarteSpeciale carteSpeciale = new CarteSpeciale("Sirènes", "Appel des sirènes", "sirènes", 4, 15);
-        CarteStrategique carteStrategique = CarteStrategique.fromCarteSpeciale(carteSpeciale);
-        
-        assertEquals("Sirènes", carteStrategique.getNomCarte());
-        assertEquals("Appel des sirènes", carteStrategique.getDescription());
-        assertEquals(TypeCarte.STRATEGIQUE, carteStrategique.getType());
-        assertEquals(CarteStrategique.TypeStrategique.SPECIALE, carteStrategique.getTypeStrategique());
-        assertEquals(4, carteStrategique.getValeur());
-        assertEquals("sirènes", carteStrategique.getEffetSpecial());
-        assertEquals(15, carteStrategique.getCout());
-    }
-    
-    @Test
-    @DisplayName("Test de conversion d'une carte trésor")
-    public void testFromCarteTresor() {
-        CarteTresor carteTresor = new CarteTresor("Grand Coffre", "Un coffre plein d'or", 20, 30);
-        CarteStrategique carteStrategique = CarteStrategique.fromCarteTresor(carteTresor);
-        
-        assertEquals("Grand Coffre", carteStrategique.getNomCarte());
-        assertEquals("Un coffre plein d'or", carteStrategique.getDescription());
-        assertEquals(TypeCarte.STRATEGIQUE, carteStrategique.getType());
-        assertEquals(CarteStrategique.TypeStrategique.TRESOR, carteStrategique.getTypeStrategique());
-        assertEquals(20, carteStrategique.getOrGagne());
-        assertEquals(30, carteStrategique.getCout());
     }
     
     @Test

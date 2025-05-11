@@ -16,7 +16,6 @@ public class ControlJeu {
     private Jeu jeu;
     private ControlPioche controlPioche;
     private ControlCartePlateau controlCartePlateau;
-    private ControlCarteSpeciale controlCarteSpeciale;
     private ControlMarche controlMarche;
     private ControlJoueur[] controlJoueurs; // Tableau des contrôleurs de joueurs
     private int joueurActif; // 0 pour joueur 1, 1 pour joueur 2
@@ -41,10 +40,6 @@ public class ControlJeu {
         controlCartePlateau = new ControlCartePlateau(controlJoueurs[0], controlJoueurs[1]);
         controlJoueurs[0].setControlCartePlateau(controlCartePlateau);
         controlJoueurs[1].setControlCartePlateau(controlCartePlateau);
-        
-        controlCarteSpeciale = new ControlCarteSpeciale(controlJoueurs[0], controlJoueurs[1]);
-        controlJoueurs[0].setControlCarteSpeciale(controlCarteSpeciale);
-        controlJoueurs[1].setControlCarteSpeciale(controlCarteSpeciale);
         
         controlMarche = new ControlMarche(controlJoueurs[0], controlJoueurs[1], controlPioche, this);
         distribuerCartesInitiales();
@@ -127,11 +122,6 @@ public class ControlJeu {
         
         // Appliquer les effets des cartes de popularité
         controlCartePlateau.appliquerEffetsCartesStrategiques();
-        
-        // Appliquer les effets des cartes spéciales (si présentes)
-        if (controlCarteSpeciale != null) {
-            controlCarteSpeciale.appliquerEffetsCartes();
-        }
     }
     
     /**
@@ -139,10 +129,6 @@ public class ControlJeu {
      */
     public void defausserCartesPlateau() {
         controlCartePlateau.defausserCartesPlateau();
-        
-        if (controlCarteSpeciale != null) {
-            controlCarteSpeciale.defausserCartes();
-        }
     }
     
     /**

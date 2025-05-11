@@ -17,7 +17,6 @@ public class ControlJoueur {
     private ControlJeu controlJeu;
     private ControlPioche controlPioche;
     private ControlCartePlateau controlCartePlateau;
-    private ControlCarteSpeciale controlCarteSpeciale;
     
     /**
      * Constructeur du contrôleur
@@ -33,13 +32,6 @@ public class ControlJoueur {
      */
     public void setControlCartePlateau(ControlCartePlateau controlCartePlateau) {
         this.controlCartePlateau = controlCartePlateau;
-    }
-    
-    /**
-     * Définit le contrôleur de carte spéciale associé
-     */
-    public void setControlCarteSpeciale(ControlCarteSpeciale controlCarteSpeciale) {
-        this.controlCarteSpeciale = controlCarteSpeciale;
     }
     
     /**
@@ -118,7 +110,7 @@ public class ControlJoueur {
         }
 
         // Correction dans la méthode jouerCarte pour s'assurer que les cartes sont bien ajoutées aux zones
-        if (carte.getType() == TypeCarte.OFFENSIVE || effet.estAttaque || effet.estSoin) {
+        if (carte.getType() == TypeCarte.OFFENSIVE) {
             if (estJoueur1) {
                 controlCartePlateau.ajouterCarteOffensiveJ1((CarteOffensive) carte);
             } else {
@@ -126,7 +118,7 @@ public class ControlJoueur {
             }
             joueur.retirerCarte(carte);
             return true;
-        } else if (carte.getType() == TypeCarte.STRATEGIQUE || effet.estPopularite || effet.estPassive || effet.estSpeciale || effet.estTresor) {
+        } else if (carte.getType() == TypeCarte.STRATEGIQUE) {
             if (estJoueur1) {
                 controlCartePlateau.ajouterCarteStrategiqueJ1((CarteStrategique) carte);
             } else {
@@ -218,23 +210,6 @@ public class ControlJoueur {
      */
     public void gagnerOr(int montant) {
         joueur.gagnerOr(montant);
-    }
-    
-    /**
-     * Applique les effets des cartes de l'adversaire sur ce joueur
-     */
-    public void recevoirEffets(List<Carte> cartesAdversaire) {
-        for (Carte carte : cartesAdversaire) {
-            Carte.EffetCarte effet = carte.effetCarte();
-            
-            if (effet.estAttaque) {
-                // Recevoir des dégâts d'une carte d'attaque
-                perdrePointsDeVie(effet.degatsInfliges);
-            }
-            
-            // La fonctionnalité de vol d'or a été supprimée
-            // Toute référence à effet.orVole a été retirée
-        }
     }
     
     /**

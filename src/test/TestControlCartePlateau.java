@@ -60,7 +60,7 @@ public class TestControlCartePlateau {
     public void testAjouterCarteOffensiveJ1() {
         // Création d'une carte offensive
         CarteOffensive carteOffensive = new CarteOffensive("Épée", "Une épée tranchante", 2, 2,
-                                                         CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+                                                         CarteOffensive.TypeOffensif.ATTAQUE);
         
         // Ajout de la carte pour joueur 1
         cCartePlateau.ajouterCarteOffensiveJ1(carteOffensive);
@@ -99,15 +99,15 @@ public class TestControlCartePlateau {
         
         // Ajout de cartes offensives
         // J1 joue : Attaque (2 dégâts infligés, 1 subi), Soin (3 PV)
-        CarteOffensive attaqueJ1 = new CarteOffensive("Canon", "", 2, 1, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+        CarteOffensive attaqueJ1 = new CarteOffensive("Canon", "", 2, 1, CarteOffensive.TypeOffensif.ATTAQUE);
         CarteOffensive soinJ1 = new CarteOffensive("Potion", "", 3); // Constructeur Soin
-        CarteOffensive attaqueExtraJ1 = new CarteOffensive("Vol de Butin", "", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+        CarteOffensive attaqueExtraJ1 = new CarteOffensive("Vol de Butin", "", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE);
         cCartePlateau.ajouterCarteOffensiveJ1(attaqueJ1);
         cCartePlateau.ajouterCarteOffensiveJ1(soinJ1);
         cCartePlateau.ajouterCarteOffensiveJ1(attaqueExtraJ1);
         
         // J2 joue : Attaque (1 dégât infligé, 0 subi)
-        CarteOffensive attaqueJ2 = new CarteOffensive("Mousquet", "", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+        CarteOffensive attaqueJ2 = new CarteOffensive("Mousquet", "", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE);
         cCartePlateau.ajouterCarteOffensiveJ2(attaqueJ2);
         
         // Application des effets
@@ -184,11 +184,11 @@ public class TestControlCartePlateau {
         // J2 joue une carte avec un type inexistant mais pas null
         // Pour éviter NullPointerException, on utilise un type connu
         CarteOffensive carteSpeciale = new CarteOffensive("Carte Spéciale", "Une carte avec type spécial", 1, 0, 
-                                                         CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE) {
+                                                         CarteOffensive.TypeOffensif.ATTAQUE) {
             @Override
             public CarteOffensive.TypeOffensif getTypeOffensif() {
                 // Utiliser un type non reconnu dans le switch mais pas null
-                return CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE;
+                return CarteOffensive.TypeOffensif.ATTAQUE;
             }
             
             @Override
@@ -254,8 +254,8 @@ public class TestControlCartePlateau {
     @DisplayName("Test de la défausse des cartes du plateau")
     public void testDefausserCartesPlateau() {
         // Ajout de cartes dans les différentes zones
-        CarteOffensive carteOff1 = new CarteOffensive("Épée", "Une épée tranchante", 2, 2, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
-        CarteOffensive carteOff2 = new CarteOffensive("Mousquet", "Un mousquet puissant", 3, 0, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+        CarteOffensive carteOff1 = new CarteOffensive("Épée", "Une épée tranchante", 2, 2, CarteOffensive.TypeOffensif.ATTAQUE);
+        CarteOffensive carteOff2 = new CarteOffensive("Mousquet", "Un mousquet puissant", 3, 0, CarteOffensive.TypeOffensif.ATTAQUE);
         CarteStrategique carteStrat1 = new CarteStrategique("Chanson", "Une chanson entraînante", 2, 2);
         CarteStrategique carteStrat2 = new CarteStrategique("Trésor", "Un coffre d'or", 5, true); // Suppression du paramètre orPerdu
         
@@ -308,7 +308,7 @@ public class TestControlCartePlateau {
     @DisplayName("Test des méthodes getter de listes de cartes")
     public void testGetters() {
         // Ajouter quelques cartes
-        CarteOffensive carteOff1 = new CarteOffensive("Épée", "Une épée tranchante", 2, 2, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+        CarteOffensive carteOff1 = new CarteOffensive("Épée", "Une épée tranchante", 2, 2, CarteOffensive.TypeOffensif.ATTAQUE);
         CarteStrategique carteStrat1 = new CarteStrategique("Chanson", "Une chanson entraînante", 2, 2);
         
         cCartePlateau.ajouterCarteOffensiveJ1(carteOff1);
@@ -324,7 +324,7 @@ public class TestControlCartePlateau {
         assertEquals(carteStrat1, cartesStrategiquesJ1.get(0), "devrait renvoyer la carte stratégique ajoutée");
         
         // Tester getCartesOffensivesJ2 et getCartesStrategiquesJ2
-        CarteOffensive carteOff2 = new CarteOffensive("Mousquet", "Un mousquet puissant", 3, 0, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+        CarteOffensive carteOff2 = new CarteOffensive("Mousquet", "Un mousquet puissant", 3, 0, CarteOffensive.TypeOffensif.ATTAQUE);
         CarteStrategique carteStrat2 = new CarteStrategique("Trésor", "Un coffre d'or", 5, true); // Suppression du paramètre orPerdu
         
         cCartePlateau.ajouterCarteOffensiveJ2(carteOff2);
@@ -389,7 +389,7 @@ public class TestControlCartePlateau {
         
         // Créer une carte offensive sans effet spécial pour le joueur 1
         CarteOffensive carteTypeSpecial = new CarteOffensive("Type Spécial", "Une carte sans effet", 0, 0, 
-                                                CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+                                                CarteOffensive.TypeOffensif.ATTAQUE);
         cCartePlateau.ajouterCarteOffensiveJ1(carteTypeSpecial);
         
         // Créer une carte stratégique qui fait perdre de l'or au joueur 2

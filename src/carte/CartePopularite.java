@@ -4,30 +4,29 @@ package carte;
  * @brief Classe représentant une carte de popularité
  */
 public class CartePopularite extends CarteStrategique {
+
+    private int populariteGagnee;
+    private int degatsSubis;
     
-    /**
-     * @brief Constructeur standard pour une carte de popularité
-     * @param nomCarte Nom de la carte
-     * @param description Description de la carte
-     * @param populariteGagnee Points de popularité gagnés (stockés dans valeurPrincipale)
-     * @param degatsSubis Points de dégâts subis par le joueur (stockés dans valeurSecondaire)
-     */
-    public CartePopularite(String nomCarte, String description, int populariteGagnee, int degatsSubis) {
-        super(nomCarte, description, populariteGagnee, degatsSubis);
-        setTypeStrategique(TypeStrategique.POPULARITE);
+    public CartePopularite(String nomCarte, String description, String cheminImage, int cout, int populariteGagnee, int degatsSubis) {
+        super(nomCarte, description, TypeStrategique.POPULARITE, cheminImage, cout);
+        this.populariteGagnee = populariteGagnee;
+        this.degatsSubis = degatsSubis;
     }
-    
-    /**
-     * @brief Constructeur complet pour une carte de popularité
-     * @param nomCarte Nom de la carte
-     * @param description Description de la carte
-     * @param populariteGagnee Points de popularité gagnés (stockés dans valeurPrincipale)
-     * @param degatsSubis Points de dégâts subis par le joueur (stockés dans valeurSecondaire)
-     * @param cout Coût d'achat de la carte
-     */
-    public CartePopularite(String nomCarte, String description, int populariteGagnee, 
-                          int degatsSubis, int cout) {
-        super(nomCarte, description, populariteGagnee, degatsSubis, cout);
-        setTypeStrategique(TypeStrategique.POPULARITE);
+
+    public CartePopularite(String nomCarte, String description, int cout, int populariteGagnee, int degatsSubis) {
+        this(nomCarte, description, null, cout, populariteGagnee, degatsSubis);
+    }
+
+    public CartePopularite(String nomCarte, String description, int populariteGagnee, int degatsSubis) {
+        this(nomCarte, description, null, 10, populariteGagnee, degatsSubis);
+    }
+
+    @Override
+    public EffetCarte effetCarte() {
+        EffetCarte effet = new EffetCarte();
+        effet.populariteGagnee = this.populariteGagnee;
+        effet.degatsSubis = this.degatsSubis;
+        return effet;
     }
 }

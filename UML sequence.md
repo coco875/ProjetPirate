@@ -75,7 +75,7 @@ sequenceDiagram
 
         ControlCartePlateau->>Carte: getTypeOffensif()
         activate Carte
-        Carte-->>ControlCartePlateau: ATTAQUE_DIRECTE
+        Carte-->>ControlCartePlateau: ATTAQUE
         deactivate Carte
 
         Note right of ControlCartePlateau: CCartePlateau accède <br/>aux attributs de effet

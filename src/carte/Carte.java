@@ -3,108 +3,55 @@ package carte;
 /**
  * Classe représentant une carte du jeu des Pirates
  */
-public class Carte {
+public abstract class Carte {
 	
 	private TypeCarte type;
 	private String nomCarte;
-	private String Description;
-	private int valeur;             // Valeur principale (points d'attaque ou de popularité)
-	private int valeurSecondaire;   // Valeur secondaire (dégâts subis ou effet secondaire)
-	private int id;                 // Identifiant unique de la carte
+	private String description;
 	private int cout;               // Coût de la carte pour l'achat au marché
-	private int orGagne;            // Or gagné en jouant cette carte
-	private int vieGagne;           // Points de vie gagnés en jouant cette carte
 	private String cheminImage;     // Chemin d'accès à l'image de la carte
-
-	private static int compteurId = 0;
 	
 	// Données pour l'effet de la carte
 	public static class EffetCarte {
 		public int degatsInfliges = 0;
 		public int degatsSubis = 0;
 		public int populariteGagnee = 0;
-		public int vieGagnee = 0;
+		public int vieGagne = 0;
 		public int orGagne = 0;
-		public int orPerdu = 0;  // Conservé pour compatibilité bien que la fonctionnalité soit supprimée
-		public String effetSpecial = null;
 		public int dureeEffet = 0;
-		public boolean estAttaque = false;
-		public boolean estPopularite = false;
-		public boolean estSpeciale = false;
-		public boolean estPassive = false;
-		public boolean estTresor = false;
-		public boolean estSoin = false;
 	}
 	
 	/**
 	 * Constructeur complet
 	 */
-	public Carte(TypeCarte type, String nomCarte, String description, int valeur, int valeurSecondaire, int cout) {
+	public Carte(TypeCarte type, String nomCarte, String description, String cheminImage, int cout) {
 		this.type = type;
 		this.nomCarte = nomCarte;
-		this.Description = description;
-		this.valeur = valeur;
-		this.valeurSecondaire = valeurSecondaire;
+		this.description = description;
+		this.cheminImage = cheminImage;
 		this.cout = cout;
-		// Valeurs par défaut pour les nouveaux attributs
-		this.orGagne = 0;
-		this.vieGagne = 0;
-		// Générer un ID unique par incrémentation
-		this.id = ++compteurId;
-		// Chemin d'image par défaut
-		this.cheminImage = "images/cartes/" + nomCarte.replaceAll("\\s+", "_").toLowerCase() + ".png";
+	}
+
+	public Carte(TypeCarte type, String nomCarte, String description, int cout) {
+		this(type, nomCarte, description, "images/cartes/" + nomCarte.replaceAll("\\s+", "_").toLowerCase() + ".jpeg", cout);
 	}
 	
 	/**
 	 * Constructeur sans coût
 	 */
-	public Carte(TypeCarte type, String nomCarte, String description, int valeur, int valeurSecondaire) {
-		this(type, nomCarte, description, valeur, valeurSecondaire, 10); // Coût par défaut à 10
-	}
-	
-	/**
-	 * Constructeur simplifié
-	 */
 	public Carte(TypeCarte type, String nomCarte, String description) {
-		this(type, nomCarte, description, 0, 0, 10); // Valeurs par défaut à 0, coût à 10
+		this(type, nomCarte, description, 10); // Coût par défaut à 10
 	}
-	
-	/**
-	 * Constructeur pour carte créée depuis un JSON
-	 */
-	public Carte(String jsonCarte, int idCarte, TypeCarte type) {
-		this(type, jsonCarte, "ID: " + idCarte, 0, 0, 10); // Valeurs et coût par défaut
-		this.id = idCarte;
-	}
+
 
 	/**
 	 * Méthode centrale pour obtenir tous les effets d'une carte
 	 * Cette méthode sera redéfinie par les classes dérivées
 	 * @return Un objet contenant tous les effets et caractéristiques de la carte
 	 */
-	public EffetCarte effetCarte() {
-		EffetCarte effet = new EffetCarte();
-		// Implémentation de base qui peut être redéfinie par les sous-classes
-		return effet;
-	}
+	public abstract EffetCarte effetCarte();
 
 	// Getters et Setters de base
-	
-	public int getValeur() {
-		return valeur;
-	}
-	
-	public void setValeur(int valeur) {
-		this.valeur = valeur;
-	}
-	
-	public int getValeurSecondaire() {
-		return valeurSecondaire;
-	}
-	
-	public void setValeurSecondaire(int valeurSecondaire) {
-		this.valeurSecondaire = valeurSecondaire;
-	}
 	
 	public int getCout() {
 		return cout;
@@ -114,17 +61,13 @@ public class Carte {
 		this.cout = cout;
 	}
 	
-	public int getId() {
-		return id;
-	}
-	
 	/**
 	 * Retourne une représentation textuelle de la carte
 	 */
 	@Override
 	public String toString() {
 	    StringBuilder sb = new StringBuilder();
-	    sb.append(this.nomCarte).append("\n").append(this.Description);
+	    sb.append(this.nomCarte).append("\n").append(this.description);
 	    
 	    EffetCarte effet = effetCarte();
 	    
@@ -137,31 +80,22 @@ public class Carte {
 	    if (effet.populariteGagnee > 0) {
 	        sb.append("\nPopularité: ").append(effet.populariteGagnee);
 	    }
-	    if (effet.vieGagnee > 0) {
-	        sb.append("\nVie gagnée: ").append(effet.vieGagnee);
+	    if (effet.vieGagne > 0) {
+	        sb.append("\nVie gagnée: ").append(effet.vieGagne);
 	    }
 	    if (effet.orGagne > 0) {
 	        sb.append("\nOr gagné: ").append(effet.orGagne);
-	    }
-	    if (effet.orPerdu > 0) {
-	        sb.append("\nOr perdu: ").append(effet.orPerdu);
-	    }
-	    if (effet.effetSpecial != null) {
-	        sb.append("\nEffet spécial: ").append(effet.effetSpecial);
-	        if (effet.dureeEffet > 1) {
-	            sb.append(" (").append(effet.dureeEffet).append(" tours)");
-	        }
 	    }
 	    
 	    return sb.toString();
 	}
 	
 	public void setDescription(String description) {
-		Description = description;
+		this.description = description;
 	}
 	
 	public String getDescription() {
-		return Description;
+		return description;
 	}
 	
 	public TypeCarte getType() {
