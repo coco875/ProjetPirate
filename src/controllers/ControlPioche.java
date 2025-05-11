@@ -60,33 +60,6 @@ public class ControlPioche {
 			}
 		}
 		
-		// Si aucune carte n'a été chargée, créer des cartes par défaut
-		if (list.isEmpty()) {
-			System.out.println("Aucune carte n'a été chargée depuis les fichiers. Création de cartes par défaut.");
-			// Ajouter quelques cartes d'attaque par défaut
-			list.add(new CarteAttaque("Épée", "Une épée tranchante", 2, 2));
-			list.add(new CarteAttaque("Pistolet", "Un pistolet puissant", 3, 3));
-			list.add(new CarteAttaque("Canon", "Un canon destructeur", 4, 4));
-			
-			// Ajouter quelques cartes de popularité par défaut
-			list.add(new CartePopularite("Chanson", "Une chanson entraînante", 2, 2));
-			list.add(new CartePopularite("Trésor", "Un trésor qui impressionne", 3, 3));
-			list.add(new CartePopularite("Légende", "Une légende inspirante", 4, 4));
-			
-			// Ajouter quelques cartes spéciales par défaut
-			list.add(new CarteSpeciale("Perroquet", "Un perroquet qui distrait l'adversaire", "Réduit les dégâts", 2));
-			list.add(new CarteSpeciale("Carte au trésor", "Une carte au trésor mystérieuse", "Augmente l'or", 3));
-			
-			// Ajouter quelques cartes de trésor par défaut
-			list.add(new CarteTresor("Coffre au trésor", "Un coffre rempli d'or", 10, 0, 0));
-			list.add(new CarteTresor("Taxes portuaires", "Vous devez payer des taxes", 0, 5, 0));
-			list.add(new CarteTresor("Pillage", "Volez de l'or à votre adversaire", 0, 0, 8));
-			
-			// Ajouter quelques cartes de soin par défaut
-			list.add(new CarteSoin("Remède", "Un remède efficace contre les blessures", 2));
-			list.add(new CarteSoin("Bandages", "Des bandages pour stopper l'hémorragie", 1));
-		}
-		
 		// Correction: Instancier Pioche sans argument, puis ajouter les cartes et mélanger
 		this.pioche = new Pioche(); 
 		for (Carte carte : list) {

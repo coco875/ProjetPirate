@@ -6,125 +6,329 @@ import org.junit.jupiter.api.DisplayName;
 
 import carte.Carte;
 import carte.CartePopularite;
-import carte.CarteSoin;
 import carte.CarteSpeciale;
 import carte.CarteTresor;
 import carte.CarteStrategique;
-import carte.CarteStrategique.TypeStrategique;
+import carte.TypeCarte;
 
 /**
- * Tests pour la classe CarteStrategique et ses méthodes de conversion
+ * Tests pour la classe CarteStrategique
  */
+@DisplayName("Tests pour la classe CarteStrategique")
 public class TestCarteStrategique {
     
     @Test
     @DisplayName("Test de la création d'une carte stratégique de popularité")
     public void testCreationCartePopularite() {
-        CarteStrategique carte = new CarteStrategique("Test", "Carte test", 3, 1);
+        CarteStrategique carte = new CarteStrategique("Chanson", "Une chanson entrainante", 2, 1);
         
-        assertEquals("Test", carte.getNomCarte());
-        assertEquals("Carte test", carte.getDescription());
-        assertEquals(TypeStrategique.POPULARITE, carte.getTypeStrategique());
+        assertEquals("Chanson", carte.getNomCarte());
+        assertEquals("Une chanson entrainante", carte.getDescription());
+        assertEquals(TypeCarte.STRATEGIQUE, carte.getType());
+        assertEquals(CarteStrategique.TypeStrategique.POPULARITE, carte.getTypeStrategique());
+        assertEquals(2, carte.getPopulariteGagnee());
+        assertEquals(1, carte.getDegatsSubis());
+        assertTrue(carte.estPopularite());
+        assertFalse(carte.estPassive());
+        assertFalse(carte.estSpeciale());
+        assertFalse(carte.estTresor());
+        assertFalse(carte.estReutilisable());
+    }
+    
+    @Test
+    @DisplayName("Test de la création d'une carte stratégique de popularité avec coût")
+    public void testCreationCartePopulariteAvecCout() {
+        CarteStrategique carte = new CarteStrategique("Chanson", "Une chanson entrainante", 2, 1, 10);
+        
+        assertEquals("Chanson", carte.getNomCarte());
+        assertEquals("Une chanson entrainante", carte.getDescription());
+        assertEquals(TypeCarte.STRATEGIQUE, carte.getType());
+        assertEquals(CarteStrategique.TypeStrategique.POPULARITE, carte.getTypeStrategique());
+        assertEquals(2, carte.getPopulariteGagnee());
+        assertEquals(1, carte.getDegatsSubis());
+        assertEquals(10, carte.getCout());
+    }
+    
+    @Test
+    @DisplayName("Test de la création d'une carte stratégique passive")
+    public void testCreationCartePassive() {
+        CarteStrategique carte = new CarteStrategique("Bouclier", "Un bouclier protecteur", 3, 2, "protection");
+        
+        assertEquals("Bouclier", carte.getNomCarte());
+        assertEquals("Un bouclier protecteur", carte.getDescription());
+        assertEquals(TypeCarte.STRATEGIQUE, carte.getType());
+        assertEquals(CarteStrategique.TypeStrategique.PASSIVE, carte.getTypeStrategique());
         assertEquals(3, carte.getValeur());
-        assertEquals(1, carte.getValeurSecondaire());
+        assertEquals(2, carte.getDuree());
+        assertEquals("protection", carte.getEffetSpecial());
+        assertEquals("protection", carte.getTypeEffet());
+        assertFalse(carte.estPopularite());
+        assertTrue(carte.estPassive());
+        assertFalse(carte.estSpeciale());
+        assertFalse(carte.estTresor());
+    }
+    
+    @Test
+    @DisplayName("Test de la création d'une carte stratégique passive avec coût")
+    public void testCreationCartePassiveAvecCout() {
+        CarteStrategique carte = new CarteStrategique("Bouclier", "Un bouclier protecteur", 3, 2, "protection", 15);
+        
+        assertEquals("Bouclier", carte.getNomCarte());
+        assertEquals("Un bouclier protecteur", carte.getDescription());
+        assertEquals(TypeCarte.STRATEGIQUE, carte.getType());
+        assertEquals(CarteStrategique.TypeStrategique.PASSIVE, carte.getTypeStrategique());
+        assertEquals(3, carte.getValeur());
+        assertEquals(2, carte.getDuree());
+        assertEquals("protection", carte.getEffetSpecial());
+        assertEquals(15, carte.getCout());
     }
     
     @Test
     @DisplayName("Test de la création d'une carte stratégique spéciale")
     public void testCreationCarteSpeciale() {
-        CarteStrategique carte = new CarteStrategique("Malédiction", "Maudit l'adversaire", "Réduction dégâts", 3);
+        CarteStrategique carte = new CarteStrategique("Tempête", "Déclenche une tempête", "tempête", 5);
         
-        assertEquals("Malédiction", carte.getNomCarte());
-        assertEquals("Maudit l'adversaire", carte.getDescription());
-        assertEquals(TypeStrategique.SPECIALE, carte.getTypeStrategique());
-        assertEquals("Réduction dégâts", carte.getEffetSpecial());
-        assertEquals(3, carte.getValeur());
+        assertEquals("Tempête", carte.getNomCarte());
+        assertEquals("Déclenche une tempête", carte.getDescription());
+        assertEquals(TypeCarte.STRATEGIQUE, carte.getType());
+        assertEquals(CarteStrategique.TypeStrategique.SPECIALE, carte.getTypeStrategique());
+        assertEquals(5, carte.getValeur());
+        assertEquals("tempête", carte.getEffetSpecial());
+        assertFalse(carte.estPopularite());
+        assertFalse(carte.estPassive());
+        assertTrue(carte.estSpeciale());
+        assertFalse(carte.estTresor());
+    }
+    
+    @Test
+    @DisplayName("Test de la création d'une carte stratégique spéciale avec coût")
+    public void testCreationCarteSpecialeAvecCout() {
+        CarteStrategique carte = new CarteStrategique("Tempête", "Déclenche une tempête", "tempête", 5, 20);
+        
+        assertEquals("Tempête", carte.getNomCarte());
+        assertEquals("Déclenche une tempête", carte.getDescription());
+        assertEquals(TypeCarte.STRATEGIQUE, carte.getType());
+        assertEquals(CarteStrategique.TypeStrategique.SPECIALE, carte.getTypeStrategique());
+        assertEquals(5, carte.getValeur());
+        assertEquals("tempête", carte.getEffetSpecial());
+        assertEquals(20, carte.getCout());
     }
     
     @Test
     @DisplayName("Test de la création d'une carte stratégique trésor")
     public void testCreationCarteTresor() {
-        CarteStrategique carte = new CarteStrategique("Coffre", "Un coffre au trésor", 10, 0, true);
+        CarteStrategique carte = new CarteStrategique("Coffre", "Un coffre au trésor", 10, true);
         
         assertEquals("Coffre", carte.getNomCarte());
         assertEquals("Un coffre au trésor", carte.getDescription());
-        assertEquals(TypeStrategique.TRESOR, carte.getTypeStrategique());
+        assertEquals(TypeCarte.STRATEGIQUE, carte.getType());
+        assertEquals(CarteStrategique.TypeStrategique.TRESOR, carte.getTypeStrategique());
         assertEquals(10, carte.getOrGagne());
-        assertEquals(0, carte.getOrPerdu());
+        assertFalse(carte.estPopularite());
+        assertFalse(carte.estPassive());
+        assertFalse(carte.estSpeciale());
+        assertTrue(carte.estTresor());
+    }
+    
+    @Test
+    @DisplayName("Test de la création d'une carte stratégique trésor avec coût")
+    public void testCreationCarteTresorAvecCout() {
+        CarteStrategique carte = new CarteStrategique("Coffre", "Un coffre au trésor", 10, true, 25);
+        
+        assertEquals("Coffre", carte.getNomCarte());
+        assertEquals("Un coffre au trésor", carte.getDescription());
+        assertEquals(TypeCarte.STRATEGIQUE, carte.getType());
+        assertEquals(CarteStrategique.TypeStrategique.TRESOR, carte.getTypeStrategique());
+        assertEquals(10, carte.getOrGagne());
+        assertEquals(25, carte.getCout());
     }
     
     @Test
     @DisplayName("Test de conversion d'une carte popularité")
     public void testFromCartePopularite() {
-        CartePopularite cartePopularite = new CartePopularite("Chanson", "Une chanson pirate", 3, 1);
+        CartePopularite cartePopularite = new CartePopularite("Discours", "Un discours inspirant", 3, 1, 5);
         CarteStrategique carteStrategique = CarteStrategique.fromCartePopularite(cartePopularite);
         
-        assertEquals("Chanson", carteStrategique.getNomCarte());
-        assertEquals("Une chanson pirate", carteStrategique.getDescription());
-        assertEquals(TypeStrategique.POPULARITE, carteStrategique.getTypeStrategique());
-        assertEquals(3, carteStrategique.getValeur());
-        assertEquals(1, carteStrategique.getValeurSecondaire());
+        assertEquals("Discours", carteStrategique.getNomCarte());
+        assertEquals("Un discours inspirant", carteStrategique.getDescription());
+        assertEquals(TypeCarte.STRATEGIQUE, carteStrategique.getType());
+        assertEquals(CarteStrategique.TypeStrategique.POPULARITE, carteStrategique.getTypeStrategique());
+        assertEquals(3, carteStrategique.getPopulariteGagnee());
+        assertEquals(1, carteStrategique.getDegatsSubis());
+        assertEquals(5, carteStrategique.getCout());
     }
     
     @Test
     @DisplayName("Test de conversion d'une carte spéciale")
     public void testFromCarteSpeciale() {
-        CarteSpeciale carteSpeciale = new CarteSpeciale("Malédiction", "Maudit l'adversaire", "Réduction dégâts", 3);
+        CarteSpeciale carteSpeciale = new CarteSpeciale("Sirènes", "Appel des sirènes", "sirènes", 4, 15);
         CarteStrategique carteStrategique = CarteStrategique.fromCarteSpeciale(carteSpeciale);
         
-        assertEquals("Malédiction", carteStrategique.getNomCarte());
-        assertEquals("Maudit l'adversaire", carteStrategique.getDescription());
-        assertEquals(TypeStrategique.SPECIALE, carteStrategique.getTypeStrategique());
-        assertEquals("Réduction dégâts", carteStrategique.getEffetSpecial());
-        assertEquals(3, carteStrategique.getValeur());
+        assertEquals("Sirènes", carteStrategique.getNomCarte());
+        assertEquals("Appel des sirènes", carteStrategique.getDescription());
+        assertEquals(TypeCarte.STRATEGIQUE, carteStrategique.getType());
+        assertEquals(CarteStrategique.TypeStrategique.SPECIALE, carteStrategique.getTypeStrategique());
+        assertEquals(4, carteStrategique.getValeur());
+        assertEquals("sirènes", carteStrategique.getEffetSpecial());
+        assertEquals(15, carteStrategique.getCout());
     }
     
     @Test
     @DisplayName("Test de conversion d'une carte trésor")
     public void testFromCarteTresor() {
-        CarteTresor carteTresor = new CarteTresor("Coffre", "Un coffre au trésor", 10, 0, 0);
+        CarteTresor carteTresor = new CarteTresor("Grand Coffre", "Un coffre plein d'or", 20, 30);
         CarteStrategique carteStrategique = CarteStrategique.fromCarteTresor(carteTresor);
         
-        assertEquals("Coffre", carteStrategique.getNomCarte());
-        assertEquals("Un coffre au trésor", carteStrategique.getDescription());
-        assertEquals(TypeStrategique.TRESOR, carteStrategique.getTypeStrategique());
+        assertEquals("Grand Coffre", carteStrategique.getNomCarte());
+        assertEquals("Un coffre plein d'or", carteStrategique.getDescription());
+        assertEquals(TypeCarte.STRATEGIQUE, carteStrategique.getType());
+        assertEquals(CarteStrategique.TypeStrategique.TRESOR, carteStrategique.getTypeStrategique());
+        assertEquals(20, carteStrategique.getOrGagne());
+        assertEquals(30, carteStrategique.getCout());
+    }
+    
+    @Test
+    @DisplayName("Test des setters")
+    public void testSetters() {
+        CarteStrategique carte = new CarteStrategique("Test", "Carte de test", 1, 1);
         
-        Carte.EffetCarte effet = carteStrategique.effetCarte();
-        assertEquals(10, effet.orGagne);
-        assertTrue(effet.estTresor);
+        // Test des setters
+        carte.setTypeStrategique(CarteStrategique.TypeStrategique.PASSIVE);
+        carte.setDuree(3);
+        carte.setEffetSpecial("test");
+        carte.setReutilisable(true);
+        
+        // Test des getters correspondants
+        assertEquals(CarteStrategique.TypeStrategique.PASSIVE, carte.getTypeStrategique());
+        assertEquals(3, carte.getDuree());
+        assertEquals("test", carte.getEffetSpecial());
+        assertTrue(carte.estReutilisable());
+    }
+    
+    @Test
+    @DisplayName("Test de la méthode reduireDuree")
+    public void testReduireDuree() {
+        CarteStrategique carte = new CarteStrategique("Bouclier", "Un bouclier protecteur", 3, 3, "protection");
+        
+        // La durée initiale est 3, après réduction elle sera 2
+        assertTrue(carte.reduireDuree(), "Après la première réduction, il devrait rester des tours");
+        assertEquals(2, carte.getDuree(), "La durée devrait être de 2 après la première réduction");
+        
+        // Après la deuxième réduction, il reste 1 tour
+        assertTrue(carte.reduireDuree(), "Après la deuxième réduction, il devrait rester 1 tour");
+        assertEquals(1, carte.getDuree(), "La durée devrait être de 1 après la deuxième réduction");
+        
+        // Après la troisième réduction, il ne reste plus de tours
+        assertFalse(carte.reduireDuree(), "Après la troisième réduction, il ne devrait plus rester de tours");
+        assertEquals(0, carte.getDuree(), "La durée devrait être de 0 après la troisième réduction");
     }
     
     @Test
     @DisplayName("Test des effets de carte stratégique par type")
-    public void testEffetCarteStrategique() {
-        // Test carte popularité
-        CarteStrategique cartePopularite = new CarteStrategique("Chanson", "Chanson pirate", 3, 1);
+    public void testEffetsCarteStrategique() {
+        // Carte de popularité
+        CarteStrategique cartePopularite = new CarteStrategique("Chanson", "Une chanson entrainante", 2, 1);
         Carte.EffetCarte effetPopularite = cartePopularite.effetCarte();
-        assertEquals(3, effetPopularite.populariteGagnee);
+        
+        assertEquals(2, effetPopularite.populariteGagnee);
+        assertEquals(1, effetPopularite.degatsSubis);
         assertTrue(effetPopularite.estPopularite);
+        assertFalse(effetPopularite.estPassive);
+        assertFalse(effetPopularite.estSpeciale);
+        assertFalse(effetPopularite.estTresor);
         
-        // Test carte passive
-        CarteStrategique cartePassive = new CarteStrategique("Bouclier", "Protection", 2, 3, "Défense");
+        // Carte passive
+        CarteStrategique cartePassive = new CarteStrategique("Bouclier", "Un bouclier protecteur", 3, 2, "protection");
         Carte.EffetCarte effetPassive = cartePassive.effetCarte();
+        
+        assertEquals(3, effetPassive.populariteGagnee);
+        assertEquals(2, effetPassive.dureeEffet);
+        assertEquals("protection", effetPassive.effetSpecial);
+        assertFalse(effetPassive.estPopularite);
         assertTrue(effetPassive.estPassive);
-        assertEquals(3, effetPassive.dureeEffet);
+        assertFalse(effetPassive.estSpeciale);
+        assertFalse(effetPassive.estTresor);
         
-        // Test carte spéciale
-        CarteStrategique carteSpeciale = new CarteStrategique("Sort", "Sort magique", "Effet spécial", 2);
+        // Carte spéciale
+        CarteStrategique carteSpeciale = new CarteStrategique("Tempête", "Déclenche une tempête", "tempête", 5);
         Carte.EffetCarte effetSpeciale = carteSpeciale.effetCarte();
+        
+        assertEquals(5, effetSpeciale.populariteGagnee);
+        assertEquals("tempête", effetSpeciale.effetSpecial);
+        assertFalse(effetSpeciale.estPopularite);
+        assertFalse(effetSpeciale.estPassive);
         assertTrue(effetSpeciale.estSpeciale);
-        assertEquals("Effet spécial", effetSpeciale.effetSpecial);
+        assertFalse(effetSpeciale.estTresor);
         
-        // Test carte trésor
-        CarteStrategique carteTresor = new CarteStrategique("Or", "Pièces d'or", 15, 0, true);
+        // Carte trésor
+        CarteStrategique carteTresor = new CarteStrategique("Coffre", "Un coffre au trésor", 10, true);
         Carte.EffetCarte effetTresor = carteTresor.effetCarte();
-        assertEquals(15, effetTresor.orGagne);
-        assertTrue(effetTresor.estTresor);
         
-        // Test carte trésor avec perte d'or
-        CarteStrategique cartePerteTresor = new CarteStrategique("Taxe", "Taxes portuaires", 0, 10, true);
-        Carte.EffetCarte effetPerteTresor = cartePerteTresor.effetCarte();
-        assertEquals(10, effetPerteTresor.orPerdu);
-        assertTrue(effetPerteTresor.estTresor);
+        assertEquals(10, effetTresor.orGagne);
+        assertEquals(0, effetTresor.orPerdu, "L'attribut orPerdu dans EffetCarte devrait toujours être 0 maintenant");
+        assertFalse(effetTresor.estPopularite);
+        assertFalse(effetTresor.estPassive);
+        assertFalse(effetTresor.estSpeciale);
+        assertTrue(effetTresor.estTresor);
+    }
+    
+    @Test
+    @DisplayName("Test de la méthode toString pour tous les types")
+    public void testToString() {
+        // Carte de popularité
+        CarteStrategique cartePopularite = new CarteStrategique("Chanson", "Une chanson entrainante", 2, 1);
+        String descriptionPopularite = cartePopularite.toString();
+        
+        assertTrue(descriptionPopularite.contains("Chanson"));
+        assertTrue(descriptionPopularite.contains("Une chanson entrainante"));
+        assertTrue(descriptionPopularite.contains("Popularité gagnée: 2"));
+        assertTrue(descriptionPopularite.contains("Dégâts subis: 1"));
+        
+        // Carte passive
+        CarteStrategique cartePassive = new CarteStrategique("Bouclier", "Un bouclier protecteur", 3, 2, "protection");
+        String descriptionPassive = cartePassive.toString();
+        
+        assertTrue(descriptionPassive.contains("Bouclier"));
+        assertTrue(descriptionPassive.contains("Un bouclier protecteur"));
+        assertTrue(descriptionPassive.contains("Valeur: 3"));
+        assertTrue(descriptionPassive.contains("Durée: 2 tours"));
+        assertTrue(descriptionPassive.contains("Type d'effet: protection"));
+        
+        // Carte spéciale
+        CarteStrategique carteSpeciale = new CarteStrategique("Tempête", "Déclenche une tempête", "tempête", 5);
+        carteSpeciale.setReutilisable(true);
+        String descriptionSpeciale = carteSpeciale.toString();
+        
+        assertTrue(descriptionSpeciale.contains("Tempête"));
+        assertTrue(descriptionSpeciale.contains("Déclenche une tempête"));
+        assertTrue(descriptionSpeciale.contains("Valeur: 5"));
+        assertTrue(descriptionSpeciale.contains("Effet spécial: tempête"));
+        assertTrue(descriptionSpeciale.contains("Réutilisable: Oui"));
+        
+        // Carte trésor avec or gagné
+        CarteStrategique carteTresorGain = new CarteStrategique("Coffre", "Un coffre au trésor", 10, true);
+        String descriptionTresorGain = carteTresorGain.toString();
+        
+        assertTrue(descriptionTresorGain.contains("Coffre"));
+        assertTrue(descriptionTresorGain.contains("Un coffre au trésor"));
+        assertTrue(descriptionTresorGain.contains("Or gagné: 10"));
+        assertFalse(descriptionTresorGain.contains("Or perdu"));
+        
+        // Carte trésor sans gain ni perte
+        CarteStrategique carteTresorVide = new CarteStrategique("Coffre Vide", "Un coffre vide", 0, true);
+        String descriptionTresorVide = carteTresorVide.toString();
+        
+        assertTrue(descriptionTresorVide.contains("Coffre Vide"));
+        assertTrue(descriptionTresorVide.contains("Un coffre vide"));
+        assertFalse(descriptionTresorVide.contains("Or gagné"));
+        assertFalse(descriptionTresorVide.contains("Or perdu"));
+        
+        // Carte trésor avec or gagné
+        CarteStrategique carteTresorRiche = new CarteStrategique("Coffre Riche", "Un coffre très riche", 8, true);
+        String descriptionTresorRiche = carteTresorRiche.toString();
+        
+        assertTrue(descriptionTresorRiche.contains("Coffre Riche"));
+        assertTrue(descriptionTresorRiche.contains("Un coffre très riche"));
+        assertTrue(descriptionTresorRiche.contains("Or gagné: 8"));
     }
 }

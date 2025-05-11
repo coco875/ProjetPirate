@@ -11,7 +11,6 @@ public class CarteStrategique extends Carte {
 	private boolean estReutilisable;          // Indique si la carte peut être réutilisée
 	// Attributs spécifiques aux cartes trésor
 	private int tresorOrGagne;
-	private int tresorOrPerdu;
 	
 	/**
 	 * Types spécifiques de cartes stratégiques
@@ -20,7 +19,7 @@ public class CarteStrategique extends Carte {
 		POPULARITE,     // Cartes augmentant la popularité
 		PASSIVE,        // Cartes à effet passif sur plusieurs tours
 		SPECIALE,       // Cartes à effets spéciaux uniques
-		TRESOR          // Cartes de trésor (or gagné/perdu)
+		TRESOR          // Cartes de trésor (or gagné)
 	}
 	
 	// Constructeurs
@@ -94,22 +93,54 @@ public class CarteStrategique extends Carte {
 	/**
 	 * Constructeur pour carte de trésor
 	 */
-	public CarteStrategique(String nomCarte, String description, int orGagne, int orPerdu, boolean estTresor) {
+	public CarteStrategique(String nomCarte, String description, int orGagne, boolean estTresor) {
 		super(TypeCarte.STRATEGIQUE, nomCarte, description, 0, 0);
 		this.typeStrategique = TypeStrategique.TRESOR;
 		this.tresorOrGagne = orGagne;
-		this.tresorOrPerdu = orPerdu;
 	}
 	
 	/**
 	 * Constructeur pour carte de trésor avec coût
+	 */
+	public CarteStrategique(String nomCarte, String description, int orGagne, 
+						boolean estTresor, int cout) {
+		super(TypeCarte.STRATEGIQUE, nomCarte, description, 0, 0, cout);
+		this.typeStrategique = TypeStrategique.TRESOR;
+		this.tresorOrGagne = orGagne;
+	}
+	
+	/**
+	 * Constructeur pour carte de trésor avec paramètre orPerdu (maintenu pour compatibilité)
+	 * @param nomCarte Nom de la carte
+	 * @param description Description de la carte
+	 * @param orGagne Or gagné en jouant la carte
+	 * @param orPerdu Ignoré, maintenu pour compatibilité
+	 * @param estTresor Indique si la carte est de type trésor
+	 * @deprecated Utilisez le constructeur sans le paramètre orPerdu à la place
+	 */
+	public CarteStrategique(String nomCarte, String description, int orGagne, int orPerdu, boolean estTresor) {
+		super(TypeCarte.STRATEGIQUE, nomCarte, description, 0, 0);
+		this.typeStrategique = TypeStrategique.TRESOR;
+		this.tresorOrGagne = orGagne;
+		// Le paramètre orPerdu est ignoré
+	}
+	
+	/**
+	 * Constructeur pour carte de trésor avec coût et paramètre orPerdu (maintenu pour compatibilité)
+	 * @param nomCarte Nom de la carte
+	 * @param description Description de la carte
+	 * @param orGagne Or gagné en jouant la carte
+	 * @param orPerdu Ignoré, maintenu pour compatibilité
+	 * @param estTresor Indique si la carte est de type trésor
+	 * @param cout Coût d'achat de la carte
+	 * @deprecated Utilisez le constructeur sans le paramètre orPerdu à la place
 	 */
 	public CarteStrategique(String nomCarte, String description, int orGagne, int orPerdu, 
 						boolean estTresor, int cout) {
 		super(TypeCarte.STRATEGIQUE, nomCarte, description, 0, 0, cout);
 		this.typeStrategique = TypeStrategique.TRESOR;
 		this.tresorOrGagne = orGagne;
-		this.tresorOrPerdu = orPerdu;
+		// Le paramètre orPerdu est ignoré
 	}
 	
 	// Méthodes de conversion depuis les anciens types
@@ -135,15 +166,13 @@ public class CarteStrategique extends Carte {
 	}
 	
 	public static CarteStrategique fromCarteTresor(CarteTresor carteTresor) {
-		CarteStrategique carte = new CarteStrategique(
+		return new CarteStrategique(
 			carteTresor.getNomCarte(),
 			carteTresor.getDescription(),
 			carteTresor.getOrGagne(),
-			carteTresor.getOrPerdu(),
-			true
+			true,
+			carteTresor.getCout()  // Utilisation du constructeur avec coût plutôt que setCout
 		);
-		carte.setCout(carteTresor.getCout());
-		return carte;
 	}
 
 	// Getters et setters
@@ -196,10 +225,6 @@ public class CarteStrategique extends Carte {
 	
 	public int getOrGagne() {
 		return this.tresorOrGagne;
-	}
-	
-	public int getOrPerdu() {
-		return this.tresorOrPerdu;
 	}
 	
 	// Méthodes spécifiques
@@ -257,7 +282,6 @@ public class CarteStrategique extends Carte {
 				break;
 			case TRESOR:
 				effet.orGagne = this.tresorOrGagne;
-				effet.orPerdu = this.tresorOrPerdu;
 				effet.estTresor = true;
 				break;
 		}
@@ -290,7 +314,6 @@ public class CarteStrategique extends Carte {
 				break;
 			case TRESOR:
 				if (getOrGagne() > 0) sb.append("\nOr gagné: ").append(getOrGagne());
-				if (getOrPerdu() > 0) sb.append("\nOr perdu: ").append(getOrPerdu());
 				break;
 		}
 		

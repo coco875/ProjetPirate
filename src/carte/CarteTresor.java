@@ -10,13 +10,10 @@ public class CarteTresor extends CarteStrategique {
      * @param nomCarte Nom de la carte
      * @param description Description de la carte
      * @param orGagne Or gagné en jouant la carte
-     * @param orPerdu Or perdu en jouant la carte
-     * @param orVole Paramètre ignoré (conservé pour compatibilité avec le code existant)
      */
-    public CarteTresor(String nomCarte, String description, int orGagne, int orPerdu, int orVole) {
+    public CarteTresor(String nomCarte, String description, int orGagne) {
         // Utilisation du constructeur de base de CarteStrategique pour carte trésor
-        super(nomCarte, description, orGagne, orPerdu, true);
-        // orVole est ignoré
+        super(nomCarte, description, orGagne, true);
     }
 
     /**
@@ -24,14 +21,11 @@ public class CarteTresor extends CarteStrategique {
      * @param nomCarte Nom de la carte
      * @param description Description de la carte
      * @param orGagne Or gagné
-     * @param orPerdu Or perdu
-     * @param orVole Paramètre ignoré (conservé pour compatibilité avec le code existant)
      * @param cout Coût d'achat de la carte
      */
-    public CarteTresor(String nomCarte, String description, int orGagne, int orPerdu, int orVole, int cout) {
+    public CarteTresor(String nomCarte, String description, int orGagne, int cout) {
         // Utilisation du constructeur de base de CarteStrategique pour carte trésor avec coût
-        super(nomCarte, description, orGagne, orPerdu, true, cout);
-        // orVole est ignoré
+        super(nomCarte, description, orGagne, true, cout);
     }
     
     /**
@@ -52,9 +46,6 @@ public class CarteTresor extends CarteStrategique {
         
         if (getOrGagne() > 0) {
             sb.append("\nOr gagné: ").append(getOrGagne());
-        }
-        if (getOrPerdu() > 0) {
-            sb.append("\nOr perdu: ").append(getOrPerdu());
         }
         
         return sb.toString();
