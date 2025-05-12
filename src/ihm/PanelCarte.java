@@ -7,10 +7,16 @@ package ihm;
 import java.awt.Graphics;
 import java.awt.*;
 import carte.*;
+import static ihm.PanelPirate.notifySelectionState;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.ToolTipManager;
+import javax.swing.border.LineBorder;
 /**
  *
  * @author FNX4294A
@@ -18,6 +24,7 @@ import javax.swing.BorderFactory;
 public class PanelCarte extends javax.swing.JPanel {
     private Image image;
     private Carte carte;
+    private int x, y, xCarte, yCarte, xCentreCarte, yCentreCarte;
     /**
      * Creates new form panelCarte
      */
@@ -26,15 +33,50 @@ public class PanelCarte extends javax.swing.JPanel {
         this.carte = carte;
         String local_path = System.getProperty("user.dir");
         File image_path = new File(local_path + "/" + carte.getCheminImage());
+        System.out.println(carte.getType());
+        System.out.println(carte.getCheminImage());
         try {
             image = ImageIO.read(image_path);
         } catch (IOException io) {
             System.out.println("Error");
         }
         
-        setPreferredSize(new Dimension(100, 150));
+        setPreferredSize(new Dimension(117, 150));
         this.setVisible(true);
         repaint();
+        
+        
+        
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                setToolTipText(carte.toString());
+                 
+                repaint();
+            }
+            
+            @Override
+            public void mousePressed(MouseEvent e){
+                x = e.getX();
+                y = e.getY();
+            }
+           
+            
+            
+            
+        });
+        addMouseMotionListener(new MouseMotionAdapter(){
+            @Override
+            public void mouseDragged(MouseEvent e){
+                Point location = getLocation();
+                xCarte = e.getX();
+                yCarte = e.getY();
+                setLocation(location.x + getWidth() / 2, location.y + yCarte);
+                xCentreCarte = location.x + getWidth() / 2;
+                yCentreCarte = location.y + getHeight() / 2;
+                repaint();
+            }
+        });
     }
     public Carte getCarte(){
         return this.carte;

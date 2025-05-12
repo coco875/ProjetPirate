@@ -1,5 +1,5 @@
 type: attaque
-titre: Bordée de Mousquets
+titre: Bordee de Mousquets
 description: Tirez une salve de mousquets sur votre ennemi.
 degats_infliges: 1
 degats_subis: 2

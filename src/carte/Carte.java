@@ -1,5 +1,8 @@
 package carte;
 
+import static carte.TypeCarte.OFFENSIVE;
+import static carte.TypeCarte.STRATEGIQUE;
+
 /**
  * Classe représentant une carte du jeu des Pirates
  */
@@ -15,7 +18,7 @@ public class Carte {
 	private int orGagne;            // Or gagné en jouant cette carte
 	private int orPerdu;            // Or perdu en jouant cette carte
 	private int vieGagne;           // Points de vie gagnés en jouant cette carte
-	private String cheminImage;     // Chemin d'accès à l'image de la carte
+        private String cheminImage;
 
 	private static int compteurId = 0;
 	
@@ -53,9 +56,8 @@ public class Carte {
 		this.vieGagne = 0;
 		// Générer un ID unique par incrémentation
 		this.id = ++compteurId;
-		// Chemin d'image par défaut
-		this.cheminImage = "images/cartes/" + nomCarte.replaceAll("\\s+", "_").toLowerCase() + ".png";
-	}
+		
+        }
 	
 	/**
 	 * Constructeur sans coût
@@ -183,7 +185,23 @@ public class Carte {
 	 * @return Le chemin d'accès à l'image de la carte
 	 */
 	public String getCheminImage() {
-		return cheminImage;
+		// Chemin d'image par défaut
+                String dossier = "";
+                switch(type){
+                    case OFFENSIVE : 
+                        dossier = "attaque";
+                        break;
+                    case  STRATEGIQUE :
+                        dossier = "popularite";
+                        break;
+                    default : 
+                        dossier = "soin";
+                        
+                    
+                }
+		
+                
+                return "src/ressources/cartes/" + dossier + "/" + nomCarte.replaceAll("\\s+", "_").toLowerCase() + ".jpg";
 	}
 	
 	/**

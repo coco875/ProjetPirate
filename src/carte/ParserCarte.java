@@ -39,7 +39,7 @@ public class ParserCarte {
         String type = properties.getOrDefault("type", "").toLowerCase();
         String titre = properties.getOrDefault("titre", "Sans titre");
         String description = properties.getOrDefault("description", "");
-        String cheminImage = properties.getOrDefault("image", "images/cartes/" + titre.replaceAll("\\s+", "_").toLowerCase() + ".png");
+        String cheminImage = properties.getOrDefault("image", "images/cartes/" + titre.replaceAll("\\s+", "_").toLowerCase() + ".jpg");
 
         try {
             // Création de la carte selon son type
