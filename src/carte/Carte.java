@@ -1,8 +1,5 @@
 package carte;
 
-import static carte.TypeCarte.OFFENSIVE;
-import static carte.TypeCarte.STRATEGIQUE;
-
 /**
  * Classe représentant une carte du jeu des Pirates
  */
@@ -12,7 +9,6 @@ public abstract class Carte {
 	private String nomCarte;
 	private String description;
 	private int cout;               // Coût de la carte pour l'achat au marché
-	private String cheminImage;     // Chemin d'accès à l'image de la carte
 	
 	// Données pour l'effet de la carte
 	public static class EffetCarte {
@@ -26,16 +22,11 @@ public abstract class Carte {
 	/**
 	 * Constructeur complet
 	 */
-	public Carte(TypeCarte type, String nomCarte, String description, String cheminImage, int cout) {
+	public Carte(TypeCarte type, String nomCarte, String description, int cout) {
 		this.type = type;
 		this.nomCarte = nomCarte;
 		this.description = description;
-		this.cheminImage = cheminImage;
 		this.cout = cout;
-	}
-
-	public Carte(TypeCarte type, String nomCarte, String description, int cout) {
-		this(type, nomCarte, description, "images/cartes/" + nomCarte.replaceAll("\\s+", "_").toLowerCase() + ".jpeg", cout);
 	}
 	
 	/**
@@ -111,36 +102,35 @@ public abstract class Carte {
 	public String getNomCarte() {
 		return nomCarte;
 	}
+        
+        public int getDegatsInfliges() {
+            EffetCarte effet = effetCarte();
+            return effet.degatsInfliges;
+        }
+
+        public int getDegatsSubis() {
+            EffetCarte effet = effetCarte();
+            return effet.degatsSubis;
+        }
+
+        public int getPopulariteGagnee() {
+            EffetCarte effet = effetCarte();
+            return effet.populariteGagnee;
+        }
+
+        public int getVieGagne() {
+            EffetCarte effet = effetCarte();
+            return effet.vieGagne;
+        }
+
+        public int getOrGagne() {
+            EffetCarte effet = effetCarte();
+            return effet.orGagne;
+        }
 	
 	/**
 	 * Getter pour le chemin d'image
 	 * @return Le chemin d'accès à l'image de la carte
 	 */
-	public String getCheminImage() {
-		// Chemin d'image par défaut
-                String dossier = "";
-                switch(type){
-                    case OFFENSIVE : 
-                        dossier = "attaque";
-                        break;
-                    case  STRATEGIQUE :
-                        dossier = "popularite";
-                        break;
-                    default : 
-                        dossier = "soin";
-                        
-                    
-                }
-		
-                
-                return "src/ressources/cartes/" + dossier + "/" + nomCarte.replaceAll("\\s+", "_").toLowerCase() + ".jpg";
-	}
-	
-	/**
-	 * Setter pour le chemin d'image
-	 * @param cheminImage Le nouveau chemin d'accès à l'image
-	 */
-	public void setCheminImage(String cheminImage) {
-		this.cheminImage = cheminImage;
-	}
+	abstract public String getCheminImage();
 }

@@ -2,3 +2,4 @@
 popularite: 0
 vie: 5
 image: src/ressources/image_pirate/JackSparrow.jpg
+carte: src/ressources/cartes/strategique/popularite/popularite1.txt

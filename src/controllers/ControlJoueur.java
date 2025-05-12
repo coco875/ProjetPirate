@@ -1,13 +1,11 @@
 package controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import carte.Carte;
 import carte.CarteOffensive;
 import carte.CarteStrategique;
 import carte.TypeCarte;
-import carte.Carte.EffetCarte;
 import joueur.Joueur;
 
 /**
@@ -47,7 +45,7 @@ public class ControlJoueur {
     public void initialiserMain() {
         Carte carte = joueur.getCarteSpecial();
         joueur.ajouterCarte(carte);
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 4; i++) {
             piocher();
         }
     }

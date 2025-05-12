@@ -15,17 +15,13 @@ public abstract class CarteStrategique extends Carte {
 		TRESOR          // Cartes de trésor (or gagné)
 	}
 
-	public CarteStrategique(String nomCarte, String description, TypeStrategique typeStrategique, String cheminImage, int cout) {
-		super(TypeCarte.STRATEGIQUE, nomCarte, description, cheminImage, cout);
+	public CarteStrategique(String nomCarte, String description, TypeStrategique typeStrategique, int cout) {
+		super(TypeCarte.STRATEGIQUE, nomCarte, description, cout);
 		this.typeStrategique = typeStrategique;
 	}
 
-    public CarteStrategique(String nomCarte, String description, TypeStrategique typeOffensif, int cout) {
-        this(nomCarte, description, typeOffensif, null, cout);
-    }
-
     public CarteStrategique(String nomCarte, String description, TypeStrategique typeOffensif) {
-        this(nomCarte, description, typeOffensif, null, 0);
+        this(nomCarte, description, typeOffensif, 0);
     }
 
 	// Getters et setters

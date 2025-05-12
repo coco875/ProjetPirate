@@ -7,6 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
+
+import carte.Carte;
+import carte.ParserCarte;
 
 /**
  * Classe permettant de charger des pirates à partir de fichiers texte
@@ -20,78 +25,67 @@ public class ParserPirate {
      * @return Un objet Pirate créé à partir des informations du fichier
      * @throws IOException Si une erreur survient lors de la lecture du fichier
      */
-    public static Pirate chargerPirate(File fichier) throws IOException {
+    public static Optional<Pirate> chargerPirate(File fichier) {
         String nom = fichier.getName().replace(".txt", "");
         String description = "";
         int popularite = 0;
-        int vie = 5; // Valeur par défaut
+        Optional<Carte> carteCoupSpeciale = Optional.empty();
         String cheminImage = "images/" + nom + ".jpg"; // Chemin par défaut
+        BufferedReader lecteur;
+        try {
+            lecteur = new BufferedReader(new FileReader(fichier));
+        } catch (IOException e) {
+            System.err.println("Erreur lors de la lecture du fichier " + fichier.getName() + ": " + e.getMessage());
+            return Optional.empty();
+        }
+        StringBuilder descBuilder = new StringBuilder();
+        boolean premiereLigne = true;
         
-        try (BufferedReader lecteur = new BufferedReader(new FileReader(fichier))) {
-            String ligne;
-            StringBuilder descBuilder = new StringBuilder();
-            boolean premiereLigne = true;
+        Supplier<String> lireLigne = () -> {
+            try {
+                return lecteur.readLine();
+            } catch (IOException e) {
+                System.err.println("Erreur lors de la lecture du fichier " + fichier.getName() + ": " + e.getMessage());
+                return null;
+            }
+        };
+
+        for (String ligne = lireLigne.get(); ligne != null; ligne = lireLigne.get()) {
+            ligne = ligne.trim();
             
-            while ((ligne = lecteur.readLine()) != null) {
-                ligne = ligne.trim();
-                
-                // Ignorer les lignes vides
-                if (ligne.isEmpty()) {
-                    continue;
-                }
-                
-                // Traiter les propriétés spécifiques
-                if (ligne.startsWith("popularite:")) {
-                    popularite = Integer.parseInt(ligne.substring("popularite:".length()).trim());
-                } else if (ligne.startsWith("vie:")) {
-                    vie = Integer.parseInt(ligne.substring("vie:".length()).trim());
-                } else if (ligne.startsWith("image:")) {
-                    cheminImage = ligne.substring("image:".length()).trim();
-                } else {
-                    // Si ce n'est pas une propriété spécifique, c'est la description
-                    if (premiereLigne) {
-                        descBuilder.append(ligne);
-                        premiereLigne = false;
-                    } else {
-                        descBuilder.append("\n").append(ligne);
-                    }
-                }
+            // Ignorer les lignes vides
+            if (ligne.isEmpty()) {
+                continue;
             }
             
-            description = descBuilder.toString().trim();
+            // Traiter les propriétés spécifiques
+            if (ligne.startsWith("popularite:")) {
+                popularite = Integer.parseInt(ligne.substring("popularite:".length()).trim());
+            } else if (ligne.startsWith("carte:")) {
+                carteCoupSpeciale = ParserCarte.lireCarte(ligne.substring("carte:".length()).trim());
+            } else if (ligne.startsWith("image:")) {
+                cheminImage = ligne.substring("image:".length()).trim();
+            } else {
+                // Si ce n'est pas une propriété spécifique, c'est la description
+                if (premiereLigne) {
+                    descBuilder.append(ligne);
+                    premiereLigne = false;
+                } else {
+                    descBuilder.append("\n").append(ligne);
+                }
+            }
         }
         
+        description = descBuilder.toString().trim();
+        
         // Création du pirate avec le constructeur disponible
-        Pirate pirate = new Pirate(nom, description, popularite, vie);
+        Pirate pirate = new Pirate(nom, description, popularite, carteCoupSpeciale.orElseThrow(),0 );
         
         // On définit le chemin d'image après la création
         pirate.setCheminImage(cheminImage);
         
-        return pirate;
+        return Optional.of(pirate);
     }
-    
-    /**
-     * Charge tous les pirates à partir des fichiers d'un répertoire
-     * 
-     * @param repertoire Le répertoire contenant les fichiers de pirates
-     * @return Une liste de pirates chargés
-     */
-    /*public static List<Pirate> chargerPirates(File repertoire) {
-        List<Pirate> pirates = new ArrayList<>();
-        
-        if (repertoire.isDirectory()) {
-            File[] fichiers = repertoire.listFiles((dir, nom) -> nom.endsWith(".txt"));
-            
-            if (fichiers != null) {
-                for (File fichier : fichiers) {
-                    try {
-                        pirates.add(chargerPirate(fichier));
-                    } catch (IOException e) {
-                        System.err.println("Erreur lors du chargement du pirate " + fichier.getName() + ": " + e.getMessage());
-                    }
-                }
-            }
-        }*/
         
     public static List<Pirate> chargerPirates(File repertoire) {
 
@@ -101,14 +95,9 @@ public class ParserPirate {
     		if (fichiers != null) {
     			return Arrays.stream(fichiers)
     									.filter(File::isFile)
-    									.map(file -> { 
-    										try {
-	    										return chargerPirate(file);
-	    									} catch (Exception e) {
-	    										System.err.println("Erreur lors du chargement du pirate " + file + ": " + e.getMessage());
-	    									}
-	    									return null;
-    									})
+    									.map(file -> chargerPirate(file))
+                                        .filter(Optional::isPresent)
+                                        .map(Optional::get)
     									.toList();				    									
     		}
     	}

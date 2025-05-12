@@ -7,17 +7,13 @@ public class CarteSoin extends CarteOffensive {
 
     private int vieGagne;
     
-    public CarteSoin(String nomCarte, String description, String cheminImage, int cout, int pointsDeSoin) {
-        super(nomCarte, description, TypeOffensif.SOIN, cheminImage, cout);
+    public CarteSoin(String nomCarte, String description, int cout, int pointsDeSoin) {
+        super(nomCarte, description, TypeOffensif.SOIN, cout);
         this.vieGagne = pointsDeSoin;
     }
 
-    public CarteSoin(String nomCarte, String description, int cout, int pointsDeSoin) {
-        this(nomCarte, description, null, cout, pointsDeSoin);
-    }
-
     public CarteSoin(String nomCarte, String description, int pointsDeSoin) {
-        this(nomCarte, description, null, 10, pointsDeSoin);
+        this(nomCarte, description, 10, pointsDeSoin);
     }
     
 
@@ -26,5 +22,10 @@ public class CarteSoin extends CarteOffensive {
         EffetCarte effet = new EffetCarte();
         effet.vieGagne = this.vieGagne;
         return effet;
+    }
+
+    @Override
+    public String getCheminImage() {
+        return "src/ressources/cartes/offensive/soin/" + getNomCarte().replaceAll("\\s+", "_").toLowerCase() + ".jpg";
     }
 }

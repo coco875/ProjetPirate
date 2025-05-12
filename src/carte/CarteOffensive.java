@@ -15,17 +15,13 @@ public abstract class CarteOffensive extends Carte {
         SOIN              // Soin permettant de récupérer des points de vie
     }
     
-    public CarteOffensive(String nomCarte, String description, TypeOffensif typeOffensif, String cheminImage, int cout) {
-        super(TypeCarte.OFFENSIVE, nomCarte, description, cheminImage, cout);
+    public CarteOffensive(String nomCarte, String description, TypeOffensif typeOffensif, int cout) {
+        super(TypeCarte.OFFENSIVE, nomCarte, description, cout);
         this.typeOffensif = typeOffensif;
     }
 
-    public CarteOffensive(String nomCarte, String description, TypeOffensif typeOffensif, int cout) {
-        this(nomCarte, description, typeOffensif, null, cout);
-    }
-
     public CarteOffensive(String nomCarte, String description, TypeOffensif typeOffensif) {
-        this(nomCarte, description, typeOffensif, null, 0);
+        this(nomCarte, description, typeOffensif, 0);
     }
     
     // Le constructeur pour les cartes de trésor offensives a été supprimé

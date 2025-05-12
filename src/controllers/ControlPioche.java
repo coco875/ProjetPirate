@@ -3,6 +3,7 @@ package controllers;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Arrays;
 
 import carte.Carte;
@@ -30,26 +31,26 @@ public class ControlPioche {
 		File resourceDir = new File("src/ressources/cartes");
 		if (resourceDir.exists() && resourceDir.isDirectory()) {
 			// Charger les cartes du répertoire principal
-			list.addAll(chargerCartesDepuisRepertoire(resourceDir));
+			// list.addAll(chargerCartesDepuisRepertoire(resourceDir));
 			
 			// Charger les cartes des sous-répertoires
-			File attaqueDir = new File("src/ressources/cartes/attaque");
+			File attaqueDir = new File("src/ressources/cartes/offensive/attaque");
 			if (attaqueDir.exists() && attaqueDir.isDirectory()) {
 				list.addAll(chargerCartesDepuisRepertoire(attaqueDir));
 			}
 			
-			File populariteDir = new File("src/ressources/cartes/popularite");
+			File populariteDir = new File("src/ressources/cartes/strategique/popularite");
 			if (populariteDir.exists() && populariteDir.isDirectory()) {
 				list.addAll(chargerCartesDepuisRepertoire(populariteDir));
 				}
 			
 			// Ajout des nouveaux sous-répertoires pour les cartes de trésor et de soin
-			File tresorDir = new File("src/ressources/cartes/tresor");
+			File tresorDir = new File("src/ressources/cartes/strategique/tresor");
 			if (tresorDir.exists() && tresorDir.isDirectory()) {
 				list.addAll(chargerCartesDepuisRepertoire(tresorDir));
 			}
 			
-			File soinDir = new File("src/ressources/cartes/soin");
+			File soinDir = new File("src/ressources/cartes/offensive/soin");
 			if (soinDir.exists() && soinDir.isDirectory()) {
 				list.addAll(chargerCartesDepuisRepertoire(soinDir));
 			}
@@ -102,15 +103,9 @@ public class ControlPioche {
 										.filter(File::isFile)
 										.map(File::toString)
 										.filter(file -> file.endsWith(".txt"))
-										.map(file -> {
-											try {
-												return ParserCarte.lireCarte(file);
-											} catch (Exception e) {
-												System.out.println("Erreur lors de la lecture du fichier " + file + ": " + e.getMessage());
-											}
-											return null;
-										})
-										.filter(carte -> carte != null)
+										.map(file -> ParserCarte.lireCarte(file))
+										.filter(Optional::isPresent)
+                                        .map(Optional::get)
 										.toList();
 			
 			

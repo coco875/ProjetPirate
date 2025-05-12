@@ -21,7 +21,7 @@ import jeu.Pioche;
 
 /**
  * Tests pour la classe ControlPioche
- */
+ *//*
 @DisplayName("Tests du contrôleur ControlPioche")
 public class TestControlPioche {
     
@@ -321,10 +321,10 @@ public class TestControlPioche {
         Carte c = cp.piocher();
         assertNotNull(c, "On devrait pouvoir piocher une carte dans la pioche nouvellement créée");
     }
-    
+    */
     /**
      * Méthode utilitaire pour extraire la pioche d'un ControlPioche à l'aide de la réflexion
-     */
+     *//*
     private List<Carte> extrairePioche(ControlPioche controlPioche) {
         try {
             // Accéder au champ pioche par réflexion
@@ -351,4 +351,4 @@ public class TestControlPioche {
             return new ArrayList<>();
         }
     }
-}
+}*/

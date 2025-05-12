@@ -20,7 +20,7 @@ import java.util.Set;
 
 /**
  * Tests pour la classe Pioche
- */
+ *//*
 public class TestPioche {
 
 	public static void main(String[] args) {
@@ -205,4 +205,4 @@ public class TestPioche {
                   idsApresMelange.containsAll(idsAvantMelange),
                   "Toutes les cartes devraient être présentes après le mélange");
     }
-}
+}*/

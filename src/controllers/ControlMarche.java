@@ -1,12 +1,8 @@
 package controllers;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import carte.Carte;
-import carte.CarteAttaque;
-import carte.CartePopularite;
 import carte.Marche;
 import joueur.Joueur;
 
@@ -53,13 +49,7 @@ public class ControlMarche {
         // Ajouter 3 cartes de la pioche au marché
         for (int i = 0; i < 3; i++) {
             Carte carte = controlPioche.piocher();
-            if (carte != null) {
-                marche.ajouterCarte(carte);
-            } else {
-                // Si la pioche est vide, créer une carte par défaut
-                carte = new CarteAttaque("Canon", "Un canon pour attaquer l'adversaire", 1, 2);
-                marche.ajouterCarte(carte);
-            }
+            marche.ajouterCarte(carte);
         }
     }
 
