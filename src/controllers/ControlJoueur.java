@@ -45,7 +45,7 @@ public class ControlJoueur {
     public void initialiserMain() {
         Carte carte = joueur.getCarteSpecial();
         joueur.ajouterCarte(carte);
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 4; i++) {
             piocher();
         }
     }

@@ -15,7 +15,7 @@ public class Pirate {
 	/**
 	 * Constructeur complet d'un pirate
 	 */
-	public Pirate(String nom, String description, int popularite, int vie) {
+	public Pirate(String nom, String description, int popularite, Carte carteCoupSpeciale, int vie) {
 		this.nom = nom;
 		this.description = description;
 		this.popularite = popularite;

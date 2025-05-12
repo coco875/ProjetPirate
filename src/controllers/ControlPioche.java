@@ -3,6 +3,7 @@ package controllers;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Arrays;
 
 import carte.Carte;
@@ -101,15 +102,9 @@ public class ControlPioche {
 										.filter(File::isFile)
 										.map(File::toString)
 										.filter(file -> file.endsWith(".txt"))
-										.map(file -> {
-											try {
-												return ParserCarte.lireCarte(file);
-											} catch (Exception e) {
-												System.out.println("Erreur lors de la lecture du fichier " + file + ": " + e.getMessage());
-											}
-											return null;
-										})
-										.filter(carte -> carte != null)
+										.map(file -> ParserCarte.lireCarte(file))
+										.filter(Optional::isPresent)
+                                        .map(Optional::get)
 										.toList();
 			
 			
