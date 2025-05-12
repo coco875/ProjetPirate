@@ -72,7 +72,6 @@ public class ParserCarte {
             default:
                 System.err.println("Type de carte inconnu: " + type + " dans " + filePath);
         }
-        
         return Optional.ofNullable(carte);
     }
 }
