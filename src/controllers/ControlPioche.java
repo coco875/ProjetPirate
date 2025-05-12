@@ -32,23 +32,23 @@ public class ControlPioche {
 			list.addAll(chargerCartesDepuisRepertoire(resourceDir));
 			
 			// Charger les cartes des sous-répertoires
-			File attaqueDir = new File("src/ressources/cartes/attaque");
+			File attaqueDir = new File("src/ressources/cartes/offensive/attaque");
 			if (attaqueDir.exists() && attaqueDir.isDirectory()) {
 				list.addAll(chargerCartesDepuisRepertoire(attaqueDir));
 			}
 			
-			File populariteDir = new File("src/ressources/cartes/popularite");
+			File populariteDir = new File("src/ressources/cartes/strategique/popularite");
 			if (populariteDir.exists() && populariteDir.isDirectory()) {
 				list.addAll(chargerCartesDepuisRepertoire(populariteDir));
 				}
 			
 			// Ajout des nouveaux sous-répertoires pour les cartes de trésor et de soin
-			File tresorDir = new File("src/ressources/cartes/tresor");
+			File tresorDir = new File("src/ressources/cartes/strategique/tresor");
 			if (tresorDir.exists() && tresorDir.isDirectory()) {
 				list.addAll(chargerCartesDepuisRepertoire(tresorDir));
 			}
 			
-			File soinDir = new File("src/ressources/cartes/soin");
+			File soinDir = new File("src/ressources/cartes/offensive/soin");
 			if (soinDir.exists() && soinDir.isDirectory()) {
 				list.addAll(chargerCartesDepuisRepertoire(soinDir));
 			}

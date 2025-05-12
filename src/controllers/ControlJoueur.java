@@ -1,13 +1,11 @@
 package controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import carte.Carte;
 import carte.CarteOffensive;
 import carte.CarteStrategique;
 import carte.TypeCarte;
-import carte.Carte.EffetCarte;
 import joueur.Joueur;
 
 /**

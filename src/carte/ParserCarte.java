@@ -39,7 +39,6 @@ public class ParserCarte {
         String type = properties.getOrDefault("type", "").toLowerCase();
         String titre = properties.getOrDefault("titre", "Sans titre");
         String description = properties.getOrDefault("description", "");
-        String cheminImage = properties.getOrDefault("image", "images/cartes/" + titre.replaceAll("\\s+", "_").toLowerCase() + ".jpg");
         int cout = Integer.parseInt(properties.getOrDefault("cout", "10"));
 
         try {
@@ -52,31 +51,26 @@ public class ParserCarte {
                     int degatsSubisAttaque = Integer.parseInt(properties.getOrDefault("degats_subis", "0"));
                     
                     // Carte offensive d'attaque directe
-                    carte = new CarteAttaque(titre, description, cheminImage, cout, degatsInfliges, degatsSubisAttaque);
+                    carte = new CarteAttaque(titre, description, cout, degatsInfliges, degatsSubisAttaque);
                     break;
                     
                 case "soin":
                     int vieGagnee = Integer.parseInt(properties.getOrDefault("vie_gagnee", "0"));
-                    carte = new CarteSoin(titre, description, cheminImage, cout, vieGagnee);
+                    carte = new CarteSoin(titre, description, cout, vieGagnee);
                     break;
 
                 case "popularite":
                     int populariteGagnee = Integer.parseInt(properties.getOrDefault("popularite_gagnee", "0"));
                     int degatsSubisPop = Integer.parseInt(properties.getOrDefault("degats_subis", "0"));
-                    carte = new CartePopularite(titre, description, cheminImage, cout, populariteGagnee, degatsSubisPop);
+                    carte = new CartePopularite(titre, description, cout, populariteGagnee, degatsSubisPop);
                     break;
 
                 case "tresor":
                     int orGagne = Integer.parseInt(properties.getOrDefault("or_gagne", "0"));
-                    carte = new CarteTresor(titre, description, cheminImage, cout, orGagne);
+                    carte = new CarteTresor(titre, description, cout, orGagne);
                     break;
                 default:
                     throw new IllegalArgumentException("Type de carte inconnu: " + type + " dans " + filePath);
-            }
-            
-            // Définir le chemin d'image pour la carte créée
-            if (carte != null) {
-                carte.setCheminImage(cheminImage);
             }
             
             return carte;

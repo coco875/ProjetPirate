@@ -7,17 +7,13 @@ public class CarteTresor extends CarteStrategique {
 
     private int orGagne;
     
-    public CarteTresor(String nomCarte, String description, String cheminImage, int cout, int orGagne) {
-        super(nomCarte, description, TypeStrategique.TRESOR, cheminImage, cout);
+    public CarteTresor(String nomCarte, String description, int cout, int orGagne) {
+        super(nomCarte, description, TypeStrategique.TRESOR, cout);
         this.orGagne = orGagne;
     }
 
-    public CarteTresor(String nomCarte, String description, int cout, int orGagne) {
-        this(nomCarte, description, null, cout, orGagne);
-    }
-
     public CarteTresor(String nomCarte, String description, int orGagne) {
-        this(nomCarte, description, null, 10, orGagne);
+        this(nomCarte, description, 10, orGagne);
     }
     
     /**
@@ -28,5 +24,10 @@ public class CarteTresor extends CarteStrategique {
         EffetCarte effet = new EffetCarte();
         effet.orGagne = this.orGagne;
         return effet;
+    }
+
+    @Override
+    public String getCheminImage() {
+        return "src/ressources/cartes/strategique/tresor/" + getNomCarte().replaceAll("\\s+", "_").toLowerCase() + ".jpg";
     }
 }
