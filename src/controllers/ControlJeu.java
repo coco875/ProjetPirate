@@ -88,11 +88,8 @@ public class ControlJeu {
      * Distribue les cartes initiales aux joueurs
      */
     public void distribuerCartesInitiales() {
-        // Chaque joueur reçoit 3 cartes au début
         for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 3; j++) {
-                controlJoueurs[i].piocher();
-            }
+            controlJoueurs[i].initialiserMain();
         }
     }
     
@@ -237,21 +234,6 @@ public class ControlJeu {
         joueurActif = 0;
         
         return true;
-    }
-    
-    /**
-     * Initialise la main du joueur
-     */
-    public void initialiserMainJoueur(int indexJoueur) {
-        // Vérifier que l'index du joueur est valide
-        if (indexJoueur < 0 || indexJoueur >= controlJoueurs.length || controlJoueurs[indexJoueur] == null) {
-            return;
-        }
-        
-        // Initialiser la main du joueur avec 3 cartes
-        for (int i = 0; i < 3; i++) {
-            controlJoueurs[indexJoueur].piocher();
-        }
     }
     
     /**
