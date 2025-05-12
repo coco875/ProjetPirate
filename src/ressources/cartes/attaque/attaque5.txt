@@ -1,5 +1,5 @@
 type: attaque
-titre: Trappe Piégée
+titre: Trappe Piegee
 description: Activez une trappe sous les pieds de votre adversaire.
 degats_infliges: 1
 degats_subis: 2

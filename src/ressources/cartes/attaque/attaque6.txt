@@ -1,5 +1,5 @@
 type: attaque
-titre: Lame Empoisonnée
+titre: Lame Empoisonnee
 description: Votre lame enduite de poison inflige des dégâts prolongés.
 degats_infliges: 1
 degats_subis: 1

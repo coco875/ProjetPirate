@@ -1,5 +1,8 @@
 package carte;
 
+import static carte.TypeCarte.OFFENSIVE;
+import static carte.TypeCarte.STRATEGIQUE;
+
 /**
  * Classe représentant une carte du jeu des Pirates
  */
@@ -114,7 +117,23 @@ public abstract class Carte {
 	 * @return Le chemin d'accès à l'image de la carte
 	 */
 	public String getCheminImage() {
-		return cheminImage;
+		// Chemin d'image par défaut
+                String dossier = "";
+                switch(type){
+                    case OFFENSIVE : 
+                        dossier = "attaque";
+                        break;
+                    case  STRATEGIQUE :
+                        dossier = "popularite";
+                        break;
+                    default : 
+                        dossier = "soin";
+                        
+                    
+                }
+		
+                
+                return "src/ressources/cartes/" + dossier + "/" + nomCarte.replaceAll("\\s+", "_").toLowerCase() + ".jpg";
 	}
 	
 	/**
