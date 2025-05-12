@@ -788,9 +788,7 @@ public class FramePlateau extends javax.swing.JFrame {
         pirateJoueur1 = PanelPirate.getSelectedLeft().getPirate();
         pirateJoueur2 = PanelPirate.getSelectedRight().getPirate();
         controlJeu = new ControlJeu();
-        controlJeu.creerJoueur(pirateJoueur1);
-        controlJeu.creerJoueur(pirateJoueur2);
-        controlJeu.initialiserJeu();
+        controlJeu.initialiserJeu(pirateJoueur1, pirateJoueur2);
         ControlJoueur controlJoueur1 = controlJeu.getJoueur(0);
         listeCartesJoueur1 = controlJoueur1.getMain();
         ControlJoueur controlJoueur2 = controlJeu.getJoueur(1);
