@@ -34,8 +34,8 @@ public class TestZoneStrategique {
     @Test
     @DisplayName("Test d'ajout de cartes dans la zone stratégique")
     public void testAjouterCarte() {
-        // Créer quelques cartes de test
-        CarteStrategique carte1 = new CarteStrategique("Coffre", "Un coffre au trésor", 10, 0, true);
+        // Créer quelques cartes de test - Mise à jour du constructeur pour enlever orPerdu
+        CarteStrategique carte1 = new CarteStrategique("Coffre", "Un coffre au trésor", 10, true);
         CarteStrategique carte2 = new CarteStrategique("Chanson", "Une chanson pirate", 3, 1);
         
         // Ajouter les cartes à la zone
@@ -52,8 +52,8 @@ public class TestZoneStrategique {
     @Test
     @DisplayName("Test de vidage de la zone stratégique")
     public void testViderZone() {
-        // Ajouter des cartes à la zone
-        CarteStrategique carte1 = new CarteStrategique("Coffre", "Un coffre au trésor", 10, 0, true);
+        // Ajouter des cartes à la zone - Mise à jour du constructeur pour enlever orPerdu
+        CarteStrategique carte1 = new CarteStrategique("Coffre", "Un coffre au trésor", 10, true);
         CarteStrategique carte2 = new CarteStrategique("Chanson", "Une chanson pirate", 3, 1);
         zoneStrategique.ajouterCarte(carte1);
         zoneStrategique.ajouterCarte(carte2);
@@ -71,8 +71,8 @@ public class TestZoneStrategique {
     @Test
     @DisplayName("Test avec différents types de cartes stratégiques")
     public void testDifferentsTypesCartes() {
-        // Créer des cartes de différents types stratégiques
-        CarteStrategique carteTresor = new CarteStrategique("Coffre", "Un coffre au trésor", 10, 0, true);
+        // Créer des cartes de différents types stratégiques - Mise à jour du constructeur de trésor
+        CarteStrategique carteTresor = new CarteStrategique("Coffre", "Un coffre au trésor", 10, true);
         CarteStrategique cartePopularite = new CarteStrategique("Chanson", "Une chanson pirate", 3, 1);
         CarteStrategique cartePassive = new CarteStrategique("Bouclier", "Protection contre attaques", 2, 3, "Protection");
         CarteStrategique carteSpeciale = new CarteStrategique("Malédiction", "Maudit l'adversaire", "Réduction dégâts", 3);

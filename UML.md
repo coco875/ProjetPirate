@@ -437,7 +437,7 @@ classDiagram
     }
     class TypeOffensif {
         <<enumeration>>
-        ATTAQUE_DIRECTE
+        ATTAQUE
         COUP_SPECIAL
         SOIN
         TRESOR_OFFENSIF

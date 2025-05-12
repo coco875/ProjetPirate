@@ -40,6 +40,7 @@ public class ParserCarte {
         String titre = properties.getOrDefault("titre", "Sans titre");
         String description = properties.getOrDefault("description", "");
         String cheminImage = properties.getOrDefault("image", "images/cartes/" + titre.replaceAll("\\s+", "_").toLowerCase() + ".jpg");
+        int cout = Integer.parseInt(properties.getOrDefault("cout", "10"));
 
         try {
             // Création de la carte selon son type
@@ -50,46 +51,25 @@ public class ParserCarte {
                     int degatsInfliges = Integer.parseInt(properties.getOrDefault("degats_infliges", "0"));
                     int degatsSubisAttaque = Integer.parseInt(properties.getOrDefault("degats_subis", "0"));
                     
-                    // Vérification de l'attribut or_vole (maintenant obsolète)
-                    if (properties.containsKey("or_vole")) {
-                        System.out.println("Avertissement: L'attribut 'or_vole' est obsolète et sera ignoré. Carte: " + titre);
-                    }
-                    
                     // Carte offensive d'attaque directe
-                    carte = new CarteOffensive(titre, description, degatsInfliges, degatsSubisAttaque, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+                    carte = new CarteAttaque(titre, description, cheminImage, cout, degatsInfliges, degatsSubisAttaque);
                     break;
                     
                 case "soin":
                     int vieGagnee = Integer.parseInt(properties.getOrDefault("vie_gagnee", "0"));
-                    carte = new CarteOffensive(titre, description, vieGagnee);
+                    carte = new CarteSoin(titre, description, cheminImage, cout, vieGagnee);
                     break;
 
                 case "popularite":
                     int populariteGagnee = Integer.parseInt(properties.getOrDefault("popularite_gagnee", "0"));
                     int degatsSubisPop = Integer.parseInt(properties.getOrDefault("degats_subis", "0"));
-                    carte = new CarteStrategique(titre, description, populariteGagnee, degatsSubisPop);
+                    carte = new CartePopularite(titre, description, cheminImage, cout, populariteGagnee, degatsSubisPop);
                     break;
 
                 case "tresor":
                     int orGagne = Integer.parseInt(properties.getOrDefault("or_gagne", "0"));
-                    carte = new CarteStrategique(titre, description, orGagne, 0, true);
+                    carte = new CarteTresor(titre, description, cheminImage, cout, orGagne);
                     break;
-
-                case "speciale":
-                    // Gestion simplifiée des cartes spéciales
-                    System.err.println("Avertissement: Type 'speciale' non entièrement géré dans le parseur pour: " + titre);
-                    carte = new CarteStrategique(titre, description, "Effet spécial non défini", 0);
-                    break;
-
-                case "passive":
-                    // Gestion des cartes passives
-                    System.err.println("Avertissement: Type 'passive' non entièrement géré dans le parseur pour: " + titre);
-                    int valeurEffetPassif = Integer.parseInt(properties.getOrDefault("valeur_effet", "0"));
-                    int dureePassif = Integer.parseInt(properties.getOrDefault("duree", "2"));
-                    String effetPassif = properties.getOrDefault("effet", "Effet passif");
-                    carte = new CarteStrategique(titre, description, valeurEffetPassif, dureePassif, effetPassif);
-                    break;
-
                 default:
                     throw new IllegalArgumentException("Type de carte inconnu: " + type + " dans " + filePath);
             }

@@ -9,9 +9,7 @@ import carte.CarteOffensive;
 import carte.CarteStrategique;
 import controllers.ControlJeu;
 import controllers.ControlJoueur;
-import controllers.ControlPioche;
 import controllers.ControlMarche;
-import jeu.Pioche;
 import joueur.Joueur;
 import joueur.Pirate;
 import joueur.ParserPirate;
@@ -64,19 +62,11 @@ public class BoundaryJeu {
 	 * @brief Démarre le jeu
 	 */
 	public void demarrerJeu() {
-		
 		// Premier joueur
 		Pirate nomPirate1 = demanderPirate(1);
-		controlJeu.creerJoueur(nomPirate1);
-		
 		// Deuxième joueur
 		Pirate nomPirate2 = demanderPirate(2);
-		controlJeu.creerJoueur(nomPirate2);
-
-		controlJeu.initialiserJeu();
-		
-		// Distribution des cartes initiales
-		controlJeu.distribuerCartesInitiales();
+		controlJeu.initialiserJeu(nomPirate1, nomPirate2);
 		
 		// Démarrage de la partie
 		jouerPartie();
@@ -169,7 +159,7 @@ public class BoundaryJeu {
 				Carte carteChoisie = main.get(choix - 1);
 				System.out.println("Vous jouez : " + carteChoisie);
 				
-				jouerCarte(carteChoisie, joueurActif);
+				jouerCarte(carteChoisie);
 				
 				// Retirer la carte de la main
 				joueurActif.retirerCarte(carteChoisie);
@@ -222,53 +212,31 @@ public class BoundaryJeu {
 	 * @param carte La carte à jouer
 	 * @param joueurActif Contrôleur du joueur actif
 	 */
-	private void jouerCarte(Carte carte, ControlJoueur joueurActif) {
+	private void jouerCarte(Carte carte) {
 		System.out.println("Description : " + carte.getDescription());
 		
 		 // Utiliser effetCarte pour déterminer le type et les effets de la carte
 		Carte.EffetCarte effet = carte.effetCarte();
 		
-		if (effet.estAttaque) {
+		if (effet.degatsInfliges > 0) {
 			System.out.println("Vous attaquez ! Dégâts infligés : " + effet.degatsInfliges);
 			if (effet.degatsSubis > 0) {
 				System.out.println("Vous subissez " + effet.degatsSubis + " points de dégâts en retour.");
 			}
-			controlJeu.ajouterCarteOffensive((CarteOffensive)carte);
-		} else if (effet.estSoin) {
-			System.out.println("Vous vous soignez ! Points de vie gagnés : " + effet.vieGagnee);
-			controlJeu.ajouterCarteOffensive((CarteOffensive)carte);
-		} else if (effet.estSpeciale && carte instanceof CarteOffensive) {
-			// Pour les coups spéciaux offensifs
-			CarteOffensive carteOff = (CarteOffensive) carte;
-			System.out.println("Vous utilisez un coup spécial ! Effet : " + carteOff.getValeur());
-			System.out.println("Coût : " + carteOff.getCoutSpecial() + " or");
-			controlJeu.ajouterCarteOffensive(carteOff);
-		} else if (effet.estPopularite) {
+		} else if (effet.vieGagne > 0) {
+			System.out.println("Vous vous soignez ! Points de vie gagnés : " + effet.vieGagne);
+		} else if (effet.populariteGagnee > 0) {
 			System.out.println("Vous gagnez en popularité ! Points gagnés : " + effet.populariteGagnee);
 			if (effet.degatsSubis > 0) {
 				System.out.println("Vous subissez " + effet.degatsSubis + " points de dégâts.");
 			}
-			controlJeu.ajouterCarteStrategique((CarteStrategique)carte);
-		} else if (effet.estPassive) {
-			System.out.println("Vous utilisez une carte passive ! Effet : " + effet.effetSpecial);
-			System.out.println("Durée : " + effet.dureeEffet + " tours");
-			controlJeu.ajouterCarteStrategique((CarteStrategique)carte);
-		} else if (effet.estSpeciale && carte instanceof CarteStrategique) {
-			// Pour les cartes spéciales stratégiques
-			System.out.println("Vous utilisez une carte spéciale ! Effet : " + effet.effetSpecial);
-			controlJeu.ajouterCarteStrategique((CarteStrategique)carte);
-		} else if (effet.estTresor) {
-			if (effet.orGagne > 0) {
-				System.out.println("Vous gagnez " + effet.orGagne + " or !");
-			}
-			if (effet.orPerdu > 0) {
-				System.out.println("Vous perdez " + effet.orPerdu + " or !");
-			}
-			// La fonctionnalité de vol d'or a été supprimée
-			controlJeu.ajouterCarteStrategique((CarteStrategique)carte);
+		} else if (effet.orGagne > 0) {
+			System.out.println("Vous gagnez " + effet.orGagne + " or !");
 		} else {
 			System.out.println("Type de carte non reconnu !");
 		}
+
+		controlJeu.jouerCarte(carte);
 	}
 	
 	/**

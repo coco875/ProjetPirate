@@ -1,5 +1,6 @@
 package controllers;
 
+import carte.Carte;
 import carte.CarteOffensive;
 import carte.CarteStrategique;
 import jeu.Jeu;
@@ -16,10 +17,11 @@ public class ControlJeu {
     private Jeu jeu;
     private ControlPioche controlPioche;
     private ControlCartePlateau controlCartePlateau;
-    private ControlCarteSpeciale controlCarteSpeciale;
     private ControlMarche controlMarche;
     private ControlJoueur[] controlJoueurs; // Tableau des contrôleurs de joueurs
     private int joueurActif; // 0 pour joueur 1, 1 pour joueur 2
+    private ControlZoneJoueur controlZoneJoueur1 = new ControlZoneJoueur(new ZoneOffensive(), new ZoneStrategique());
+    private ControlZoneJoueur controlZoneJoueur2 = new ControlZoneJoueur(new ZoneOffensive(), new ZoneStrategique());
 
     /**
      * Constructeur du contrôleur
@@ -34,19 +36,16 @@ public class ControlJeu {
     /**
      * Initialise le jeu
      */
-    public void initialiserJeu() {
+    public void initialiserJeu(Pirate pirate1, Pirate pirate2) {
+        setJoueur1(pirate1);
+        setJoueur2(pirate2);
         // Initialisation de la pioche
         controlPioche.initialiserPioche();
 
-        controlCartePlateau = new ControlCartePlateau(controlJoueurs[0], controlJoueurs[1]);
-        controlJoueurs[0].setControlCartePlateau(controlCartePlateau);
-        controlJoueurs[1].setControlCartePlateau(controlCartePlateau);
-        
-        controlCarteSpeciale = new ControlCarteSpeciale(controlJoueurs[0], controlJoueurs[1]);
-        controlJoueurs[0].setControlCarteSpeciale(controlCarteSpeciale);
-        controlJoueurs[1].setControlCarteSpeciale(controlCarteSpeciale);
+        controlCartePlateau = new ControlCartePlateau(controlJoueurs[0], controlJoueurs[1], controlZoneJoueur1, controlZoneJoueur2);
         
         controlMarche = new ControlMarche(controlJoueurs[0], controlJoueurs[1], controlPioche, this);
+        controlCartePlateau.setJoueurs(controlJoueurs[0], controlJoueurs[1]);
         distribuerCartesInitiales();
         // Les contrôleurs de joueurs seront créés lors de la création des joueurs
     }
@@ -56,7 +55,7 @@ public class ControlJeu {
      */
     public void setJoueur1(Pirate pirate) {
         Joueur joueur = new Joueur(pirate);
-        controlJoueurs[0] = new ControlJoueur(joueur, this, controlPioche);
+        controlJoueurs[0] = new ControlJoueur(joueur, controlPioche, controlZoneJoueur1);
     }
     
     /**
@@ -64,7 +63,7 @@ public class ControlJeu {
      */
     public void setJoueur2(Pirate pirate) {
         Joueur joueur = new Joueur(pirate);
-        controlJoueurs[1] = new ControlJoueur(joueur, this, controlPioche);
+        controlJoueurs[1] = new ControlJoueur(joueur, controlPioche, controlZoneJoueur2);
     }
     
     /**
@@ -81,7 +80,8 @@ public class ControlJeu {
         int indexJoueur = (controlJoueurs[0] == null) ? 0 : 1;
         
         // Créer le contrôleur de joueur
-        controlJoueurs[indexJoueur] = new ControlJoueur(joueur, this, controlPioche);
+        controlJoueurs[indexJoueur] = new ControlJoueur(joueur, controlPioche, 
+                (indexJoueur == 0) ? controlCartePlateau.getZoneJoueur1() : controlCartePlateau.getZoneJoueur2());
     }
     
     /**
@@ -97,41 +97,11 @@ public class ControlJeu {
     }
     
     /**
-     * Ajoute une carte offensive au plateau pour le joueur actif
-     */
-    public void ajouterCarteOffensive(CarteOffensive carte) {
-        if (joueurActif == 0) {
-            controlCartePlateau.ajouterCarteOffensiveJ1(carte);
-        } else {
-            controlCartePlateau.ajouterCarteOffensiveJ2(carte);
-        }
-    }
-    
-    /**
-     * Ajoute une carte stratégique au plateau pour le joueur actif
-     */
-    public void ajouterCarteStrategique(CarteStrategique carte) {
-        if (joueurActif == 0) {
-            controlCartePlateau.ajouterCarteStrategiqueJ1(carte);
-        } else {
-            controlCartePlateau.ajouterCarteStrategiqueJ2(carte);
-        }
-    }
-    
-    /**
      * Applique les effets de toutes les cartes sur le plateau
      */
     public void appliquerEffetsCartes() {
         // Appliquer les effets des cartes d'attaque
-        controlCartePlateau.appliquerEffetsCartesOffensives();
-        
-        // Appliquer les effets des cartes de popularité
-        controlCartePlateau.appliquerEffetsCartesStrategiques();
-        
-        // Appliquer les effets des cartes spéciales (si présentes)
-        if (controlCarteSpeciale != null) {
-            controlCarteSpeciale.appliquerEffetsCartes();
-        }
+        controlCartePlateau.appliquerEffetCarte();
     }
     
     /**
@@ -139,10 +109,6 @@ public class ControlJeu {
      */
     public void defausserCartesPlateau() {
         controlCartePlateau.defausserCartesPlateau();
-        
-        if (controlCarteSpeciale != null) {
-            controlCarteSpeciale.defausserCartes();
-        }
     }
     
     /**
@@ -304,9 +270,9 @@ public class ControlJeu {
      * @param indexCarte Index de la carte à jouer dans la main du joueur
      * @return true si la carte a été jouée avec succès, false sinon
      */
-    public boolean jouerCarte(int indexCarte) {
+    public boolean jouerCarte(Carte carte) {
         if (joueurActif >= 0 && joueurActif < controlJoueurs.length && controlJoueurs[joueurActif] != null) {
-            return controlJoueurs[joueurActif].jouerCarte(indexCarte);
+            return controlJoueurs[joueurActif].jouerCarte(carte);
         }
         return false;
     }

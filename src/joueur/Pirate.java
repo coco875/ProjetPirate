@@ -1,6 +1,6 @@
 package joueur;
 
-import carte.CarteCoupSpecial;
+import carte.Carte;
 
 /**
  * Classe représentant un personnage pirate dans le jeu
@@ -10,7 +10,7 @@ public class Pirate {
 	private String description;
 	private int popularite, vie;
 	private String cheminImage; // Attribut pour le chemin d'accès à l'image du pirate
-	private CarteCoupSpecial carteCoupSpeciale;
+	private Carte carteCoupSpeciale;
 
 	/**
 	 * Constructeur complet d'un pirate
@@ -48,12 +48,8 @@ public class Pirate {
 		return nom;
 	}
 
-	public CarteCoupSpecial getCarteCoupSpeciale() {
+	public Carte getCarteSpecial() {
 		return carteCoupSpeciale;
-	}
-	
-	public void setCarteCoupSpeciale(CarteCoupSpecial carteCoupSpeciale) {
-		this.carteCoupSpeciale = carteCoupSpeciale;
 	}
 	
 	public int getPopularite() {

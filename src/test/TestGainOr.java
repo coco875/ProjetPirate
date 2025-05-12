@@ -1,6 +1,6 @@
 package test;
 
-/*
+/* Classe de test pour les fonctionnalités de gain d'or (commentée car en développement)
 import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -93,7 +93,7 @@ public class TestGainOr {
         joueur1.setOr(5);
         joueur2.setOr(5);
         
-        CarteTresor carteTresor2 = new CarteTresor("Trésor maudit", "Un trésor qui apporte richesse", 15, 0, 0);
+        CarteTresor carteTresor2 = new CarteTresor("Trésor maudit", "Un trésor qui apporte richesse", 15, 0);
         controlCartePlateau.ajouterCarteStrategiqueJ2(carteTresor2);
         
         orInitial = joueur2.getOr();
@@ -135,8 +135,8 @@ public class TestGainOr {
             newJoueur.setOr(5);
             
             // Ajouter deux cartes trésor
-            CarteTresor carteTresor3 = new CarteTresor("Petit trésor", "Un petit trésor", 5, 0, 0);
-            CarteTresor carteTresor4 = new CarteTresor("Grand trésor", "Un grand trésor", 20, 0, 0);
+            CarteTresor carteTresor3 = new CarteTresor("Petit trésor", "Un petit trésor", 5, 0);
+            CarteTresor carteTresor4 = new CarteTresor("Grand trésor", "Un grand trésor", 20, 0);
             
             newControlCartePlateau.ajouterCarteStrategiqueJ1(carteTresor3);
             newControlCartePlateau.ajouterCarteStrategiqueJ1(carteTresor4);
@@ -162,7 +162,7 @@ public class TestGainOr {
         // Test 1: Carte avec or perdu
         joueur1.setOr(20);
         
-        CarteTresor carteImpot = new CarteTresor("Impôt pirate", "Payez des taxes pour votre navire", 0, 5, 0);
+        CarteTresor carteImpot = new CarteTresor("Impôt pirate", "Payez des taxes pour votre navire", 0, 5);
         controlCartePlateau.ajouterCarteStrategiqueJ1(carteImpot);
         
         int orInitial = joueur1.getOr();
@@ -196,7 +196,7 @@ public class TestGainOr {
         System.out.println("\n--- Test des attributs de carte trésor ---");
         
         // Création d'une carte trésor directement
-        CarteTresor carteTresor = new CarteTresor("Coffre d'or", "Un coffre rempli d'or", 10, 0, 0);
+        CarteTresor carteTresor = new CarteTresor("Coffre d'or", "Un coffre rempli d'or", 10, 0);
         
         // Vérifie que la carte a bien des attributs cohérents
         assertEquals(10, carteTresor.getOrGagne(), "L'or gagné devrait être 10");
@@ -207,7 +207,7 @@ public class TestGainOr {
                           ", OrGagne=" + carteTresor.getOrGagne() + ", OrPerdu=" + carteTresor.getOrPerdu() + " ✓");
                      
         // Test avec des valeurs négatives (ne devrait pas arriver mais pour tester la robustesse)
-        CarteTresor carteInvalide = new CarteTresor("Carte étrange", "Cette carte a des valeurs étranges", -5, -3, 0);
+        CarteTresor carteInvalide = new CarteTresor("Carte étrange", "Cette carte a des valeurs étranges", -5, -3);
         
         // La carte devrait avoir correctement initialisé les valeurs même négatives
         assertEquals(-5, carteInvalide.getOrGagne(), "L'or gagné devrait être -5 même si c'est étrange");
@@ -215,4 +215,5 @@ public class TestGainOr {
         System.out.println("Vérification attributs carte invalide: OrGagne=" + carteInvalide.getOrGagne() + 
                           ", OrPerdu=" + carteInvalide.getOrPerdu() + " ✓");
     }
-}*/
+}
+*/

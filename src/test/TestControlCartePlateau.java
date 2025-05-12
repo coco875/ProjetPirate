@@ -1,9 +1,11 @@
 package test;
 
-/*
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 
+import carte.Carte;
 import carte.CarteOffensive;
 import carte.CarteStrategique;
 import controllers.ControlCartePlateau;
@@ -14,40 +16,51 @@ import jeu.ZoneStrategique;
 import joueur.Joueur;
 import joueur.Pirate;
 
+import java.util.List;
 
+
+@DisplayName("Tests du contrôleur ControlCartePlateau")
 public class TestControlCartePlateau {
     
-    @Test
-    public void testCreationControlCartePlateau() {
-        // Création des objets nécessaires
-        ControlPioche cPioche = new ControlPioche();
-        ControlJoueur cJoueur1 = new ControlJoueur(null, null, cPioche);
-        ControlJoueur cJoueur2 = new ControlJoueur(null, null, cPioche);
-        
-        // Création du contrôleur
-        ControlCartePlateau cCartePlateau = new ControlCartePlateau(cJoueur1, cJoueur2);
-        
-        // Vérification
-        assertNotNull(cCartePlateau, "Le contrôleur de carte plateau ne devrait pas être null");
+    private ControlPioche cPioche;
+    private Pirate pirate1;
+    private Pirate pirate2;
+    private Joueur joueur1;
+    private Joueur joueur2;
+    private ControlJoueur cJoueur1;
+    private ControlJoueur cJoueur2;
+    private ControlCartePlateau cCartePlateau;
+    
+    @BeforeEach
+    public void initialiser() {
+        // Initialisation des objets nécessaires pour les tests
+        cPioche = new ControlPioche();
+        pirate1 = new Pirate("Jack Sparrow");
+        pirate2 = new Pirate("Barbe Noire");
+        joueur1 = new Joueur(pirate1);
+        joueur2 = new Joueur(pirate2);
+        cJoueur1 = new ControlJoueur(joueur1, null, cPioche);
+        cJoueur2 = new ControlJoueur(joueur2, null, cPioche);
+        cCartePlateau = new ControlCartePlateau(cJoueur1, cJoueur2);
+        cJoueur1.setControlCartePlateau(cCartePlateau);
+        cJoueur2.setControlCartePlateau(cCartePlateau);
     }
     
     @Test
-    public void testAjouterCarteOffensive() {
-        // Création des objets nécessaires
-        ControlPioche cPioche = new ControlPioche();
-        Joueur joueur1 = new Joueur("TestJoueur1", new Pirate("Jack Sparrow"));
-        Joueur joueur2 = new Joueur("TestJoueur2", new Pirate("Barbe Noire"));
-        ControlJoueur cJoueur1 = new ControlJoueur(joueur1, null, cPioche);
-        ControlJoueur cJoueur2 = new ControlJoueur(joueur2, null, cPioche);
-        
-        // Création du contrôleur
-        ControlCartePlateau cCartePlateau = new ControlCartePlateau(cJoueur1, cJoueur2);
-        cJoueur1.setControlCartePlateau(cCartePlateau);
-        cJoueur2.setControlCartePlateau(cCartePlateau);
-        
+    @DisplayName("Test de la création d'un contrôleur de carte plateau")
+    public void testCreationControlCartePlateau() {
+        // Vérification
+        assertNotNull(cCartePlateau, "Le contrôleur de carte plateau ne devrait pas être null");
+        assertEquals(cJoueur1, cCartePlateau.getJoueurs()[0], "Le contrôleur joueur 1 devrait être correctement assigné");
+        assertEquals(cJoueur2, cCartePlateau.getJoueurs()[1], "Le contrôleur joueur 2 devrait être correctement assigné");
+    }
+    
+    @Test
+    @DisplayName("Test de l'ajout d'une carte offensive pour le joueur 1")
+    public void testAjouterCarteOffensiveJ1() {
         // Création d'une carte offensive
         CarteOffensive carteOffensive = new CarteOffensive("Épée", "Une épée tranchante", 2, 2,
-                                                         CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+                                                         CarteOffensive.TypeOffensif.ATTAQUE);
         
         // Ajout de la carte pour joueur 1
         cCartePlateau.ajouterCarteOffensiveJ1(carteOffensive);
@@ -60,19 +73,8 @@ public class TestControlCartePlateau {
     }
     
     @Test
+    @DisplayName("Test de l'ajout d'une carte stratégique pour le joueur 1")
     public void testAjouterCarteStrategique() {
-        // Création des objets nécessaires
-        ControlPioche cPioche = new ControlPioche();
-        Joueur joueur1 = new Joueur("TestJoueur1", new Pirate("Jack Sparrow"));
-        Joueur joueur2 = new Joueur("TestJoueur2", new Pirate("Barbe Noire"));
-        ControlJoueur cJoueur1 = new ControlJoueur(joueur1, null, cPioche);
-        ControlJoueur cJoueur2 = new ControlJoueur(joueur2, null, cPioche);
-        
-        // Création du contrôleur
-        ControlCartePlateau cCartePlateau = new ControlCartePlateau(cJoueur1, cJoueur2);
-        cJoueur1.setControlCartePlateau(cCartePlateau);
-        cJoueur2.setControlCartePlateau(cCartePlateau);
-        
         // Création d'une carte stratégique
         CarteStrategique carteStrat = new CarteStrategique("Chanson", "Une chanson entrainante", 2, 2);
         
@@ -87,25 +89,8 @@ public class TestControlCartePlateau {
     }
     
     @Test
+    @DisplayName("Test des effets des cartes offensives")
     public void testAppliquerEffetsCartesOffensives() {
-        // Création des objets nécessaires via ControlJeu
-        ControlJeu controlJeu = new ControlJeu();
-        
-        // Créer les joueurs via ControlJeu
-        Joueur joueur1 = controlJeu.creerJoueur("TestJoueur1", "Jack Sparrow");
-        Joueur joueur2 = controlJeu.creerJoueur("TestJoueur2", "Barbe Noire");
-        
-        // Récupérer les contrôleurs des joueurs et du plateau
-        ControlJoueur cJoueur1 = controlJeu.getJoueur(0);
-        ControlJoueur cJoueur2 = controlJeu.getJoueur(1);
-        ControlCartePlateau cCartePlateau = controlJeu.getControlCartePlateau();
-        
-        // Forcer les valeurs initiales pour le test
-        joueur1.setVie(5);
-        joueur2.setVie(5);
-        joueur1.setOr(3);
-        joueur2.setOr(3);
-        
         // Valeurs initiales
         int vieInitialeJ1 = joueur1.getPointsDeVie();
         int vieInitialeJ2 = joueur2.getPointsDeVie();
@@ -114,50 +99,33 @@ public class TestControlCartePlateau {
         
         // Ajout de cartes offensives
         // J1 joue : Attaque (2 dégâts infligés, 1 subi), Soin (3 PV)
-        // La carte "Vol de Butin" est remplacée par une attaque normale
-        CarteOffensive attaqueJ1 = new CarteOffensive("Canon", "", 2, 1, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+        CarteOffensive attaqueJ1 = new CarteOffensive("Canon", "", 2, 1, CarteOffensive.TypeOffensif.ATTAQUE);
         CarteOffensive soinJ1 = new CarteOffensive("Potion", "", 3); // Constructeur Soin
-        CarteOffensive attaqueExtraJ1 = new CarteOffensive("Vol de Butin", "Cette carte était auparavant une carte de vol", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+        CarteOffensive attaqueExtraJ1 = new CarteOffensive("Vol de Butin", "", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE);
         cCartePlateau.ajouterCarteOffensiveJ1(attaqueJ1);
         cCartePlateau.ajouterCarteOffensiveJ1(soinJ1);
         cCartePlateau.ajouterCarteOffensiveJ1(attaqueExtraJ1);
         
         // J2 joue : Attaque (1 dégât infligé, 0 subi)
-        CarteOffensive attaqueJ2 = new CarteOffensive("Mousquet", "", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+        CarteOffensive attaqueJ2 = new CarteOffensive("Mousquet", "", 1, 0, CarteOffensive.TypeOffensif.ATTAQUE);
         cCartePlateau.ajouterCarteOffensiveJ2(attaqueJ2);
         
         // Application des effets
         cCartePlateau.appliquerEffetsCartesOffensives();
         
-        // Vérifications modifiées - plus de vol d'or
-        // Dégâts subis par J1: 1 (attaqueJ1) + 1 (attaqueJ2) = 2
-        // Soins reçus par J1: 3 (soinJ1)
-        // Total PV J1: vieInitialeJ1 - 2 + 3 = vieInitialeJ1 + 1, mais limité à 5
-        assertEquals(5, joueur1.getPointsDeVie(), "PV J1 incorrects");
-        // Or de J1 inchangé (plus de vol d'or)
-        assertEquals(orInitialJ1, joueur1.getOr(), "Or J1 incorrect");
-
-        // Dégâts subis par J2: 2 (attaqueJ1) + 1 (attaqueExtraJ1) = 3
-        // Total PV J2: vieInitialeJ2 - 3
+        // Vérifications des dégâts et soins
+        // J1 subit 1 (attaqueJ2) + 1 (attaqueJ1 self damage) = 2 dégâts, mais reçoit 3 soins
+        assertEquals(Math.min(5, vieInitialeJ1 - 2 + 3), joueur1.getPointsDeVie(), "PV J1 incorrects");
+        // J2 subit 2 (attaqueJ1) + 1 (attaqueExtraJ1) = 3 dégâts
         assertEquals(vieInitialeJ2 - 3, joueur2.getPointsDeVie(), "PV J2 incorrects");
-        // Or de J2 inchangé (plus de vol d'or)
+        // L'or ne change pas
+        assertEquals(orInitialJ1, joueur1.getOr(), "Or J1 incorrect");
         assertEquals(orInitialJ2, joueur2.getOr(), "Or J2 incorrect");
     }
     
     @Test
+    @DisplayName("Test des effets des cartes stratégiques")
     public void testAppliquerEffetsCartesStrategiques() {
-        // Création des objets nécessaires via ControlJeu
-        ControlJeu controlJeu = new ControlJeu();
-        
-        // Créer les joueurs via ControlJeu
-        Joueur joueur1 = controlJeu.creerJoueur("TestJoueur1", "Jack Sparrow");
-        Joueur joueur2 = controlJeu.creerJoueur("TestJoueur2", "Barbe Noire");
-        
-        // Récupérer les contrôleurs des joueurs et du plateau
-        ControlJoueur cJoueur1 = controlJeu.getJoueur(0);
-        ControlJoueur cJoueur2 = controlJeu.getJoueur(1);
-        ControlCartePlateau cCartePlateau = controlJeu.getControlCartePlateau();
-        
         // Valeurs initiales
         int popInitialeJ1 = joueur1.getPopularite();
         int popInitialeJ2 = joueur2.getPopularite();
@@ -169,8 +137,7 @@ public class TestControlCartePlateau {
         // Ajout de cartes stratégiques
         // J1 joue : Popularité (2 pop gagnée, 1 dégât subi), Trésor (10 or gagné)
         CarteStrategique popJ1 = new CarteStrategique("Chanson", "", 2, 1); // Constructeur Popularité
-        // Utiliser le bon constructeur pour Tresor (orGagne, orPerdu, estTresor)
-        CarteStrategique tresorJ1 = new CarteStrategique("Coffre", "", 10, 0, true);
+        CarteStrategique tresorJ1 = new CarteStrategique("Coffre", "", 10, true); // Constructeur Trésor - suppression du paramètre orPerdu
         cCartePlateau.ajouterCarteStrategiqueJ1(popJ1);
         cCartePlateau.ajouterCarteStrategiqueJ1(tresorJ1);
         
@@ -194,42 +161,270 @@ public class TestControlCartePlateau {
         assertEquals(popInitialeJ2 + 1, joueur2.getPopularite(), "Popularité J2 incorrecte");
         // Dégâts subis: 0 (popJ2)
         assertEquals(vieInitialeJ2, joueur2.getPointsDeVie(), "PV J2 incorrects");
-        // Or gagné: 0
+        // Or inchangé
         assertEquals(orInitialJ2, joueur2.getOr(), "Or J2 incorrect");
     }
     
     @Test
+    @DisplayName("Test des cartes offensives avec différents types")
+    public void testCartesOffensivesDifferentsTypes() {
+        // Valeurs initiales
+        int vieInitialeJ1 = joueur1.getPointsDeVie();
+        int vieInitialeJ2 = joueur2.getPointsDeVie();
+        
+        // J1 joue une carte de soin
+        CarteOffensive soin = new CarteOffensive("Potion", "Une potion de soin", 3) {
+            @Override
+            public CarteOffensive.TypeOffensif getTypeOffensif() {
+                return CarteOffensive.TypeOffensif.SOIN;
+            }
+        };
+        cCartePlateau.ajouterCarteOffensiveJ1(soin);
+        
+        // J2 joue une carte avec un type inexistant mais pas null
+        // Pour éviter NullPointerException, on utilise un type connu
+        CarteOffensive carteSpeciale = new CarteOffensive("Carte Spéciale", "Une carte avec type spécial", 1, 0, 
+                                                         CarteOffensive.TypeOffensif.ATTAQUE) {
+            @Override
+            public CarteOffensive.TypeOffensif getTypeOffensif() {
+                // Utiliser un type non reconnu dans le switch mais pas null
+                return CarteOffensive.TypeOffensif.ATTAQUE;
+            }
+            
+            @Override
+            public EffetCarte effetCarte() {
+                EffetCarte effet = super.effetCarte();
+                // On simule le comportement d'une carte spéciale sans avoir d'impact
+                return effet;
+            }
+        };
+        cCartePlateau.ajouterCarteOffensiveJ2(carteSpeciale);
+        
+        // Application des effets - aucune exception ne devrait être levée
+        cCartePlateau.appliquerEffetsCartesOffensives();
+        
+        // Le joueur 1 devrait avoir gagné des points de vie grâce au soin
+        assertTrue(joueur1.getPointsDeVie() >= vieInitialeJ1, "J1 devrait avoir au moins autant de PV qu'au début");
+    }
+    
+    @Test
+    @DisplayName("Test des cartes stratégiques avec trésor perdu")
+    public void testCartesStrategiquesAvecTresorPerdu() {
+        // Valeurs initiales
+        int orInitialJ1 = joueur1.getOr();
+        int orInitialJ2 = joueur2.getOr();
+        
+        // Configurer un trésor avec perte d'or pour J1
+        // Utilisation d'une classe anonyme pour surcharger effetCarte et simuler la perte d'or
+        CarteStrategique tresorPerte = new CarteStrategique("Coffre Maudit", "Un coffre qui fait perdre de l'or", 0, true) {
+            @Override
+            public Carte.EffetCarte effetCarte() {
+                Carte.EffetCarte effet = new Carte.EffetCarte();
+                effet.orGagne = 0;
+                effet.estTresor = true;
+                effet.orPerdu = 2; // Simuler la perte d'or via orPerdu
+                return effet;
+            }
+        };
+        cCartePlateau.ajouterCarteStrategiqueJ1(tresorPerte);
+        
+        // Configurer un trésor avec gain d'or pour J2
+        CarteStrategique tresorGain = new CarteStrategique("Coffre d'Or", "Un coffre qui donne de l'or", 5, true) {
+            @Override
+            public Carte.EffetCarte effetCarte() {
+                Carte.EffetCarte effet = new Carte.EffetCarte();
+                effet.orGagne = 5;
+                effet.estTresor = true;
+                return effet;
+            }
+        };
+        cCartePlateau.ajouterCarteStrategiqueJ2(tresorGain);
+        
+        // Application des effets
+        cCartePlateau.appliquerEffetsCartesStrategiques();
+        
+        // Vérifier que J1 a perdu de l'or
+        assertEquals(Math.max(0, orInitialJ1 - 2), joueur1.getOr(), "J1 devrait avoir perdu 2 or");
+        
+        // Vérifier que J2 a gagné de l'or
+        assertEquals(orInitialJ2 + 5, joueur2.getOr(), "J2 devrait avoir gagné 5 or");
+    }
+    
+    @Test
+    @DisplayName("Test de la défausse des cartes du plateau")
     public void testDefausserCartesPlateau() {
-        // Création des objets nécessaires
-        ControlPioche cPioche = new ControlPioche();
-        Joueur joueur1 = new Joueur("TestJoueur1", new Pirate("Jack Sparrow"));
-        Joueur joueur2 = new Joueur("TestJoueur2", new Pirate("Barbe Noire"));
-        ControlJoueur cJoueur1 = new ControlJoueur(joueur1, null, cPioche);
-        ControlJoueur cJoueur2 = new ControlJoueur(joueur2, null, cPioche);
+        // Ajout de cartes dans les différentes zones
+        CarteOffensive carteOff1 = new CarteOffensive("Épée", "Une épée tranchante", 2, 2, CarteOffensive.TypeOffensif.ATTAQUE);
+        CarteOffensive carteOff2 = new CarteOffensive("Mousquet", "Un mousquet puissant", 3, 0, CarteOffensive.TypeOffensif.ATTAQUE);
+        CarteStrategique carteStrat1 = new CarteStrategique("Chanson", "Une chanson entraînante", 2, 2);
+        CarteStrategique carteStrat2 = new CarteStrategique("Trésor", "Un coffre d'or", 5, true); // Suppression du paramètre orPerdu
         
-        // Création du contrôleur
-        ControlCartePlateau cCartePlateau = new ControlCartePlateau(cJoueur1, cJoueur2);
-        cJoueur1.setControlCartePlateau(cCartePlateau);
-        cJoueur2.setControlCartePlateau(cCartePlateau);
+        cCartePlateau.ajouterCarteOffensiveJ1(carteOff1);
+        cCartePlateau.ajouterCarteOffensiveJ2(carteOff2);
+        cCartePlateau.ajouterCarteStrategiqueJ1(carteStrat1);
+        cCartePlateau.ajouterCarteStrategiqueJ2(carteStrat2);
         
-        // Ajout de cartes
-        CarteOffensive carteOffensive = new CarteOffensive("Épée", "Une épée tranchante", 2, 2,
-                                                         CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
-        CarteStrategique carteStrat = new CarteStrategique("Chanson", "Une chanson entraînante", 2, 2);
-        cCartePlateau.ajouterCarteOffensiveJ1(carteOffensive);
-        cCartePlateau.ajouterCarteStrategiqueJ2(carteStrat);
+        // Vérifier que les cartes ont bien été ajoutées
+        assertEquals(1, cCartePlateau.getZoneOffensiveJ1().getCartesOffensives().size(), "Zone offensive J1 devrait contenir 1 carte");
+        assertEquals(1, cCartePlateau.getZoneOffensiveJ2().getCartesOffensives().size(), "Zone offensive J2 devrait contenir 1 carte");
+        assertEquals(1, cCartePlateau.getZoneStrategiqueJ1().getCartesStrategiques().size(), "Zone stratégique J1 devrait contenir 1 carte");
+        assertEquals(1, cCartePlateau.getZoneStrategiqueJ2().getCartesStrategiques().size(), "Zone stratégique J2 devrait contenir 1 carte");
         
-        // Défausse des cartes
+        // Défausser les cartes
         cCartePlateau.defausserCartesPlateau();
         
-        // Vérification
-        assertEquals(0, cCartePlateau.getZoneOffensiveJ1().getCartesOffensives().size(),
-                    "La zone offensive J1 devrait être vide après défausse");
-        assertEquals(0, cCartePlateau.getZoneOffensiveJ2().getCartesOffensives().size(),
-                    "La zone offensive J2 devrait être vide après défausse");
-        assertEquals(0, cCartePlateau.getZoneStrategiqueJ1().getCartesStrategiques().size(),
-                    "La zone stratégique J1 devrait être vide après défausse");
-        assertEquals(0, cCartePlateau.getZoneStrategiqueJ2().getCartesStrategiques().size(),
-                    "La zone stratégique J2 devrait être vide après défausse");
+        // Vérifier que les zones sont maintenant vides
+        assertEquals(0, cCartePlateau.getZoneOffensiveJ1().getCartesOffensives().size(), "Zone offensive J1 devrait être vide");
+        assertEquals(0, cCartePlateau.getZoneOffensiveJ2().getCartesOffensives().size(), "Zone offensive J2 devrait être vide");
+        assertEquals(0, cCartePlateau.getZoneStrategiqueJ1().getCartesStrategiques().size(), "Zone stratégique J1 devrait être vide");
+        assertEquals(0, cCartePlateau.getZoneStrategiqueJ2().getCartesStrategiques().size(), "Zone stratégique J2 devrait être vide");
+        
+        // Vérifier que les cartes sont dans la défausse (4 au total)
+        assertEquals(4, cCartePlateau.getDefausse().getCartes().size(), "La défausse devrait contenir 4 cartes");
+        assertTrue(cCartePlateau.getDefausse().getCartes().contains(carteOff1), "La défausse devrait contenir carteOff1");
+        assertTrue(cCartePlateau.getDefausse().getCartes().contains(carteOff2), "La défausse devrait contenir carteOff2");
+        assertTrue(cCartePlateau.getDefausse().getCartes().contains(carteStrat1), "La défausse devrait contenir carteStrat1");
+        assertTrue(cCartePlateau.getDefausse().getCartes().contains(carteStrat2), "La défausse devrait contenir carteStrat2");
     }
-}*/
+    
+    @Test
+    @DisplayName("Test de la méthode setJoueurs")
+    public void testSetJoueurs() {
+        // Créer de nouveaux contrôleurs de joueurs
+        Joueur nouveauJoueur1 = new Joueur(new Pirate("Nouveau Pirate 1"));
+        Joueur nouveauJoueur2 = new Joueur(new Pirate("Nouveau Pirate 2"));
+        ControlJoueur nouveauCJoueur1 = new ControlJoueur(nouveauJoueur1, null, cPioche);
+        ControlJoueur nouveauCJoueur2 = new ControlJoueur(nouveauJoueur2, null, cPioche);
+        
+        // Mettre à jour les joueurs dans le contrôleur de plateau
+        cCartePlateau.setJoueurs(nouveauCJoueur1, nouveauCJoueur2);
+        
+        // Vérifier que les joueurs ont été mis à jour
+        assertEquals(nouveauCJoueur1, cCartePlateau.getJoueurs()[0], "Le nouveau contrôleur joueur 1 devrait être assigné");
+        assertEquals(nouveauCJoueur2, cCartePlateau.getJoueurs()[1], "Le nouveau contrôleur joueur 2 devrait être assigné");
+    }
+    
+    @Test
+    @DisplayName("Test des méthodes getter de listes de cartes")
+    public void testGetters() {
+        // Ajouter quelques cartes
+        CarteOffensive carteOff1 = new CarteOffensive("Épée", "Une épée tranchante", 2, 2, CarteOffensive.TypeOffensif.ATTAQUE);
+        CarteStrategique carteStrat1 = new CarteStrategique("Chanson", "Une chanson entraînante", 2, 2);
+        
+        cCartePlateau.ajouterCarteOffensiveJ1(carteOff1);
+        cCartePlateau.ajouterCarteStrategiqueJ1(carteStrat1);
+        
+        // Tester getCartesOffensivesJ1 et getCartesStrategiquesJ1
+        List<CarteOffensive> cartesOffensivesJ1 = cCartePlateau.getCartesOffensivesJ1();
+        List<CarteStrategique> cartesStrategiquesJ1 = cCartePlateau.getCartesStrategiquesJ1();
+        
+        assertEquals(1, cartesOffensivesJ1.size(), "devrait renvoyer 1 carte offensive");
+        assertEquals(carteOff1, cartesOffensivesJ1.get(0), "devrait renvoyer la carte offensive ajoutée");
+        assertEquals(1, cartesStrategiquesJ1.size(), "devrait renvoyer 1 carte stratégique");
+        assertEquals(carteStrat1, cartesStrategiquesJ1.get(0), "devrait renvoyer la carte stratégique ajoutée");
+        
+        // Tester getCartesOffensivesJ2 et getCartesStrategiquesJ2
+        CarteOffensive carteOff2 = new CarteOffensive("Mousquet", "Un mousquet puissant", 3, 0, CarteOffensive.TypeOffensif.ATTAQUE);
+        CarteStrategique carteStrat2 = new CarteStrategique("Trésor", "Un coffre d'or", 5, true); // Suppression du paramètre orPerdu
+        
+        cCartePlateau.ajouterCarteOffensiveJ2(carteOff2);
+        cCartePlateau.ajouterCarteStrategiqueJ2(carteStrat2);
+        
+        List<CarteOffensive> cartesOffensivesJ2 = cCartePlateau.getCartesOffensivesJ2();
+        List<CarteStrategique> cartesStrategiquesJ2 = cCartePlateau.getCartesStrategiquesJ2();
+        
+        assertEquals(1, cartesOffensivesJ2.size(), "devrait renvoyer 1 carte offensive pour J2");
+        assertEquals(carteOff2, cartesOffensivesJ2.get(0), "devrait renvoyer la carte offensive ajoutée pour J2");
+        assertEquals(1, cartesStrategiquesJ2.size(), "devrait renvoyer 1 carte stratégique pour J2");
+        assertEquals(carteStrat2, cartesStrategiquesJ2.get(0), "devrait renvoyer la carte stratégique ajoutée pour J2");
+    }
+    
+    @Test
+    @DisplayName("Test de defausserCartes avec objet non-Carte")
+    public void testDefausserCartesObjetNonCarte() {
+        // Créer une liste avec un objet qui n'est pas une Carte
+        class ObjetNonCarte {}
+        List<Object> listeObjets = List.of(new ObjetNonCarte());
+        
+        // Vérifier que la méthode ne lève pas d'exception
+        assertDoesNotThrow(() -> {
+            // Utiliser la réflexion pour accéder à la méthode privée defausserCartes
+            java.lang.reflect.Method method = ControlCartePlateau.class.getDeclaredMethod("defausserCartes", List.class);
+            method.setAccessible(true);
+            method.invoke(cCartePlateau, listeObjets);
+        }, "La méthode defausserCartes ne devrait pas lever d'exception avec un objet non-Carte");
+        
+        // La défausse devrait toujours être vide
+        assertEquals(0, cCartePlateau.getDefausse().getCartes().size(), "La défausse devrait être vide");
+    }
+
+    @Test
+    @DisplayName("Test des soins pour le joueur 2 et des cartes avec des types particuliers")
+    public void testSoinsJoueur2EtTypesParticuliers() {
+        // Valeurs initiales
+        int vieInitialeJ2 = joueur2.getPointsDeVie();
+        int orInitialJ2 = joueur2.getOr();
+        
+        // Réduire les PV du joueur 2 pour pouvoir tester le soin
+        joueur2.setVie(3);
+        vieInitialeJ2 = joueur2.getPointsDeVie();
+        assertEquals(3, vieInitialeJ2, "Les PV du joueur 2 devraient être à 3");
+        
+        // Créer une carte de soin pour le joueur 2
+        CarteOffensive soinJ2 = new CarteOffensive("Potion J2", "Une potion pour J2", 3) {
+            @Override
+            public CarteOffensive.TypeOffensif getTypeOffensif() {
+                return CarteOffensive.TypeOffensif.SOIN;
+            }
+            
+            @Override
+            public EffetCarte effetCarte() {
+                // Créer directement un effet de soin
+                EffetCarte effet = new EffetCarte();
+                effet.vieGagnee = 3;
+                return effet;
+            }
+        };
+        cCartePlateau.ajouterCarteOffensiveJ2(soinJ2);
+        
+        // Créer une carte offensive sans effet spécial pour le joueur 1
+        CarteOffensive carteTypeSpecial = new CarteOffensive("Type Spécial", "Une carte sans effet", 0, 0, 
+                                                CarteOffensive.TypeOffensif.ATTAQUE);
+        cCartePlateau.ajouterCarteOffensiveJ1(carteTypeSpecial);
+        
+        // Créer une carte stratégique qui fait perdre de l'or au joueur 2
+        // On utilise une classe anonyme qui surcharge effetCarte pour simuler la perte d'or
+        CarteStrategique tresorNegJ2 = new CarteStrategique("Coffre Maudit J2", "Un coffre qui fait perdre de l'or au J2", 0, true) {
+            @Override
+            public EffetCarte effetCarte() {
+                // Créer un effet simple avec orPerdu
+                EffetCarte effet = new EffetCarte();
+                effet.estTresor = true;
+                effet.orPerdu = 2; // Simuler la perte d'or via orPerdu
+                return effet;
+            }
+            
+            @Override
+            public CarteStrategique.TypeStrategique getTypeStrategique() {
+                return CarteStrategique.TypeStrategique.TRESOR;
+            }
+        };
+        cCartePlateau.ajouterCarteStrategiqueJ2(tresorNegJ2);
+        
+        // Appliquer les effets
+        cCartePlateau.appliquerEffetsCartesOffensives();
+        cCartePlateau.appliquerEffetsCartesStrategiques();
+        
+        // Vérifier que le joueur 2 a bien reçu des soins
+        assertTrue(joueur2.getPointsDeVie() > vieInitialeJ2, "Joueur 2 aurait dû recevoir des soins");
+        
+        // Les points de vie sont probablement limités à un maximum (par défaut 5)
+        // Donc on vérifie que les PV sont soit au maximum, soit égaux à vieInitiale + 3
+        int pvMaximum = 5; // Valeur maximale des points de vie
+        assertEquals(Math.min(pvMaximum, vieInitialeJ2 + 3), joueur2.getPointsDeVie(), 
+                    "Joueur 2 aurait dû gagner 3 PV, limité au maximum de " + pvMaximum);
+        
+        // Vérifier que joueur 2 a perdu de l'or
+        assertEquals(Math.max(0, orInitialJ2 - 2), joueur2.getOr(), "Joueur 2 aurait dû perdre 2 or");
+    }
+}

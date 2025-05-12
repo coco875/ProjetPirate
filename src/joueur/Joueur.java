@@ -28,6 +28,10 @@ public class Joueur {
 		this.main = new ArrayList<Carte>(4);
 	}
 
+	public Carte getCarteSpecial() {
+		return pirate.getCarteSpecial();
+	}
+
 	// Getters et setters de base
 	
 	public int getPointsDeVie() {

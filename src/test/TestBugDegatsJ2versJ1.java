@@ -26,7 +26,7 @@ public class TestBugDegatsJ2versJ1 {
         
         // Carte d'attaque du joueur 2
         CarteOffensive attaqueJ2 = new CarteOffensive("Canon", "Un puissant canon", 2, 0, 
-                                                     CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+                                                     CarteOffensive.TypeOffensif.ATTAQUE);
         cCartePlateau.ajouterCarteOffensiveJ2(attaqueJ2);
         
         // Application des effets
@@ -51,9 +51,9 @@ public class TestBugDegatsJ2versJ1 {
         
         // Tour 1: attaques des deux côtés
         CarteOffensive attaqueJ1 = new CarteOffensive("Sabre", "Un sabre tranchant", 1, 0, 
-                                                    CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+                                                    CarteOffensive.TypeOffensif.ATTAQUE);
         CarteOffensive attaqueJ2 = new CarteOffensive("Pistolet", "Un pistolet précis", 2, 0, 
-                                                    CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+                                                    CarteOffensive.TypeOffensif.ATTAQUE);
         
         cCartePlateau.ajouterCarteOffensiveJ1(attaqueJ1);
         cCartePlateau.ajouterCarteOffensiveJ2(attaqueJ2);
@@ -69,7 +69,7 @@ public class TestBugDegatsJ2versJ1 {
         
         // Tour 2: attaque du joueur 2 uniquement
         CarteOffensive attaqueJ2Tour2 = new CarteOffensive("Canon", "Un puissant canon", 3, 0, 
-                                                         CarteOffensive.TypeOffensif.ATTAQUE_DIRECTE);
+                                                         CarteOffensive.TypeOffensif.ATTAQUE);
         cCartePlateau.ajouterCarteOffensiveJ2(attaqueJ2Tour2);
         
         cCartePlateau.appliquerEffetsCartesOffensives();
