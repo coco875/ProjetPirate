@@ -9,9 +9,7 @@ import carte.CarteOffensive;
 import carte.CarteStrategique;
 import controllers.ControlJeu;
 import controllers.ControlJoueur;
-import controllers.ControlPioche;
 import controllers.ControlMarche;
-import jeu.Pioche;
 import joueur.Joueur;
 import joueur.Pirate;
 import joueur.ParserPirate;
@@ -64,16 +62,11 @@ public class BoundaryJeu {
 	 * @brief Démarre le jeu
 	 */
 	public void demarrerJeu() {
-		
 		// Premier joueur
 		Pirate nomPirate1 = demanderPirate(1);
-		controlJeu.creerJoueur(nomPirate1);
-		
 		// Deuxième joueur
 		Pirate nomPirate2 = demanderPirate(2);
-		controlJeu.creerJoueur(nomPirate2);
-
-		controlJeu.initialiserJeu();
+		controlJeu.initialiserJeu(nomPirate1, nomPirate2);
 		
 		// Démarrage de la partie
 		jouerPartie();
@@ -166,7 +159,7 @@ public class BoundaryJeu {
 				Carte carteChoisie = main.get(choix - 1);
 				System.out.println("Vous jouez : " + carteChoisie);
 				
-				jouerCarte(carteChoisie, joueurActif);
+				jouerCarte(carteChoisie);
 				
 				// Retirer la carte de la main
 				joueurActif.retirerCarte(carteChoisie);
@@ -219,7 +212,7 @@ public class BoundaryJeu {
 	 * @param carte La carte à jouer
 	 * @param joueurActif Contrôleur du joueur actif
 	 */
-	private void jouerCarte(Carte carte, ControlJoueur joueurActif) {
+	private void jouerCarte(Carte carte) {
 		System.out.println("Description : " + carte.getDescription());
 		
 		 // Utiliser effetCarte pour déterminer le type et les effets de la carte
@@ -230,22 +223,20 @@ public class BoundaryJeu {
 			if (effet.degatsSubis > 0) {
 				System.out.println("Vous subissez " + effet.degatsSubis + " points de dégâts en retour.");
 			}
-			controlJeu.ajouterCarteOffensive((CarteOffensive)carte);
 		} else if (effet.vieGagne > 0) {
 			System.out.println("Vous vous soignez ! Points de vie gagnés : " + effet.vieGagne);
-			controlJeu.ajouterCarteOffensive((CarteOffensive)carte);
 		} else if (effet.populariteGagnee > 0) {
 			System.out.println("Vous gagnez en popularité ! Points gagnés : " + effet.populariteGagnee);
 			if (effet.degatsSubis > 0) {
 				System.out.println("Vous subissez " + effet.degatsSubis + " points de dégâts.");
 			}
-			controlJeu.ajouterCarteStrategique((CarteStrategique)carte);
 		} else if (effet.orGagne > 0) {
 			System.out.println("Vous gagnez " + effet.orGagne + " or !");
-			controlJeu.ajouterCarteStrategique((CarteStrategique)carte);
 		} else {
 			System.out.println("Type de carte non reconnu !");
 		}
+
+		controlJeu.jouerCarte(carte);
 	}
 	
 	/**

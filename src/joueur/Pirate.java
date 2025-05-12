@@ -48,12 +48,8 @@ public class Pirate {
 		return nom;
 	}
 
-	public Carte getCarteCoupSpeciale() {
+	public Carte getCarteSpecial() {
 		return carteCoupSpeciale;
-	}
-	
-	public void setCarteCoupSpeciale(Carte carteCoupSpeciale) {
-		this.carteCoupSpeciale = carteCoupSpeciale;
 	}
 	
 	public int getPopularite() {

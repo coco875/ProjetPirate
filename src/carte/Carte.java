@@ -18,7 +18,6 @@ public abstract class Carte {
 		public int populariteGagnee = 0;
 		public int vieGagne = 0;
 		public int orGagne = 0;
-		public int dureeEffet = 0;
 	}
 	
 	/**

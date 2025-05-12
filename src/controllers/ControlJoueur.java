@@ -7,6 +7,7 @@ import carte.Carte;
 import carte.CarteOffensive;
 import carte.CarteStrategique;
 import carte.TypeCarte;
+import carte.Carte.EffetCarte;
 import joueur.Joueur;
 
 /**
@@ -14,24 +15,16 @@ import joueur.Joueur;
  */
 public class ControlJoueur {
     private Joueur joueur;
-    private ControlJeu controlJeu;
     private ControlPioche controlPioche;
-    private ControlCartePlateau controlCartePlateau;
+    private ControlZoneJoueur controlZoneJoueur;
     
     /**
      * Constructeur du contrôleur
      */
-    public ControlJoueur(Joueur joueur, ControlJeu controlJeu, ControlPioche controlPioche) {
+    public ControlJoueur(Joueur joueur, ControlPioche controlPioche, ControlZoneJoueur controlZoneJoueur) {
         this.joueur = joueur;
-        this.controlJeu = controlJeu;
         this.controlPioche = controlPioche;
-    }
-    
-    /**
-     * Définit le contrôleur de carte plateau associé
-     */
-    public void setControlCartePlateau(ControlCartePlateau controlCartePlateau) {
-        this.controlCartePlateau = controlCartePlateau;
+        this.controlZoneJoueur = controlZoneJoueur;
     }
     
     /**
@@ -52,6 +45,8 @@ public class ControlJoueur {
      * Initialise la main du joueur en piochant 5 cartes
      */
     public void initialiserMain() {
+        Carte carte = joueur.getCarteSpecial();
+        joueur.ajouterCarte(carte);
         for (int i = 0; i < 5; i++) {
             piocher();
         }
@@ -98,32 +93,14 @@ public class ControlJoueur {
         }
         
         Carte carte = joueur.getMain().get(indexCarte);
-        Carte.EffetCarte effet = carte.effetCarte();
-        
-        // Détermine si ce contrôleur gère le joueur 1 ou 2
-        boolean estJoueur1 = false;
-        if (controlJeu != null && controlJeu.getJoueur(0) != null) {
-            estJoueur1 = (this.joueur == controlJeu.getJoueur(0).getJoueur());
-        } else {
-            // Dans le contexte des tests, on considère toujours controlJoueur1 comme joueur 1
-            estJoueur1 = (this == controlCartePlateau.getJoueurs()[0]);
-        }
 
         // Correction dans la méthode jouerCarte pour s'assurer que les cartes sont bien ajoutées aux zones
         if (carte.getType() == TypeCarte.OFFENSIVE) {
-            if (estJoueur1) {
-                controlCartePlateau.ajouterCarteOffensiveJ1((CarteOffensive) carte);
-            } else {
-                controlCartePlateau.ajouterCarteOffensiveJ2((CarteOffensive) carte);
-            }
+            controlZoneJoueur.ajouterCarteOffensive((CarteOffensive) carte);
             joueur.retirerCarte(carte);
             return true;
         } else if (carte.getType() == TypeCarte.STRATEGIQUE) {
-            if (estJoueur1) {
-                controlCartePlateau.ajouterCarteStrategiqueJ1((CarteStrategique) carte);
-            } else {
-                controlCartePlateau.ajouterCarteStrategiqueJ2((CarteStrategique) carte);
-            }
+            controlZoneJoueur.ajouterCarteStrategique((CarteStrategique) carte);
             joueur.retirerCarte(carte);
             return true;
         } else {
@@ -155,16 +132,7 @@ public class ControlJoueur {
         
         Carte carte = joueur.getMain().get(indexCarte);
         
-        // Retirer la carte de la main
-        boolean retiree = joueur.retirerCarte(carte);
-        
-        if (retiree && controlCartePlateau != null) {
-            // Ajouter la carte à la défausse
-            controlCartePlateau.getDefausse().ajouterCarte(carte);
-            return true;
-        }
-        
-        return false; // La carte n'a pas pu être retirée ou la défausse n'est pas accessible
+        return joueur.retirerCarte(carte);
     }
 
     // Méthodes affectant les attributs du joueur
@@ -210,38 +178,6 @@ public class ControlJoueur {
      */
     public void gagnerOr(int montant) {
         joueur.gagnerOr(montant);
-    }
-    
-    /**
-     * Version surchargée de recevoirEffets pour rétrocompatibilité
-     * @param degats Dégâts à infliger
-     * @param popularite Popularité à modifier (positif = gain, négatif = perte)
-     */
-    public void recevoirEffets(int degats, int popularite) {
-        if (degats > 0) {
-            perdrePointsDeVie(degats);
-        } else if (degats < 0) {
-            gagnerPointsDeVie(-degats);
-        }
-        
-        if (popularite > 0) {
-            gagnerPopularite(popularite);
-        } else if (popularite < 0) {
-            perdrePopularite(-popularite);
-        }
-    }
-    
-    /**
-     * Simule un tour complet du joueur
-     */
-    public void jouerTour() {
-        // Piocher une carte
-        piocher();
-        
-        // Jouer une carte (première carte de la main pour simplifier)
-        if (!joueur.getMain().isEmpty()) {
-            jouerCarte(0);
-        }
     }
     
     // Getters
