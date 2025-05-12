@@ -29,7 +29,7 @@ public class ControlPioche {
 		File resourceDir = new File("src/ressources/cartes");
 		if (resourceDir.exists() && resourceDir.isDirectory()) {
 			// Charger les cartes du répertoire principal
-			list.addAll(chargerCartesDepuisRepertoire(resourceDir));
+			// list.addAll(chargerCartesDepuisRepertoire(resourceDir));
 			
 			// Charger les cartes des sous-répertoires
 			File attaqueDir = new File("src/ressources/cartes/offensive/attaque");
