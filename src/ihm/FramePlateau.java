@@ -178,7 +178,7 @@ public class FramePlateau extends javax.swing.JFrame {
         panelImagePirate1 = new PanelImage(pirateJoueur1.getCheminImage());
         panelImagePirate2 = new PanelImage(pirateJoueur2.getCheminImage());
 
-        Dimension size = new Dimension(125, 125);
+        Dimension size = new Dimension(75, 75);
         panelImagePirate1.setPreferredSize(size); 
         panelImagePirate2.setPreferredSize(size);
         panelImagePirate1.setSize(size); 
@@ -186,8 +186,8 @@ public class FramePlateau extends javax.swing.JFrame {
         
         panelJeu.setLayout(null);
         
-        panelImagePirate1.setBounds(888, 755, size.width, size.height);
-        panelImagePirate2.setBounds(888, 200, size.width, size.height);
+        panelImagePirate1.setBounds(915, 755, size.width, size.height);
+        panelImagePirate2.setBounds(915, 250, size.width, size.height);
         
         panelJeu.add(panelImagePirate1);
         panelJeu.add(panelImagePirate2);
@@ -200,9 +200,9 @@ public class FramePlateau extends javax.swing.JFrame {
     }
     
     private void setupMain(){
-        Dimension sizeMain = new Dimension(750, 170);
-        panelMainJoueur1.setBounds(585, 880, sizeMain.width, sizeMain.height);
-        panelMainJoueur2.setBounds(585, 0, sizeMain.width, sizeMain.height);
+        Dimension sizeMain = new Dimension(1000, 200);
+        panelMainJoueur1.setBounds(460, 830, sizeMain.width, sizeMain.height);
+        panelMainJoueur2.setBounds(460, 0, sizeMain.width, sizeMain.height);
         
         panelMainJoueur1.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
         panelMainJoueur2.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));

@@ -11,6 +11,7 @@ import static ihm.PanelPirate.notifySelectionState;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.awt.geom.RoundRectangle2D;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -23,7 +24,7 @@ import javax.swing.border.LineBorder;
  */
 public class PanelCarte extends javax.swing.JPanel {
     private Image image;
-    private Point pDessinIcone = new Point(0, getHeight() - 45);
+    private Point pDessinIcone = new Point(0, 0);
     private Carte carte;
     private int x, y, xCarte, yCarte, xCentreCarte, yCentreCarte;
     
@@ -42,8 +43,8 @@ public class PanelCarte extends javax.swing.JPanel {
         } catch (IOException io) {
             System.out.println("Error");
         }
-        
-        setPreferredSize(new Dimension(117, 150));
+        setOpaque(false);
+        setPreferredSize(new Dimension(149, 190));
         this.setVisible(true);
         repaint();
         
@@ -104,7 +105,7 @@ public class PanelCarte extends javax.swing.JPanel {
 
     public void dessinerIcones(Graphics g) {
         pDessinIcone.x = 0;  // Réinitialisation de la position horizontale pour le prochain dessin
-        pDessinIcone.y = getHeight() - 45;
+        pDessinIcone.y = 0;
 
         if (carte.getDegatsInfliges() != 0) {
             dessinerImage(g, "/src/ressources/icones/swords/swords_minus" + carte.getDegatsInfliges() + ".png", 30);
@@ -123,31 +124,42 @@ public class PanelCarte extends javax.swing.JPanel {
         }
     }
 
-    
-    
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
+   @Override
+protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
 
-        // Exemple de fond rouge (peut être supprimé si tu ne veux pas de fond)
-        g.setColor(Color.RED);
-        g.fillRect(0, 0, getWidth(), getHeight());
+    Graphics2D g2 = (Graphics2D) g.create();
+    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // Dessin de l'image de fond (assure-toi que "image" est bien initialisé)
-        
-        if (image != null) {
-            g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
-        }
+    // Appliquer le clip arrondi pour que tout le contenu respecte cette forme
+    Shape clip = new RoundRectangle2D.Float(10, 10, getWidth() -20, getHeight() -20, 20, 20);
+    g2.setClip(clip);
 
-        // Appel du dessin des icônes
-        dessinerIcones(g);
+    // Dessin du fond
+    g2.setColor(Color.RED);
+    g2.fillRect(0, 0, getWidth(), getHeight());
+
+    if (image != null) {
+        g2.drawImage(image, 5, 5, getWidth() -10, getHeight() -10, this);
     }
-    /*
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
-    }*/
+
+    
+
+    // Retirer le clip pour dessiner les bords visibles
+    g2.setClip(null);
+    g2.setStroke(new BasicStroke(3));
+    g2.setColor(Color.WHITE);
+    g2.drawRoundRect(10, 10, getWidth() - 21, getHeight() - 21, 20, 20);
+
+    g2.setStroke(new BasicStroke(1));
+    g2.setColor(Color.LIGHT_GRAY);
+    g2.drawRoundRect(13, 13, getWidth() - 27, getHeight() - 27, 16, 16);
+    
+    dessinerIcones(g2);
+    
+    g2.dispose();
+}
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

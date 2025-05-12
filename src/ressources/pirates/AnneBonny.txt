@@ -2,4 +2,3 @@
 popularite: 0
 vie: 6
 image: src/ressources/image_pirate/AnneBonny.jpg
-carte: src/ressources/cartes/strategique/popularite/popularite1.txt
