@@ -23,8 +23,10 @@ import javax.swing.border.LineBorder;
  */
 public class PanelCarte extends javax.swing.JPanel {
     private Image image;
+    private Point pDessinIcone = new Point(0, getHeight() - 45);
     private Carte carte;
     private int x, y, xCarte, yCarte, xCentreCarte, yCentreCarte;
+    
     /**
      * Creates new form panelCarte
      */
@@ -81,13 +83,64 @@ public class PanelCarte extends javax.swing.JPanel {
     public Carte getCarte(){
         return this.carte;
     }
+   
+    
+    private void dessinerImage(Graphics g, String cheminImage, int taille) {
+        try {
+            String local_path = System.getProperty("user.dir");
+            File imageFile = new File(local_path + cheminImage);
+            Image img = ImageIO.read(imageFile);
+            if (img == null) {
+                System.out.println("L'image n'a pas pu être lue !");
+            } else {
+                System.out.println("Image chargée : " + imageFile.getName());
+            }
+            g.drawImage(img, pDessinIcone.x, pDessinIcone.y, taille, taille, this);
+            pDessinIcone.x += taille + 5;  // Déplacer la position de p1.x pour la prochaine image
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void dessinerIcones(Graphics g) {
+        pDessinIcone.x = 0;  // Réinitialisation de la position horizontale pour le prochain dessin
+        pDessinIcone.y = getHeight() - 45;
+
+        if (carte.getDegatsInfliges() != 0) {
+            dessinerImage(g, "/src/ressources/icones/swords/swords_minus" + carte.getDegatsInfliges() + ".png", 30);
+        }
+
+        if (carte.getDegatsSubis() != 0) {
+            dessinerImage(g, "/src/ressources/icones/heart_red/heart_red_minus" + carte.getDegatsSubis() + ".png", 30);
+        }
+
+        if (carte.getPopulariteGagnee() != 0) {
+            dessinerImage(g, "/src/ressources/icones/star/star_plus" + carte.getPopulariteGagnee() + ".png", 30);
+        }
+
+        if (carte.getVieGagne() != 0) {
+            dessinerImage(g, "/src/ressources/icones/heart_blue/heart_blue_plus" + carte.getVieGagne() + ".png", 30);
+        }
+    }
+
+    
     
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        // Exemple de fond rouge (peut être supprimé si tu ne veux pas de fond)
         g.setColor(Color.RED);
         g.fillRect(0, 0, getWidth(), getHeight());
-        g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+
+        // Dessin de l'image de fond (assure-toi que "image" est bien initialisé)
+        
+        if (image != null) {
+            g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+        }
+
+        // Appel du dessin des icônes
+        dessinerIcones(g);
     }
     /*
     @Override

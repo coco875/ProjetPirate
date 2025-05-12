@@ -102,6 +102,31 @@ public abstract class Carte {
 	public String getNomCarte() {
 		return nomCarte;
 	}
+        
+        public int getDegatsInfliges() {
+            EffetCarte effet = effetCarte();
+            return effet.degatsInfliges;
+        }
+
+        public int getDegatsSubis() {
+            EffetCarte effet = effetCarte();
+            return effet.degatsSubis;
+        }
+
+        public int getPopulariteGagnee() {
+            EffetCarte effet = effetCarte();
+            return effet.populariteGagnee;
+        }
+
+        public int getVieGagne() {
+            EffetCarte effet = effetCarte();
+            return effet.vieGagne;
+        }
+
+        public int getOrGagne() {
+            EffetCarte effet = effetCarte();
+            return effet.orGagne;
+        }
 	
 	/**
 	 * Getter pour le chemin d'image
