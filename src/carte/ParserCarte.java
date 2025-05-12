@@ -5,15 +5,68 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+
+
+
 /**
  * Classe pour charger les cartes depuis des fichiers texte
  */
 public class ParserCarte {
+	
+	private static Map<String, FabriqueCarte> registryCartes; //type:constructeur
+	
+	@FunctionalInterface
+	public interface FabriqueCarte {
+	    Carte creer(String nomCarte, String description, String cheminImage, int cout, int... valeurs);
+	}
+	
+	public static void initialiserRegistry() {
+	    registryCartes = new HashMap<>();
+
+	    // Pour CarteAttaque : valeurs[0] = degâts infligés, valeurs[1] = subis
+	    registryCartes.put("attaque",
+	        (nom, desc, img, cout, valeurs) ->
+	            new CarteAttaque(nom, desc, img, cout, valeurs[0], valeurs[1])
+	    );
+
+	    // Pour CarteSoin : valeurs[0] = points de soin
+	    registryCartes.put("soin",
+	        (nom, desc, img, cout, valeurs) ->
+	            new CarteSoin(nom, desc, img, cout, valeurs[0])
+	    );
+	    
+	    // Pour CarteTresor : valeurs[0] = or gagné
+	    registryCartes.put("tresor",
+	        (nom, desc, img, cout, valeurs) ->
+	            new CarteTresor(nom, desc, img, cout, valeurs[0])
+	    );
+	    
+	    // Pour CartePopularite : valeurs[0] = pop gagnée, valeurs[1] = potentiels dégats subis
+	    registryCartes.put("popularite",
+	        (nom, desc, img, cout, valeurs) ->
+	            new CartePopularite(nom, desc, img, cout, valeurs[0], valeurs[1])
+	    );
+	       
+	}
+	
+	
+	public static Carte creerCarte(String nom, String desc, String cheminImage, int cout, String type, int... valeurs) {
+	    FabriqueCarte fabrique = registryCartes.get(type);
+	    if (fabrique == null) {
+	        throw new IllegalArgumentException("Type inconnu : " + type);
+	    }
+	    return fabrique.creer(nom, desc, cheminImage, cout, valeurs);
+	}
+	
+	
+	
     /**
      * Lit une carte depuis un fichier texte formaté
      */
     public static Carte lireCarte(String filePath) throws Exception {
         Map<String, String> properties = new HashMap<>();
+        
+        initialiserRegistry();
         
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -46,29 +99,30 @@ public class ParserCarte {
             // Création de la carte selon son type
             Carte carte = null;
             
+            
             switch (type) {
                 case "attaque":
                     int degatsInfliges = Integer.parseInt(properties.getOrDefault("degats_infliges", "0"));
                     int degatsSubisAttaque = Integer.parseInt(properties.getOrDefault("degats_subis", "0"));
                     
                     // Carte offensive d'attaque directe
-                    carte = new CarteAttaque(titre, description, cheminImage, cout, degatsInfliges, degatsSubisAttaque);
+                    carte = creerCarte(titre, description, cheminImage, cout, type, degatsInfliges, degatsSubisAttaque);
                     break;
                     
                 case "soin":
                     int vieGagnee = Integer.parseInt(properties.getOrDefault("vie_gagnee", "0"));
-                    carte = new CarteSoin(titre, description, cheminImage, cout, vieGagnee);
+                    carte = creerCarte(titre, description, cheminImage, cout, type, vieGagnee);
                     break;
 
                 case "popularite":
                     int populariteGagnee = Integer.parseInt(properties.getOrDefault("popularite_gagnee", "0"));
                     int degatsSubisPop = Integer.parseInt(properties.getOrDefault("degats_subis", "0"));
-                    carte = new CartePopularite(titre, description, cheminImage, cout, populariteGagnee, degatsSubisPop);
+                    carte = creerCarte(titre, description, cheminImage, cout, type, populariteGagnee, degatsSubisPop);
                     break;
 
                 case "tresor":
                     int orGagne = Integer.parseInt(properties.getOrDefault("or_gagne", "0"));
-                    carte = new CarteTresor(titre, description, cheminImage, cout, orGagne);
+                    carte = creerCarte(titre, description, cheminImage, cout, type, orGagne);
                     break;
                 default:
                     throw new IllegalArgumentException("Type de carte inconnu: " + type + " dans " + filePath);

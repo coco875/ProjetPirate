@@ -15,10 +15,11 @@ import jeu.Pioche;
 public class ControlPioche {
 	private Pioche pioche;
 	
+	
 	public ControlPioche() {
 		initialiserPioche();
 	}
-	
+
 	/**
 	 * Initialise la pioche avec les cartes depuis les fichiers ou par défaut
 	 */
