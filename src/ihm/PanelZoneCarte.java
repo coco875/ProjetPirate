@@ -49,7 +49,6 @@ public class PanelZoneCarte extends javax.swing.JPanel {
     @Override
     public Component add(Component comp) {
         nbCartes ++;
-        
         super.add(comp); //Appel à la méthode add de JPanel
         repaint();
         PanelCarte panelCarte = (PanelCarte) comp;
