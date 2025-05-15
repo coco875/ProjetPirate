@@ -10,6 +10,7 @@ import carte.CarteStrategique;
 import controllers.ControlJeu;
 import controllers.ControlJoueur;
 import controllers.ControlMarche;
+import controllers.ControlPioche;
 import joueur.Joueur;
 import joueur.Pirate;
 import joueur.ParserPirate;
@@ -131,8 +132,12 @@ public class BoundaryJeu {
 		boolean finPartie = false;
 		int tourJoueur = 0;
 		boolean continuerIteration = true;
+		int nbTour = 0;
+		int nbToursMax = 20;
 		
 		while (!finPartie && continuerIteration) {
+			nbTour++;
+			
 			// Déterminer le joueur actif
 			ControlJoueur joueurActif = controlJeu.getJoueur(tourJoueur % 2);
 			Joueur j = joueurActif.getJoueur();
@@ -170,8 +175,15 @@ public class BoundaryJeu {
 			// Appliquer les effets des cartes sur le plateau
 			controlJeu.appliquerEffetsCartes();
 			
+			
+			
 			// Vérifier si la partie est terminée
 			finPartie = controlJeu.verifierFinPartie();
+			
+			if (!finPartie) {
+				finPartie = controlJeu.estNbToursMaxAtteint(nbTour, nbToursMax);
+			}
+			
 			
 			// Défausser les cartes du plateau à la fin du tour
 			controlJeu.defausserCartesPlateau();
@@ -179,6 +191,9 @@ public class BoundaryJeu {
 			// Passer au joueur suivant
 			tourJoueur++;
 			controlJeu.passerAuJoueurSuivant();
+			
+			// Remplir la pioche si elle est vide
+			controlJeu.verifierPiocheNonVide();
 			
 			// Si ce n'est pas la fin de partie, demander si on continue l'itération
 			if (!finPartie && (tourJoueur % 2 == 0)) { // À chaque fin d'itération (après que les deux joueurs ont joué)
@@ -188,6 +203,9 @@ public class BoundaryJeu {
 		
 		// Afficher le résultat final
 		if (finPartie) {
+			if (controlJeu.estNbToursMaxAtteint(nbTour, nbToursMax)) {
+				System.out.println("\n\n\n== Nombre de tours maximum (" + nbToursMax + ") atteint ==");
+			}
 			afficherResultatFinal();
 		} else {
 			System.out.println("\n=== Partie interrompue ===");
