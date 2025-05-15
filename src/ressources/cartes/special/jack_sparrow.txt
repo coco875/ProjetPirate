@@ -1,0 +1,5 @@
+titre: Trésor de Jack Sparrow
+type: tresor
+description: Cette carte permet à Jack Sparrow de gagner 30 pièces d'or.
+or_gagne: 10
+image: src/ressources/cartes/special/jack_sparrow.jpg

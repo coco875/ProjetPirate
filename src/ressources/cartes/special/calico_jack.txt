@@ -1,0 +1,5 @@
+titre: Popularité de Calico Jack
+type: popularite
+description: Cette carte augmente la popularité de Calico Jack de 3 points.
+popularite_gagnee: 3
+image: src/ressources/cartes/special/calico_jack.jpg

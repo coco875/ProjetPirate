@@ -38,7 +38,7 @@ public class PanelPirate extends javax.swing.JPanel {
         try {
             image = ImageIO.read(image_path);
         } catch (IOException io) {
-            System.out.println("Error");
+            System.out.println("Erreur lors du chargement de l'image " + image_path + ": " + io.getMessage());
         }
         
         addMouseListener(new MouseAdapter() {

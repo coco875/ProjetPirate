@@ -117,3 +117,25 @@ A stern pirate captain collecting "taxes" from reluctant crew members on the dec
 A cunning pirate stealthily stealing gold and valuables from another pirate's personal stash, in mature comic book style. The thief carefully reaches into a hidden compartment or bag while the owner is distracted or sleeping nearby. The tension of the moment is clear as the theft is in progress. Moonlight streams through a porthole, creating dramatic lighting. Mature comic book style with detailed rendering of the stolen treasures, the thief's expression of concentration and mischief, and strong contrast between shadows and highlights to enhance the secretive atmosphere.
 ```
 
+## Special Pirate Cards
+
+### Anne Bonny's Healing
+```
+A mature comic book illustration of Anne Bonny, the Irish pirate, receiving medical care on the deck of a ship. She sits determined as a pirate doctor applies a bandage to her arm. Healing potions and medicinal herbs are scattered nearby. The atmosphere is realistic, with strong shadows and a sense of recovery after battle. Mature comic book style, focus on bandages, Anne Bonny's pain and resilience.
+```
+
+### Blackbeard's Attack
+```
+Blackbeard, imposing and menacing, leads a fierce attack on a ship's deck, brandishing a flaming saber. Dramatic lighting highlights his fierce face, braided black beard, and pistols at his belt. Opponents recoil from his powerful assault. Mature comic book style, dynamic lighting effects, and detailed depiction of the violence of the attack.
+```
+
+### Calico Jack's Popularity
+```
+Calico Jack, charismatic and clever, stands at the center of his crew, who cheer and celebrate him. He wears his signature colorful coat and captain's hat. Pirates around him display admiration and respect, some holding up wanted posters or tokens of fame. The scene radiates energy and festivity, with bright colors and details emphasizing Calico Jack's rising popularity and influence among pirates. Mature comic book style, focus on group admiration and the aura of popularity.
+```
+
+### Jack Sparrow's Treasure
+```
+Jack Sparrow, eccentric and cunning, discovers a huge treasure in a secret cave. He holds a pouch overflowing with gold coins, his eyes sparkling with mischief. Around him, open chests, jewels, and artifacts shine in torchlight. The atmosphere is mysterious and opulent, mature comic book style, with dramatic shadows and highlights on the gold and Jack Sparrow's accessories.
+```
+

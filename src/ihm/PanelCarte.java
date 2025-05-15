@@ -51,7 +51,9 @@ public class PanelCarte extends JPanel {
         try {
             String cheminImage = System.getProperty("user.dir") + "/" + carte.getCheminImage();
             image = ImageIO.read(new File(cheminImage));
-        } catch (IOException e) {}
+        } catch (IOException e) {
+            System.out.println("Erreur lors du chargement de l'image " + carte.getCheminImage() + ": " + e.getMessage());
+        }
 
         setOpaque(false);
         setPreferredSize(new Dimension(149, 190));
