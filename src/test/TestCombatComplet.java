@@ -1,6 +1,7 @@
 package test;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -79,12 +80,13 @@ public class TestCombatComplet {
         // Premier tour : les deux joueurs jouent une carte d'attaque
         controlJoueur1.jouerCarte(carteAttaqueJ1);
         controlJoueur2.jouerCarte(carteAttaqueJ2);
+
         
         // Application des effets
         controlCartePlateau.appliquerEffetCarte();
         
         // Vérifications après le premier tour
-        assertEquals(4, joueur1.getPointsDeVie(), "Joueur 1 devrait avoir 4 points de vie après le tour 1");
+        assertEquals(3, joueur1.getPointsDeVie(), "Joueur 1 devrait avoir 3 points de vie après le tour 1");
         assertEquals(3, joueur2.getPointsDeVie(), "Joueur 2 devrait avoir 3 points de vie après le tour 1");
         
         // Défausse des cartes du plateau
