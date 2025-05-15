@@ -300,4 +300,8 @@ public class ControlJeu {
     		reinitialiserPioche();
     	}
     }
+    
+    public boolean estNbToursMaxAtteint(int nbToursJoues, int nbToursMax) {
+    	return nbToursJoues >= nbToursMax;
+    }
 }

@@ -132,8 +132,12 @@ public class BoundaryJeu {
 		boolean finPartie = false;
 		int tourJoueur = 0;
 		boolean continuerIteration = true;
+		int nbTour = 0;
+		int nbToursMax = 20;
 		
 		while (!finPartie && continuerIteration) {
+			nbTour++;
+			
 			// Déterminer le joueur actif
 			ControlJoueur joueurActif = controlJeu.getJoueur(tourJoueur % 2);
 			Joueur j = joueurActif.getJoueur();
@@ -176,6 +180,10 @@ public class BoundaryJeu {
 			// Vérifier si la partie est terminée
 			finPartie = controlJeu.verifierFinPartie();
 			
+			if (!finPartie) {
+				finPartie = controlJeu.estNbToursMaxAtteint(nbTour, nbToursMax);
+			}
+			
 			
 			// Défausser les cartes du plateau à la fin du tour
 			controlJeu.defausserCartesPlateau();
@@ -195,6 +203,9 @@ public class BoundaryJeu {
 		
 		// Afficher le résultat final
 		if (finPartie) {
+			if (controlJeu.estNbToursMaxAtteint(nbTour, nbToursMax)) {
+				System.out.println("\n\n\n== Nombre de tours maximum (" + nbToursMax + ") atteint ==");
+			}
 			afficherResultatFinal();
 		} else {
 			System.out.println("\n=== Partie interrompue ===");
