@@ -13,37 +13,124 @@ sequenceDiagram
 
     participant ControlJeu
     participant ControlCartePlateau
-    participant ControlJoueur1
-    participant ControlJoueur2
-    participant Joueur2
+    participant controlJoueur1
+    participant controlJoueur2
+    participant joueur1
+    participant joueur2
+    participant ControlZoneJoueur
     participant Carte
-    participant Effet 
-    participant CarteOffensive
     participant ZoneOffensive
     
-	Joueur1->>BoundaryJeu: jouer carte (index)
-    BoundaryJeu->>BoundaryJeu: jouerCarte()
+	Joueur1-->>BoundaryJeu: jouer carte (Carte Choisie)
+    BoundaryJeu->>BoundaryJeu: jouerCarte(carteChoisie: Carte)
     activate BoundaryJeu
     BoundaryJeu->>Carte: effetCarte()
     activate Carte
-    Carte-->>BoundaryJeu: effet
+    Carte-->>BoundaryJeu: effet: Carte.EffetCarte
     deactivate Carte
     Note right of BoundaryJeu: BoundaryJeu accède aux <br/>attributs de effet
 
     BoundaryJeu-->>Joueur1: Vous attaquez ! Dégâts infligés : 2
     BoundaryJeu-->>Joueur1: Vous subissez 1 points de dégâts en retour.
 
-    BoundaryJeu->>ControlJeu: ajouterCarteOffensive()
+    BoundaryJeu->>ControlJeu: jouerCarte(carte: Carte)
 
     activate ControlJeu
-    ControlJeu->>ControlCartePlateau: ajouterCarteOffensiveJ1()
+    ControlJeu->>controlJoueur1: joueurCarte(carte: Carte)
 
-    activate ControlCartePlateau
-    ControlCartePlateau->>ZoneOffensive: ajouterCarte()
+    activate controlJoueur1
+    controlJoueur1->>joueur1: getMain()
+    activate joueur1
+    joueur1-->>controlJoueur1: main: List<Carte>
+    deactivate joueur1
+
+    controlJoueur1->>controlJoueur1: main.indexOf(carte: Carte)
+    controlJoueur1->>Carte: getType()
+
+    activate Carte
+    Carte-->>controlJoueur1: TypeCarte.OFFENSIVE
+    deactivate Carte
+
+    controlJoueur1->>ControlZoneJoueur: ajouterCarteOffensive((CarteOffensive)carte : CarteOffensive)
+    
+    activate ControlZoneJoueur
+    ControlZoneJoueur->>ZoneOffensive: ajouterCarte(carte: CarteOffensive)
+    
 
     activate ZoneOffensive
-    ZoneOffensive-->>ControlCartePlateau: 
+    ZoneOffensive->>ZoneOffensive: cartes.add(carte: CarteOffensive)
+    ZoneOffensive-->>ControlZoneJoueur: 
     deactivate ZoneOffensive
+
+    ControlZoneJoueur-->>controlJoueur1: 
+    deactivate ControlZoneJoueur
+
+    controlJoueur1->>joueur1: retirerCarte(carte: Carte)
+
+    activate joueur1
+    joueur1->>joueur1: main.remove(carte: Carte)
+    joueur1-->>controlJoueur1: true
+    deactivate joueur1
+
+    controlJoueur1-->>ControlJeu: true
+    deactivate controlJoueur1
+
+
+    ControlJeu-->>BoundaryJeu: true
+    deactivate ControlJeu
+    
+    
+
+    BoundaryJeu->>ControlJeu: appliquerEffetsCartes()
+
+    activate ControlJeu
+    ControlJeu->>ControlCartePlateau: appliquerEffetCarte()
+
+    activate ControlCartePlateau
+    ControlCartePlateau->>ControlZoneJoueur: getZoneOffensive()
+    
+    activate ControlZoneJoueur
+    ControlZoneJoueur-->>ControlCartePlateau: zoneOffensiveJ1: ZoneOffensive
+    deactivate ControlZoneJoueur
+    
+    ControlCartePlateau->>ZoneOffensive: getCartesOffensives()
+    activate ZoneOffensive
+    ZoneOffensive-->>ControlCartePlateau: cartesStrategique: List<Cartes>
+    deactivate ZoneOffensive
+    
+	loop for carte in cartesOffensives
+		Note right of ControlJeu: Ici une seul itération car une seule carte jouée
+		ControlCartePlateau->>Carte: effetCarte()
+		activate Carte
+		Carte-->>ControlCartePlateau: effet: Carte.EffetCarte
+		deactivate Carte
+
+		ControlCartePlateau->>ControlCartePlateau: appliquerEffetCarte(effet: EffetCarte, <br/>controlJoueur1: ControlJoueur, controlJoueur2: ControlJoueur)
+		ControlCartePlateau->>controlJoueur1: perdrePointsDeVie(effet.degatsSubis)
+
+		activate controlJoueur1
+		controlJoueur1->>joueur1: perdrePointsDeVie(degats: Int)
+
+		activate joueur1
+		joueur1-->>controlJoueur1: 
+		deactivate joueur1
+
+		controlJoueur1-->>ControlCartePlateau: 
+		deactivate controlJoueur1
+		
+		ControlCartePlateau->>controlJoueur2: perdrePointsDeVie(effet.degatsSubis: Int)
+
+		activate controlJoueur2
+		controlJoueur2->>joueur2: perdrePointsDeVie(degats: Int)
+
+		activate joueur2
+		joueur2-->>controlJoueur2: 
+		deactivate joueur2
+
+		controlJoueur2-->>ControlCartePlateau: 
+		deactivate controlJoueur2
+	end
+
 
     ControlCartePlateau-->>ControlJeu: 
     deactivate ControlCartePlateau
@@ -52,44 +139,135 @@ sequenceDiagram
     deactivate ControlJeu
 
     deactivate BoundaryJeu
-
-    activate BoundaryJeu
-    BoundaryJeu->>ControlJeu: appliquerEffetsCartes()
     
+    
+```
+
+
+```mermaid
+sequenceDiagram
+    actor Joueur1
+    participant BoundaryJeu
+    participant ControlJeu
+    participant ControlCartePlateau
+    participant controlJoueur1
+    participant controlJoueur2
+    participant joueur1
+    participant joueur2
+    participant ControlZoneJoueur
+    participant Carte
+    participant ZoneStrategique
+    
+	Joueur1-->>BoundaryJeu: jouer carte (Carte Choisie)
+    BoundaryJeu->>BoundaryJeu: jouerCarte(carteChoisie: Carte)
+    activate BoundaryJeu
+    BoundaryJeu->>Carte: effetCarte()
+    activate Carte
+    Carte-->>BoundaryJeu: effet: Carte.EffetCarte
+    deactivate Carte
+    Note right of BoundaryJeu: BoundaryJeu accède aux <br/>attributs de effet
+
+    BoundaryJeu-->>Joueur1: Vous gagnez en popularité ! Points gagnés : 2
+    BoundaryJeu-->>Joueur1: Vous subissez 1 points de dégâts en retour.
+
+    BoundaryJeu->>ControlJeu: jouerCarte(carte: Carte)
+
     activate ControlJeu
-    ControlJeu->>ControlCartePlateau: appliquerEffetsCartesOffensives()
+    ControlJeu->>controlJoueur1: joueurCarte(carte: Carte)
+
+    activate controlJoueur1
+    controlJoueur1->>joueur1: getMain()
+    activate joueur1
+    joueur1-->>controlJoueur1: main: List<Carte>
+    deactivate joueur1
+
+    controlJoueur1->>controlJoueur1: main.indexOf(carte: Carte)
+    controlJoueur1->>Carte: getType()
+
+    activate Carte
+    Carte-->>controlJoueur1: TypeCarte.STRATEGIQUE
+    deactivate Carte
+
+    controlJoueur1->>ControlZoneJoueur: ajouterCarteStrategique((CarteStrategique)carte : CarteStrategique)
+    
+    activate ControlZoneJoueur
+    ControlZoneJoueur->>ZoneStrategique: ajouterCarte(carte: CarteStrategique)
+    
+
+    activate ZoneStrategique
+    ZoneStrategique->>ZoneStrategique: cartes.add(carte: CarteStrategique)
+    ZoneStrategique-->>ControlZoneJoueur: 
+    deactivate ZoneStrategique
+
+    ControlZoneJoueur-->>controlJoueur1: 
+    deactivate ControlZoneJoueur
+
+    controlJoueur1->>joueur1: retirerCarte(carte: Carte)
+
+    activate joueur1
+    joueur1->>joueur1: main.remove(carte: Carte)
+    joueur1-->>controlJoueur1: true
+    deactivate joueur1
+
+    controlJoueur1-->>ControlJeu: true
+    deactivate controlJoueur1
+
+
+    ControlJeu-->>BoundaryJeu: true
+    deactivate ControlJeu
+    
+    
+
+    BoundaryJeu->>ControlJeu: appliquerEffetsCartes()
+
+    activate ControlJeu
+    ControlJeu->>ControlCartePlateau: appliquerEffetCarte()
 
     activate ControlCartePlateau
+    ControlCartePlateau->>ControlZoneJoueur: getZoneStrategique()
+    
+    activate ControlZoneJoueur
+    ControlZoneJoueur-->>ControlCartePlateau: zoneStrategiqueJ1: ZoneStrategique
+    deactivate ControlZoneJoueur
+    
+    ControlCartePlateau->>ZoneStrategique: getCartesStrategiques()
+    activate ZoneStrategique
+    ZoneStrategique-->>ControlCartePlateau: cartesStrategique: List<Cartes>
+    deactivate ZoneStrategique
+    
+	loop for carte in cartesStrategiques
+		Note right of ControlJeu: Ici une seul itération car une seule carte jouée
+		ControlCartePlateau->>Carte: effetCarte()
+		activate Carte
+		Carte-->>ControlCartePlateau: effet: Carte.EffetCarte
+		deactivate Carte
 
-    loop foreach carte
+		ControlCartePlateau->>ControlCartePlateau: appliquerEffetCarte(effet: EffetCarte, <br/>controlJoueur1: ControlJoueur, controlJoueur2: ControlJoueur)
+		ControlCartePlateau->>controlJoueur1: perdrePointsDeVie(effet.degatsSubis)
 
-        ControlCartePlateau->>ZoneOffensive: getCartesOffensives()
-        activate ZoneOffensive
-        ZoneOffensive-->>ControlCartePlateau: carte
-        deactivate ZoneOffensive
+		activate controlJoueur1
+		controlJoueur1->>joueur1: perdrePointsDeVie(degats: Int)
 
-        ControlCartePlateau->>Carte: effetCarte()
-        activate Carte
-        Carte-->>ControlCartePlateau: effet
-        deactivate Carte
+		activate joueur1
+		joueur1-->>controlJoueur1: 
+		deactivate joueur1
 
-        ControlCartePlateau->>Carte: getTypeOffensif()
-        activate Carte
-        Carte-->>ControlCartePlateau: ATTAQUE
-        deactivate Carte
+		controlJoueur1-->>ControlCartePlateau: 
+		deactivate controlJoueur1
+		
+		ControlCartePlateau->>controlJoueur1: gagnerPopularite(effet.populariteGagnee: Int)
+		
+		activate controlJoueur1
+		controlJoueur1->>joueur1: gagnerPopularite(pointsAGagner: Int)
 
-        Note right of ControlCartePlateau: CCartePlateau accède <br/>aux attributs de effet
-    end
+		activate joueur1
+		joueur1-->>controlJoueur1: 
+		deactivate joueur1
 
-    ControlCartePlateau->>ControlJoueur2: recevoirEffets()
-    activate ControlJoueur2
-    ControlJoueur2->>ControlJoueur2: perdrePointsDeVie()
-    ControlJoueur2->>Joueur2: perdrePointsDeVie()
-    activate Joueur2
-    Joueur2-->>ControlJoueur2: 
-    deactivate Joueur2
-    ControlJoueur2-->>ControlCartePlateau: 
-    deactivate ControlJoueur2
+		controlJoueur1-->>ControlCartePlateau: 
+		deactivate controlJoueur1
+	end
+
 
     ControlCartePlateau-->>ControlJeu: 
     deactivate ControlCartePlateau

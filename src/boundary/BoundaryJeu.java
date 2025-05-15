@@ -178,6 +178,7 @@ public class BoundaryJeu {
 			
 			// Passer au joueur suivant
 			tourJoueur++;
+			controlJeu.passerAuJoueurSuivant();
 			
 			// Si ce n'est pas la fin de partie, demander si on continue l'itération
 			if (!finPartie && (tourJoueur % 2 == 0)) { // À chaque fin d'itération (après que les deux joueurs ont joué)

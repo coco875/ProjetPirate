@@ -29,7 +29,7 @@ public class ParserPirate {
         String nom = fichier.getName().replace(".txt", "");
         String description = "";
         int popularite = 0;
-        Optional<Carte> carteCoupSpeciale = Optional.empty();
+        Optional<Carte> carteCoupSpeciale = null;
         String cheminImage = "images/" + nom + ".jpg"; // Chemin par défaut
         BufferedReader lecteur;
         try {
@@ -74,6 +74,9 @@ public class ParserPirate {
                     descBuilder.append("\n").append(ligne);
                 }
             }
+        }
+        if (carteCoupSpeciale == null) {
+            System.err.println("Aucune carte spéciale trouvée pour le pirate " + nom);
         }
         
         description = descBuilder.toString().trim();

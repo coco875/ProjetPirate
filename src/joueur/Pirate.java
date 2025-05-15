@@ -20,6 +20,7 @@ public class Pirate {
 		this.description = description;
 		this.popularite = popularite;
 		this.vie = vie;
+		this.carteCoupSpeciale = carteCoupSpeciale;
 		this.cheminImage = "images/" + nom.toLowerCase().replaceAll("\\s+", "_") + ".jpg"; // Chemin d'accès par défaut basé sur le nom
 	}
 	
