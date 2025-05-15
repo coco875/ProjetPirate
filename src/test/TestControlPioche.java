@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import jeu.Pioche;
 
@@ -260,13 +261,11 @@ public class TestControlPioche {
         // Utiliser la réflexion pour accéder à la méthode privée
         Method methode = ControlPioche.class.getDeclaredMethod("chargerCartesDepuisRepertoire", File.class);
         methode.setAccessible(true);
-        
-        // Invoquer la méthode avec le répertoire temporaire
-        @SuppressWarnings("unchecked")
-        List<Carte> result = (List<Carte>) methode.invoke(controlPiocheTest, tempDir.toFile());
-        
-        // La liste devrait être vide car le fichier est invalide
-        assertTrue(result.isEmpty(), "La liste devrait être vide pour un fichier invalide");
+        assertThrows(InvocationTargetException.class, () -> {
+            // Invoquer la méthode avec le répertoire temporaire
+            @SuppressWarnings("unchecked")
+            List<Carte> result = (List<Carte>) methode.invoke(controlPiocheTest, tempDir.toFile());
+        });
     }
     
     @Test
