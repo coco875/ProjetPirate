@@ -6,15 +6,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.BeforeEach;
 
 import jeu.ZoneOffensive;
+import carte.CarteAttaque;
+import carte.CarteSoin;
 import carte.CarteOffensive;
-import carte.TypeCarte;
-import carte.CarteOffensive.TypeOffensif;
 
 import java.util.List;
 
 /**
  * Tests pour la classe ZoneOffensive
- *//*
+ */
 public class TestZoneOffensive {
     
     private ZoneOffensive zoneOffensive;
@@ -36,8 +36,8 @@ public class TestZoneOffensive {
     @DisplayName("Test d'ajout de cartes dans la zone offensive")
     public void testAjouterCarte() {
         // Créer quelques cartes de test
-        CarteOffensive carte1 = new CarteOffensive("Épée", "Une épée tranchante", 3, 1, TypeOffensif.ATTAQUE);
-        CarteOffensive carte2 = new CarteOffensive("Potion", "Une potion de soin", 2, 0, TypeOffensif.SOIN);
+        CarteAttaque carte1 = new CarteAttaque("Épée", "Une épée tranchante", 5, 3, 1);
+        CarteSoin carte2 = new CarteSoin("Potion", "Une potion de soin", 3, 2);
         
         // Ajouter les cartes à la zone
         zoneOffensive.ajouterCarte(carte1);
@@ -54,13 +54,14 @@ public class TestZoneOffensive {
     @DisplayName("Test de vidage de la zone offensive")
     public void testViderZone() {
         // Ajouter des cartes à la zone
-        CarteOffensive carte1 = new CarteOffensive("Épée", "Une épée tranchante", 3, 1, TypeOffensif.ATTAQUE);
-        CarteOffensive carte2 = new CarteOffensive("Potion", "Une potion de soin", 2, 0, TypeOffensif.SOIN);
+        CarteAttaque carte1 = new CarteAttaque("Épée", "Une épée tranchante", 5, 3, 1);
+        CarteSoin carte2 = new CarteSoin("Potion", "Une potion de soin", 3, 2);
+        
         zoneOffensive.ajouterCarte(carte1);
         zoneOffensive.ajouterCarte(carte2);
         
-        // Vérifier que la zone n'est pas vide
-        assertFalse(zoneOffensive.getCartesOffensives().isEmpty(), "La zone offensive ne devrait pas être vide");
+        // Vérifier que les cartes sont bien ajoutées
+        assertEquals(2, zoneOffensive.getCartesOffensives().size());
         
         // Vider la zone
         zoneOffensive.viderZone();
@@ -69,4 +70,3 @@ public class TestZoneOffensive {
         assertTrue(zoneOffensive.getCartesOffensives().isEmpty(), "La zone offensive devrait être vide après vidage");
     }
 }
-*/

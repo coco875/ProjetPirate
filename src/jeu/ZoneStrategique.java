@@ -2,8 +2,10 @@ package jeu;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import carte.CarteStrategique;
+import carte.CarteStrategique.TypeStrategique;
 
 /**
  * Zone de jeu pour les cartes stratégiques
@@ -38,5 +40,16 @@ public class ZoneStrategique {
      */
     public void viderZone() {
         cartesStrategiques.clear();
+    }
+    
+    /**
+     * Filtre les cartes par type stratégique
+     * @param type Le type stratégique à filtrer
+     * @return La liste des cartes du type spécifié
+     */
+    public List<CarteStrategique> getCartesParType(TypeStrategique type) {
+        return cartesStrategiques.stream()
+                .filter(carte -> carte.getTypeStrategique() == type)
+                .collect(Collectors.toList());
     }
 }

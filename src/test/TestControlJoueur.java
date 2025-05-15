@@ -21,7 +21,7 @@ import controllers.ControlPioche;
 import joueur.Joueur;
 import joueur.Pirate;
 
-/*
+
 @DisplayName("Tests du contrôleur ControlJoueur")
 public class TestControlJoueur {
     
@@ -887,4 +887,4 @@ public class TestControlJoueur {
         assertEquals(vieInitiale, joueur1.getPointsDeVie(), "Les points de vie ne devraient pas changer");
         assertEquals(popInitiale, joueur1.getPopularite(), "La popularité ne devrait pas changer");
     }
-}*/
+}

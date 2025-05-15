@@ -1,6 +1,5 @@
 package test;
 
-/*
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -9,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import joueur.Joueur;
 import joueur.Pirate;
 import carte.Carte;
+import carte.CarteAttaque;
 import carte.TypeCarte;
 
 import java.util.List;
@@ -21,14 +21,13 @@ public class TestJoueur {
     
     @BeforeEach
     public void initialiser() {
-        pirate = new Pirate("Jack Sparrow", "Capitaine du Black Pearl", 2, 5);
-        joueur = new Joueur("Joueur Test", pirate);
+        pirate = new Pirate("Jack Sparrow");
+        joueur = new Joueur(pirate);
     }
     
     @Test
     @DisplayName("Test de la création d'un joueur")
     public void testCreationJoueur() {
-        assertEquals("Joueur Test", joueur.getNom());
         assertSame(pirate, joueur.getPirate());
         assertEquals(5, joueur.getPointsDeVie());
         assertEquals(0, joueur.getPopularite());
@@ -98,9 +97,9 @@ public class TestJoueur {
     @Test
     @DisplayName("Test de la gestion des cartes en main")
     public void testGestionCartes() {
-        // Créer des cartes de test
-        Carte carte1 = new Carte(TypeCarte.OFFENSIVE, "Épée", "Une épée tranchante", 3, 1, 5);
-        Carte carte2 = new Carte(TypeCarte.STRATEGIQUE, "Potion", "Une potion de soin", 2, 0, 3);
+        // Créer des cartes d'attaque pour le test
+        CarteAttaque carte1 = new CarteAttaque("Épée", "Une épée tranchante", 5, 3, 1);
+        CarteAttaque carte2 = new CarteAttaque("Potion", "Une potion de soin", 3, 0, 0);
         
         // Ajouter des cartes à la main du joueur
         joueur.ajouterCarte(carte1);
@@ -123,6 +122,7 @@ public class TestJoueur {
         // Tenter de retirer une carte inexistante
         resultat = joueur.retirerCarte(carte1);
         assertFalse(resultat);
+        // La taille ne devrait pas changer car la carte n'est plus dans la main
         assertEquals(1, joueur.getNbCartes());
     }
     
@@ -148,4 +148,4 @@ public class TestJoueur {
         joueur.setNbCartes(5);
         assertEquals(5, joueur.getNbCartes());
     }
-}*/
+}
