@@ -31,12 +31,4 @@ public abstract class CarteOffensive extends Carte {
     public TypeOffensif getTypeOffensif() {
         return typeOffensif;
     }
-    
-    public void setTypeOffensif(TypeOffensif typeOffensif) {
-        this.typeOffensif = typeOffensif;
-    }
-    
-    public boolean estTresorOffensif() {
-        return false; // Méthode conservée pour la compatibilité mais renvoie toujours false
-    }
 }

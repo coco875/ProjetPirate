@@ -269,7 +269,6 @@ classDiagram
         + Pirate(String, String, int, int)
         + Pirate(String)
         + getDescription() String
-        + setDescription(String) void
         + getNom() String
         + getCarteCoupSpeciale() CarteCoupSpecial
         + setCarteCoupSpeciale(CarteCoupSpecial) void
@@ -420,7 +419,6 @@ classDiagram
         + fromCarteSoin(CarteSoin) CarteOffensive
         + fromCarteCoupSpecial(CarteCoupSpecial) CarteOffensive
         + getTypeOffensif() TypeOffensif
-        + setTypeOffensif(TypeOffensif) void
         + estJouee() boolean
         + setEstJouee(boolean) void
         + getCoutSpecial() int
@@ -428,7 +426,6 @@ classDiagram
         + estAttaqueDirecte() boolean
         + estCoupSpecial() boolean
         + estSoin() boolean
-        + estTresorOffensif() boolean
         + getDegatsInfliges() int
         + getDegatsSubis() int
         + getVieGagnee() int
@@ -459,7 +456,6 @@ classDiagram
         + getDuree() int
         + getEffetSpecial() String
         + getTypeStrategique() TypeStrategique
-        + setTypeStrategique(TypeStrategique) void
     }
     class TypeStrategique {
         <<enumeration>>

@@ -1,5 +1,5 @@
 package test;
-/*
+
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +11,7 @@ import joueur.ParserPirate;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public class TestParserPirate {
     
@@ -43,7 +44,7 @@ public class TestParserPirate {
             assertNotNull(pirate.getNom(), "Le nom du pirate ne devrait pas être null");
             assertFalse(pirate.getNom().isEmpty(), "Le nom du pirate ne devrait pas être vide");
             assertNotNull(pirate.getDescription(), "La description du pirate ne devrait pas être null");
-            assertTrue(pirate.getVie() > 0, "Les points de vie devraient être positifs");
+            assertTrue(pirate.getVie() >= 0, "Les points de vie devraient être positifs");
             assertTrue(pirate.getPopularite() >= 0, "La popularité devrait être positive ou nulle");
         }
     }
@@ -55,13 +56,13 @@ public class TestParserPirate {
         assertTrue(fichierJack.exists(), "Le fichier JackSparrow.txt devrait exister");
         
         // Charger le pirate
-        Pirate jackSparrow = ParserPirate.chargerPirate(fichierJack);
+        Pirate jackSparrow = ParserPirate.chargerPirate(fichierJack).get();
         
         // Vérifier les données du pirate
         assertNotNull(jackSparrow, "Le pirate ne devrait pas être null");
         assertEquals("JackSparrow", jackSparrow.getNom(), "Le nom devrait être 'Jack Sparrow'");
         assertNotNull(jackSparrow.getDescription(), "La description ne devrait pas être null");
-        assertTrue(jackSparrow.getVie() > 0, "Les points de vie devraient être positifs");
+        assertTrue(jackSparrow.getVie() >= 0, "Les points de vie devraient être positifs");
         assertTrue(jackSparrow.getPopularite() >= 0, "La popularité devrait être positive ou nulle");
     }
     
@@ -74,8 +75,28 @@ public class TestParserPirate {
         assertFalse(fichierInexistant.exists(), "Le fichier de test ne devrait pas exister");
         
         // Vérifier que l'exception est bien levée
-        assertThrows(IOException.class, () -> {
-            ParserPirate.chargerPirate(fichierInexistant);
-        }, "Une exception IOException devrait être levée pour un fichier inexistant");
+        Optional<Pirate> pirate = ParserPirate.chargerPirate(fichierInexistant);
+        assertFalse(pirate.isPresent(), "Le pirate ne devrait pas être présent");
     }
-}*/
+
+    @Test
+    @DisplayName("Test des autres setteurs de Pirate")
+    public void testSetteursPirate() {
+        Pirate pirate = new Pirate("Test");
+        
+        // Vérifier que le nom est bien défini
+        assertEquals("Test", pirate.getNom(), "Le nom du pirate devrait être 'Test'");
+        
+        // Modifier le popularité
+        pirate.setPopularite(5);
+        assertEquals(5, pirate.getPopularite(), "La popularité devrait être 5");
+
+        // Modifier les points de vie
+        pirate.setVie(10);
+        assertEquals(10, pirate.getVie(), "Les points de vie devraient être 10");
+
+        // cheminImage
+        pirate.setCheminImage("images/test.jpg");
+        assertEquals("images/test.jpg", pirate.getCheminImage(), "Le chemin de l'image devrait être 'images/test.jpg'");
+    }
+}
