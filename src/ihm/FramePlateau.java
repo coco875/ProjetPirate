@@ -17,7 +17,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.miginfocom.swing.MigLayout;
 
 /**
  *
@@ -91,13 +90,18 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
     
     private void setupFonts() {
         try {
-            Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/ressources/fonts/xbones.ttf")).deriveFont(30f);
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/ressources/fonts/Pieces_of_Eight.ttf")).deriveFont(30f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);
 
             labelChoixDesPirates.setFont(customFont.deriveFont(80f));
             labelJoueur1.setFont(customFont.deriveFont(40f));
             labelJoueur2.setFont(customFont.deriveFont(40f));
+            boutonValider.setFont(customFont.deriveFont(25f));
+            labelGagnant.setFont(customFont.deriveFont(80f));
+            labelNomPirate1.setFont(customFont.deriveFont(40f));
+            labelNomPirate2.setFont(customFont.deriveFont(40f));
+            
 
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
@@ -158,7 +162,7 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
     
     private void setupDescriptionLabels() {
         try{
-            Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/ressources/fonts/xbones.ttf")).deriveFont(30f);
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/ressources/fonts/Pieces_of_Eight.ttf")).deriveFont(30f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);
             
@@ -216,8 +220,13 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
         
         panelPioche.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
+                ((PanelImage) panelPioche).setGrise(true);
+            }
+            @Override
+            public void mouseReleased(MouseEvent e) {
                 panelPiocheMouseClicked(e);
+                ((PanelImage) panelPioche).setGrise(false);
             }
 
             
@@ -311,6 +320,7 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
         }
         panelInformationsJoueur1.repaint();
         panelInformationsJoueur2.repaint();
+        
     } 
     
     private void setupZones(){
@@ -361,12 +371,12 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
         
         Font customFont;
         try {
-            customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/ressources/fonts/xbones.ttf")).deriveFont(15f);
+            customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/ressources/fonts/Pieces_of_Eight.ttf")).deriveFont(25f);
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(customFont);
-            labelZoneStrategique.setFont(customFont.deriveFont(15f));
-            labelZoneOffensive.setFont(customFont.deriveFont(15f));
-            labelPioche.setFont(customFont.deriveFont(15f));
+            labelZoneStrategique.setFont(customFont.deriveFont(25f));
+            labelZoneOffensive.setFont(customFont.deriveFont(25f));
+            labelPioche.setFont(customFont.deriveFont(25f));
         } catch (FontFormatException ex) {
             Logger.getLogger(PanelZoneCarte.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -378,7 +388,19 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
         panelJeu.add(labelPioche);
     }
     
+    private void setupRecapitulatif() {
+    
+    }
+
+    
+    
     private void setupInformations(){
+        labelNomPirate1.setBounds(720, 750, 200, 50);
+        labelNomPirate2.setBounds(720, 230, 200, 50);
+        
+        labelNomPirate1.setText(controlJeu.getJoueur(0).getPirate().getNom());
+        labelNomPirate2.setText(controlJeu.getJoueur(1).getPirate().getNom());
+        
         panelInformationsJoueur1 = new PanelInformations(controlJeu.getJoueur(0).getJoueur());
         panelInformationsJoueur2 = new PanelInformations(controlJeu.getJoueur(1).getJoueur());
         
@@ -387,6 +409,9 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
         
         panelJeu.add(panelInformationsJoueur1);
         panelJeu.add(panelInformationsJoueur2);
+        
+        panelJeu.add(labelNomPirate1);
+        panelJeu.add(labelNomPirate2);
     }
     
     
@@ -402,11 +427,20 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
     }
     
     private void setupPlateauFin(){
+        
         panelFin = new PanelImage("src/ressources/image_plateau/plateau.jpg");
         panelFin.setOpaque(true);
         panelConteneur.add(panelFin, "panelFin");
         CardLayout c1 = (CardLayout) panelConteneur.getLayout();
         c1.show(panelConteneur, "panelFin");
+        panelFin.setLayout(null);
+        
+        labelGagnant.setHorizontalAlignment(JLabel.CENTER);
+        labelGagnant.setBounds(0, 125, getWidth(), 150);
+        labelGagnant.setText(controlJeu.determinerVainqueur().getPirate().getNom() + " L'EMPORTE !");
+        labelGagnant.setVisible(true);
+        panelFin.add(labelGagnant);
+        setupRecapitulatif();
         panelJeu.revalidate();
         panelJeu.repaint();
     }
@@ -454,6 +488,11 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
         panelInformationsJoueur1 = new javax.swing.JPanel();
         panelInformationsJoueur2 = new javax.swing.JPanel();
         panelFin = new javax.swing.JPanel();
+        labelGagnant = new javax.swing.JLabel();
+        panelRecapitulatifJoueur1 = new javax.swing.JPanel();
+        panelRecapitulatifJoueur2 = new javax.swing.JPanel();
+        labelNomPirate1 = new javax.swing.JLabel();
+        labelNomPirate2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -578,9 +617,9 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
         panelJoueur1Layout.setVerticalGroup(
             panelJoueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelJoueur1Layout.createSequentialGroup()
-                .addContainerGap(20, Short.MAX_VALUE)
+                .addContainerGap(11, Short.MAX_VALUE)
                 .addComponent(labelJoueur1)
-                .addGap(19, 19, 19))
+                .addGap(28, 28, 28))
         );
 
         labelJoueur2.setText("Joueur 2");
@@ -592,14 +631,14 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
             .addGroup(panelJoueur2Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(labelJoueur2)
-                .addContainerGap(47, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
         panelJoueur2Layout.setVerticalGroup(
             panelJoueur2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelJoueur2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(labelJoueur2)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         boutonValider.setText("Valider");
@@ -984,15 +1023,71 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
 
         panelConteneur.add(panelJeu, "card4");
 
+        labelGagnant.setText("jLabel1");
+
+        javax.swing.GroupLayout panelRecapitulatifJoueur1Layout = new javax.swing.GroupLayout(panelRecapitulatifJoueur1);
+        panelRecapitulatifJoueur1.setLayout(panelRecapitulatifJoueur1Layout);
+        panelRecapitulatifJoueur1Layout.setHorizontalGroup(
+            panelRecapitulatifJoueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        panelRecapitulatifJoueur1Layout.setVerticalGroup(
+            panelRecapitulatifJoueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout panelRecapitulatifJoueur2Layout = new javax.swing.GroupLayout(panelRecapitulatifJoueur2);
+        panelRecapitulatifJoueur2.setLayout(panelRecapitulatifJoueur2Layout);
+        panelRecapitulatifJoueur2Layout.setHorizontalGroup(
+            panelRecapitulatifJoueur2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        panelRecapitulatifJoueur2Layout.setVerticalGroup(
+            panelRecapitulatifJoueur2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+
+        labelNomPirate1.setText("labelNomPirate1");
+
+        labelNomPirate2.setText("jLabel2");
+
         javax.swing.GroupLayout panelFinLayout = new javax.swing.GroupLayout(panelFin);
         panelFin.setLayout(panelFinLayout);
         panelFinLayout.setHorizontalGroup(
             panelFinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 579, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFinLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(labelGagnant)
+                .addGap(258, 258, 258))
+            .addGroup(panelFinLayout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addComponent(labelNomPirate1)
+                .addGap(29, 29, 29)
+                .addComponent(panelRecapitulatifJoueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 146, Short.MAX_VALUE)
+                .addComponent(panelRecapitulatifJoueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(84, 84, 84))
+            .addGroup(panelFinLayout.createSequentialGroup()
+                .addGap(62, 62, 62)
+                .addComponent(labelNomPirate2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         panelFinLayout.setVerticalGroup(
             panelFinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 626, Short.MAX_VALUE)
+            .addGroup(panelFinLayout.createSequentialGroup()
+                .addGap(88, 88, 88)
+                .addComponent(labelGagnant)
+                .addGap(157, 157, 157)
+                .addGroup(panelFinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelRecapitulatifJoueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelRecapitulatifJoueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFinLayout.createSequentialGroup()
+                .addGap(132, 132, 132)
+                .addComponent(labelNomPirate2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 174, Short.MAX_VALUE)
+                .addComponent(labelNomPirate1)
+                .addGap(288, 288, 288))
         );
 
         panelConteneur.add(panelFin, "card4");
@@ -1103,8 +1198,11 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
     private javax.swing.JLabel labelChoixDesPirates;
     private javax.swing.JLabel labelDescriptionPirateDroite;
     private javax.swing.JLabel labelDescriptionPirateGauche;
+    private javax.swing.JLabel labelGagnant;
     private javax.swing.JLabel labelJoueur1;
     private javax.swing.JLabel labelJoueur2;
+    private javax.swing.JLabel labelNomPirate1;
+    private javax.swing.JLabel labelNomPirate2;
     private javax.swing.JPanel panelChoix;
     private javax.swing.JPanel panelChoixDesPirates;
     private javax.swing.JPanel panelConteneur;
@@ -1121,6 +1219,8 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
     private javax.swing.JPanel panelPioche;
     private javax.swing.JPanel panelPiratesJoueur1;
     private javax.swing.JPanel panelPiratesJoueur2;
+    private javax.swing.JPanel panelRecapitulatifJoueur1;
+    private javax.swing.JPanel panelRecapitulatifJoueur2;
     private javax.swing.JPanel panelZoneOffensiveJoueur1;
     private javax.swing.JPanel panelZoneOffensiveJoueur2;
     private javax.swing.JPanel panelZoneStrategiqueJoueur1;
