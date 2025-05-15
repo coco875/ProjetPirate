@@ -3,6 +3,8 @@ package test;
 
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 
 import carte.CarteAttaque;
 import carte.CarteOffensive;
@@ -13,28 +15,39 @@ import joueur.Joueur;
 import joueur.Pirate;
 
 public class TestBugDegatsJ2versJ1 {
+    
+    private ControlJeu controlJeu;
+    private ControlJoueur controlJoueur1;
+    private ControlJoueur controlJoueur2;
+    private Joueur joueur1;
+    private Joueur joueur2;
+    private ControlCartePlateau cCartePlateau;
 
-    @Test
-    public void testAttaqueJ2versJ1() {
+    @BeforeEach
+    public void initialiser() {
         // Initialisation
-        ControlJeu controlJeu = new ControlJeu();
+        controlJeu = new ControlJeu();
         Pirate pirate1 = new Pirate("AnneBonny");
         Pirate pirate2 = new Pirate("BarbeNoire");
         
         controlJeu.initialiserJeu(pirate1, pirate2);
         
-        ControlJoueur controlJoueur1 = controlJeu.getJoueur(0);
-        ControlJoueur controlJoueur2 = controlJeu.getJoueur(1);
+        controlJoueur1 = controlJeu.getJoueur(0);
+        controlJoueur2 = controlJeu.getJoueur(1);
         
-        Joueur joueur1 = controlJoueur1.getJoueur();
-        Joueur joueur2 = controlJoueur2.getJoueur();
+        joueur1 = controlJoueur1.getJoueur();
+        joueur2 = controlJoueur2.getJoueur();
         
         // Points de vie initiaux
         joueur1.setVie(5);
         joueur2.setVie(5);
         
-        ControlCartePlateau cCartePlateau = controlJeu.getControlCartePlateau();
-        
+        cCartePlateau = controlJeu.getControlCartePlateau();
+    }
+
+    @Test
+    @DisplayName("Test des dégâts du J2 vers J1")
+    public void testAttaqueJ2versJ1() {
         // Carte d'attaque du joueur 2
         CarteOffensive attaqueJ2 = new CarteAttaque("Canon", "Un puissant canon", 2, 2, 0);
         
@@ -53,38 +66,21 @@ public class TestBugDegatsJ2versJ1 {
     }
 
     @Test
+    @DisplayName("Test d'une partie complète avec plusieurs tours")
     public void testPartieComplete() {
-        // Initialisation
-    	ControlJeu controlJeu = new ControlJeu();
-        Pirate pirate1 = new Pirate("AnneBonny");
-        Pirate pirate2 = new Pirate("BarbeNoire");
-         
-        controlJeu.initialiserJeu(pirate1, pirate2);
-         
-        ControlJoueur controlJoueur1 = controlJeu.getJoueur(0);
-        ControlJoueur controlJoueur2 = controlJeu.getJoueur(1);
-         
-        Joueur joueur1 = controlJoueur1.getJoueur();
-        Joueur joueur2 = controlJoueur2.getJoueur();
-        
-        joueur1.setVie(5);
-        joueur2.setVie(5);
-        
-        ControlCartePlateau cCartePlateau = controlJeu.getControlCartePlateau();
-        
         // Tour 1: attaques des deux côtés
         CarteOffensive attaqueJ1 = new CarteAttaque("Sabre", "Un sabre tranchant", 2, 1, 0);
         CarteOffensive attaqueJ2 = new CarteAttaque("Pistolet", "Un pistolet précis", 2, 2, 0);
         
         //ajout des cartes à la mains des joueurs, sinon jouerCarte renvoie false et ne place pas la carte dans la zoneOffensive
-        controlJoueur1.getJoueur().ajouterCarte(attaqueJ1);
-        controlJoueur2.getJoueur().ajouterCarte(attaqueJ2);
+        joueur1.ajouterCarte(attaqueJ1);
+        joueur2.ajouterCarte(attaqueJ2);
         
     	controlJoueur1.jouerCarte(attaqueJ1);
     	controlJoueur2.jouerCarte(attaqueJ2);
     	
-    	assertEquals(false, cCartePlateau.getZoneJoueur1().getZoneOffensive().getCartesOffensives().isEmpty(), "Le joueur 1 a une zone de carte offensive vide");
-    	assertEquals(false, cCartePlateau.getZoneJoueur2().getZoneOffensive().getCartesOffensives().isEmpty(), "Le joueur 2 a une zone de carte offensive vide");
+    	assertFalse(cCartePlateau.getZoneJoueur1().getZoneOffensive().getCartesOffensives().isEmpty(), "Le joueur 1 a une zone de carte offensive vide");
+    	assertFalse(cCartePlateau.getZoneJoueur2().getZoneOffensive().getCartesOffensives().isEmpty(), "Le joueur 2 a une zone de carte offensive vide");
 
         
         cCartePlateau.appliquerEffetCarte();
@@ -100,7 +96,7 @@ public class TestBugDegatsJ2versJ1 {
         CarteOffensive attaqueJ2Tour2 = new CarteAttaque("Canon", "Un puissant canon", 2, 3, 0);
         
         //ajout des cartes à la mains des joueurs, sinon jouerCarte renvoie false et ne place pas la carte dans la zoneOffensive
-        controlJoueur2.getJoueur().ajouterCarte(attaqueJ2Tour2);
+        joueur2.ajouterCarte(attaqueJ2Tour2);
         
         controlJoueur2.jouerCarte(attaqueJ2Tour2);
         

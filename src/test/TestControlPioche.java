@@ -21,7 +21,7 @@ import jeu.Pioche;
 
 /**
  * Tests pour la classe ControlPioche
- *//*
+ */
 @DisplayName("Tests du contrôleur ControlPioche")
 public class TestControlPioche {
     
@@ -90,10 +90,10 @@ public class TestControlPioche {
             carte = controlPioche.piocher();
             assertNotNull(carte, "Une carte piochée ne devrait pas être null");
             
-            // Vérifier que l'ID de chaque carte est unique
+            // Vérifier que chaque carte est unique (par référence d'objet)
             for (Carte cartePrecedente : cartesPiochees) {
-                assertNotEquals(cartePrecedente.getId(), carte.getId(), 
-                               "Les IDs des cartes devraient être uniques");
+                assertNotSame(cartePrecedente, carte, 
+                               "Chaque carte piochée devrait être un objet distinct");
             }
             
             cartesPiochees.add(carte);
@@ -321,10 +321,10 @@ public class TestControlPioche {
         Carte c = cp.piocher();
         assertNotNull(c, "On devrait pouvoir piocher une carte dans la pioche nouvellement créée");
     }
-    */
+    
     /**
      * Méthode utilitaire pour extraire la pioche d'un ControlPioche à l'aide de la réflexion
-     *//*
+     */
     private List<Carte> extrairePioche(ControlPioche controlPioche) {
         try {
             // Accéder au champ pioche par réflexion
@@ -351,4 +351,4 @@ public class TestControlPioche {
             return new ArrayList<>();
         }
     }
-}*/
+}

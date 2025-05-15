@@ -6,164 +6,133 @@ import org.junit.jupiter.api.DisplayName;
 
 import carte.Carte;
 import carte.CarteAttaque;
-import carte.CarteOffensive;
+import carte.CarteOffensive.TypeOffensif;
 import carte.CarteSoin;
 import carte.TypeCarte;
 
 /**
- * Tests pour la classe CarteOffensive
- *//*
-@DisplayName("Tests pour la classe CarteOffensive")
+ * Tests pour les classes héritant de CarteOffensive
+ * Note: La classe CarteOffensive est maintenant abstraite, ce test utilise les classes concrètes
+ */
+@DisplayName("Tests pour les cartes offensives")
 public class TestCarteOffensive {
     
     @Test
-    @DisplayName("Test de la création d'une carte offensive d'attaque directe")
+    @DisplayName("Test de la création d'une carte d'attaque directe")
     public void testCreationCarteAttaqueDirecte() {
-        CarteOffensive carte = new CarteOffensive("Épée", "Une épée tranchante", 3, 1, CarteOffensive.TypeOffensif.ATTAQUE);
+        CarteAttaque carte = new CarteAttaque("Épée", "Une épée tranchante", 10, 3, 1);
         
         assertEquals("Épée", carte.getNomCarte());
         assertEquals("Une épée tranchante", carte.getDescription());
         assertEquals(TypeCarte.OFFENSIVE, carte.getType());
-        assertEquals(CarteOffensive.TypeOffensif.ATTAQUE, carte.getTypeOffensif());
-        assertEquals(3, carte.getDegatsInfliges());
-        assertEquals(1, carte.getDegatsSubis());
-        assertEquals(0, carte.getVieGagnee());
-        assertEquals(0, carte.getOrGagne());
-        assertFalse(carte.estJouee());
+        assertEquals(TypeOffensif.ATTAQUE, carte.getTypeOffensif());
+        assertEquals(3, carte.effetCarte().degatsInfliges);
+        assertEquals(1, carte.effetCarte().degatsSubis);
     }
     
     @Test
     @DisplayName("Test de la création d'une carte offensive avec coût")
     public void testCreationCarteOffensiveAvecCout() {
-        CarteOffensive carte = new CarteOffensive("Mousquet", "Un mousquet puissant", 4, 2, 
-                                                 CarteOffensive.TypeOffensif.ATTAQUE, 15);
+        CarteAttaque carte = new CarteAttaque("Mousquet", "Un mousquet puissant", 15, 4, 2);
         
         assertEquals("Mousquet", carte.getNomCarte());
         assertEquals("Un mousquet puissant", carte.getDescription());
         assertEquals(TypeCarte.OFFENSIVE, carte.getType());
-        assertEquals(CarteOffensive.TypeOffensif.ATTAQUE, carte.getTypeOffensif());
-        assertEquals(4, carte.getDegatsInfliges());
-        assertEquals(2, carte.getDegatsSubis());
+        assertEquals(TypeOffensif.ATTAQUE, carte.getTypeOffensif());
+        assertEquals(4, carte.effetCarte().degatsInfliges);
+        assertEquals(2, carte.effetCarte().degatsSubis);
         assertEquals(15, carte.getCout());
-        assertFalse(carte.estJouee());
-        assertEquals(0, carte.getCoutSpecial());
     }
     
     @Test
     @DisplayName("Test de la création d'une carte de soin")
     public void testCreationCarteSoin() {
-        CarteOffensive carte = new CarteOffensive("Potion", "Une potion de soin", 5);
+        CarteSoin carte = new CarteSoin("Potion", "Une potion de soin", 5);
         
         assertEquals("Potion", carte.getNomCarte());
         assertEquals("Une potion de soin", carte.getDescription());
         assertEquals(TypeCarte.OFFENSIVE, carte.getType());
-        assertEquals(CarteOffensive.TypeOffensif.SOIN, carte.getTypeOffensif());
-        assertEquals(5, carte.getVieGagnee());
-        // Pour les cartes de soin, la valeur est utilisée pour les soins, donc getDegatsInfliges() renvoie aussi cette valeur
-        assertEquals(5, carte.getDegatsInfliges());
-        assertEquals(0, carte.getDegatsSubis());
-        assertFalse(carte.estJouee());
+        assertEquals(TypeOffensif.SOIN, carte.getTypeOffensif());
+        assertEquals(5, carte.effetCarte().vieGagne);
     }
     
     @Test
     @DisplayName("Test des getters et setters")
     public void testGettersSetters() {
-        CarteOffensive carte = new CarteOffensive("Test", "Carte de test", 1, 1, CarteOffensive.TypeOffensif.ATTAQUE);
+        CarteAttaque carte = new CarteAttaque("Test", "Carte de test", 10, 3, 1);
         
         // Test setters
-        carte.setTypeOffensif(CarteOffensive.TypeOffensif.COUP_SPECIAL);
-        carte.setEstJouee(true);
-        carte.setCoutSpecial(5);
+        carte.setNomCarte("Test modifié");
+        carte.setDescription("Description modifiée");
+        carte.setCout(15);
         
         // Test getters
-        assertEquals(CarteOffensive.TypeOffensif.COUP_SPECIAL, carte.getTypeOffensif());
-        assertTrue(carte.estJouee());
-        assertEquals(5, carte.getCoutSpecial());
+        assertEquals("Test modifié", carte.getNomCarte());
+        assertEquals("Description modifiée", carte.getDescription());
+        assertEquals(15, carte.getCout());
     }
     
     @Test
-    @DisplayName("Test des méthodes de vérification de type")
-    public void testMethodesVerificationType() {
-        CarteOffensive carteAttaque = new CarteOffensive("Épée", "Une épée tranchante", 3, 1, CarteOffensive.TypeOffensif.ATTAQUE);
-        CarteOffensive carteSoin = new CarteOffensive("Potion", "Une potion de soin", 5);
+    @DisplayName("Test des types de cartes offensives")
+    public void testTypesCarteOffensive() {
+        CarteAttaque carteAttaque = new CarteAttaque("Épée", "Une épée tranchante", 10, 3, 1);
+        CarteSoin carteSoin = new CarteSoin("Potion", "Une potion de soin", 5);
         
         // Tests pour carte Attaque
-        assertTrue(carteAttaque.estAttaqueDirecte());
-        assertFalse(carteAttaque.estSoin());
-        assertFalse(carteAttaque.estTresorOffensif());
+        assertEquals(TypeOffensif.ATTAQUE, carteAttaque.getTypeOffensif());
         
         // Tests pour carte Soin
-        assertFalse(carteSoin.estAttaqueDirecte());
-        assertTrue(carteSoin.estSoin());
-        assertFalse(carteSoin.estTresorOffensif());
+        assertEquals(TypeOffensif.SOIN, carteSoin.getTypeOffensif());
     }
     
     @Test
     @DisplayName("Test de la méthode effetCarte pour carte d'attaque directe")
     public void testEffetCarteAttaqueDirecte() {
-        CarteOffensive carte = new CarteOffensive("Épée", "Une épée tranchante", 3, 1, CarteOffensive.TypeOffensif.ATTAQUE);
+        CarteAttaque carte = new CarteAttaque("Épée", "Une épée tranchante", 10, 3, 1);
         
         Carte.EffetCarte effet = carte.effetCarte();
         
         assertEquals(3, effet.degatsInfliges);
         assertEquals(1, effet.degatsSubis);
-        assertTrue(effet.estAttaque);
-        assertFalse(effet.estSoin);
-        assertFalse(effet.estSpeciale);
-        assertEquals(0, effet.orGagne);
-        assertEquals(0, effet.orPerdu);
     }
     
     @Test
     @DisplayName("Test de la méthode effetCarte pour carte de soin")
     public void testEffetCarteSoin() {
-        CarteOffensive carte = new CarteOffensive("Potion", "Une potion de soin", 5);
+        CarteSoin carte = new CarteSoin("Potion", "Une potion de soin", 5);
         
         Carte.EffetCarte effet = carte.effetCarte();
         
-        assertEquals(5, effet.vieGagnee);
-        assertTrue(effet.estSoin);
-        assertFalse(effet.estAttaque);
-        assertFalse(effet.estSpeciale);
-        assertEquals(0, effet.orGagne);
-        assertEquals(0, effet.orPerdu);
+        assertEquals(5, effet.vieGagne);
+        assertEquals(0, effet.degatsInfliges);
+        assertEquals(0, effet.degatsSubis);
     }
     
     @Test
-    @DisplayName("Test de la méthode toString pour carte d'attaque")
-    public void testToStringAttaqueDirecte() {
-        CarteOffensive carte = new CarteOffensive("Épée", "Une épée tranchante", 3, 1, CarteOffensive.TypeOffensif.ATTAQUE);
+    @DisplayName("Test de la méthode toString")
+    public void testToString() {
+        // Test toString pour carte d'attaque
+        CarteAttaque carteAttaque = new CarteAttaque("Épée", "Une épée tranchante", 10, 3, 1);
+        String descriptionAttaque = carteAttaque.toString();
         
-        String description = carte.toString();
+        assertTrue(descriptionAttaque.contains("Épée"));
+        assertTrue(descriptionAttaque.contains("Une épée tranchante"));
         
-        assertTrue(description.contains("Épée"));
-        assertTrue(description.contains("Une épée tranchante"));
-        assertTrue(description.contains("Dégâts infligés: 3"));
-        assertTrue(description.contains("Dégâts subis: 1"));
+        // Test toString pour carte de soin
+        CarteSoin carteSoin = new CarteSoin("Potion", "Une potion de soin", 5);
+        String descriptionSoin = carteSoin.toString();
+        
+        assertTrue(descriptionSoin.contains("Potion"));
+        assertTrue(descriptionSoin.contains("Une potion de soin"));
     }
     
     @Test
-    @DisplayName("Test de la méthode toString pour carte de soin")
-    public void testToStringSoin() {
-        CarteOffensive carte = new CarteOffensive("Potion", "Une potion de soin", 5);
+    @DisplayName("Test de l'unicité des instances")
+    public void testInstancesUniques() {
+        CarteAttaque carte1 = new CarteAttaque("Carte 1", "Description 1", 10, 1, 0);
+        CarteAttaque carte2 = new CarteAttaque("Carte 2", "Description 2", 10, 1, 0);
         
-        String description = carte.toString();
-        
-        assertTrue(description.contains("Potion"));
-        assertTrue(description.contains("Une potion de soin"));
-        assertTrue(description.contains("Vie gagnée: 5"));
+        // Vérifier que ce sont des instances différentes
+        assertNotSame(carte1, carte2);
     }
-    
-    @Test
-    @DisplayName("Test de la méthode toString pour coup spécial")
-    public void testToStringCoupSpecial() {
-        CarteOffensive carte = new CarteOffensive("Frappe Éclair", "Une attaque spéciale", 4, 2);
-        
-        String description = carte.toString();
-        
-        assertTrue(description.contains("Frappe Éclair"));
-        assertTrue(description.contains("Une attaque spéciale"));
-        assertTrue(description.contains("Valeur: 4"));
-        assertTrue(description.contains("Coût spécial: 2"));
-    }
-}*/
+}
