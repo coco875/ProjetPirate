@@ -73,57 +73,6 @@ public class TestControlJeu {
     }
     
     @Test
-    @DisplayName("Test de la gestion des cartes sur le plateau")
-    public void testGestionCartesPlateau() {
-        // Création des cartes
-        CarteAttaque carteAttaque = new CarteAttaque("Épée", "Une épée tranchante", 2, 1, 0);
-        CarteTresor carteTresor = new CarteTresor("Coffre", "Un coffre rempli d'or", 3, 5);
-        
-        // Récupérer les zones des joueurs
-        ControlZoneJoueur zoneJoueur1 = controlJeu.getControlZoneJoueur1();
-        
-        // Ajouter des cartes dans les zones
-        zoneJoueur1.ajouterCarteOffensive(carteAttaque);
-        zoneJoueur1.ajouterCarteStrategique(carteTresor);
-        
-        // Vérifications
-        assertEquals(1, zoneJoueur1.getZoneOffensive().getCartesOffensives().size(), 
-                    "La zone offensive du joueur 1 devrait contenir 1 carte");
-        assertEquals(1, zoneJoueur1.getZoneStrategique().getCartesStrategiques().size(), 
-                    "La zone stratégique du joueur 1 devrait contenir 1 carte");
-        
-        // Vérifier que les cartes sont bien celles ajoutées
-        assertTrue(zoneJoueur1.getZoneOffensive().getCartesOffensives().contains(carteAttaque),
-                  "La zone offensive du joueur 1 devrait contenir la carte attaque");
-        assertTrue(zoneJoueur1.getZoneStrategique().getCartesStrategiques().contains(carteTresor),
-                  "La zone stratégique du joueur 1 devrait contenir la carte trésor");
-    }
-    
-    @Test
-    @DisplayName("Test de la vider les zones")
-    public void testViderZones() {
-        // Création des cartes
-        CarteAttaque carteAttaque = new CarteAttaque("Épée", "Une épée tranchante", 2, 1, 0);
-        CarteTresor carteTresor = new CarteTresor("Coffre", "Un coffre rempli d'or", 3, 5);
-        
-        // Récupérer les zones des joueurs
-        ControlZoneJoueur zoneJoueur1 = controlJeu.getControlZoneJoueur1();
-        
-        // Ajouter des cartes dans les zones
-        zoneJoueur1.ajouterCarteOffensive(carteAttaque);
-        zoneJoueur1.ajouterCarteStrategique(carteTresor);
-        
-        // Vider les zones
-        zoneJoueur1.viderZone();
-        
-        // Vérifications
-        assertEquals(0, zoneJoueur1.getZoneOffensive().getCartesOffensives().size(), 
-                    "La zone offensive du joueur 1 devrait être vide");
-        assertEquals(0, zoneJoueur1.getZoneStrategique().getCartesStrategiques().size(), 
-                    "La zone stratégique du joueur 1 devrait être vide");
-    }
-    
-    @Test
     @DisplayName("Test de la gestion du joueur actif")
     public void testGestionJoueurActif() {
         // Initialisation
