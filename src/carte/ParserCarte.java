@@ -6,15 +6,68 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+
+
+
 /**
  * Classe pour charger les cartes depuis des fichiers texte
  */
 public class ParserCarte {
+	
+	private static Map<String, FabriqueCarte> registryCartes; //type:constructeur
+	
+	@FunctionalInterface
+	public interface FabriqueCarte {
+	    Carte creer(String nomCarte, String description, int cout, Map<String, String> properties);
+	}
+	
+	public static void initialiserRegistry() {
+	    registryCartes = new HashMap<>();
+
+	    // Pour CarteAttaque : valeurs[0] = degâts infligés, valeurs[1] = subis
+	    registryCartes.put("attaque",
+	        (nom, desc, cout, properties) ->
+	            new CarteAttaque(nom, desc, cout, Integer.parseInt(properties.getOrDefault("degats_infliges", "0")), Integer.parseInt(properties.getOrDefault("degats_subis", "0")))
+	    );
+
+	    // Pour CarteSoin : valeurs[0] = points de soin
+	    registryCartes.put("soin",
+	        (nom, desc, cout, properties) ->
+	            new CarteSoin(nom, desc, cout, Integer.parseInt(properties.getOrDefault("vie_gagnee", "0")))
+	    );
+	    
+	    // Pour CarteTresor : valeurs[0] = or gagné
+	    registryCartes.put("tresor",
+	        (nom, desc, cout, properties) ->
+	            new CarteTresor(nom, desc, cout, Integer.parseInt(properties.getOrDefault("or_gagne", "0")))
+	    );
+	    
+	    // Pour CartePopularite : valeurs[0] = pop gagnée, valeurs[1] = potentiels dégats subis
+	    registryCartes.put("popularite",
+	        (nom, desc, cout, properties) ->
+	            new CartePopularite(nom, desc, cout, Integer.parseInt(properties.getOrDefault("popularite_gagnee", "0")), Integer.parseInt(properties.getOrDefault("degats_subis", "0")))
+	    );
+	       
+	}
+	
+	
+	public static Carte creerCarte(String type, String nom, String desc, int cout, Map<String, String> properties) {
+	    FabriqueCarte fabrique = registryCartes.get(type);
+	    if (fabrique == null) {
+	        throw new IllegalArgumentException("Type inconnu : " + type);
+	    }
+	    return fabrique.creer(nom, desc, cout, properties);
+	}
+	
+	
+	
     /**
      * Lit une carte depuis un fichier texte formaté
      */
     public static Optional<Carte> lireCarte(String filePath) {
         Map<String, String> properties = new HashMap<>();
+        
+        initialiserRegistry();
         
         try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
@@ -43,35 +96,8 @@ public class ParserCarte {
         String description = properties.getOrDefault("description", "");
         int cout = Integer.parseInt(properties.getOrDefault("cout", "10"));
         // Création de la carte selon son type
-        Carte carte = null;
+        Carte carte = creerCarte(type, titre, description, cout, properties);
         
-        switch (type) {
-            case "attaque":
-                int degatsInfliges = Integer.parseInt(properties.getOrDefault("degats_infliges", "0"));
-                int degatsSubisAttaque = Integer.parseInt(properties.getOrDefault("degats_subis", "0"));
-                
-                // Carte offensive d'attaque directe
-                carte = new CarteAttaque(titre, description, cout, degatsInfliges, degatsSubisAttaque);
-                break;
-                
-            case "soin":
-                int vieGagnee = Integer.parseInt(properties.getOrDefault("vie_gagnee", "0"));
-                carte = new CarteSoin(titre, description, cout, vieGagnee);
-                break;
-
-            case "popularite":
-                int populariteGagnee = Integer.parseInt(properties.getOrDefault("popularite_gagnee", "0"));
-                int degatsSubisPop = Integer.parseInt(properties.getOrDefault("degats_subis", "0"));
-                carte = new CartePopularite(titre, description, cout, populariteGagnee, degatsSubisPop);
-                break;
-
-            case "tresor":
-                int orGagne = Integer.parseInt(properties.getOrDefault("or_gagne", "0"));
-                carte = new CarteTresor(titre, description, cout, orGagne);
-                break;
-            default:
-                System.err.println("Type de carte inconnu: " + type + " dans " + filePath);
-        }
         return Optional.ofNullable(carte);
     }
 }

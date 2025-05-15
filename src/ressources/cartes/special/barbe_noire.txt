@@ -1,0 +1,6 @@
+titre: Attaque de Barbe Noire
+type: attaque
+description: Cette carte permet à Barbe Noire d'infliger 3 points de dégâts à un adversaire.
+
+degats_infliges: 3
+image: src/ressources/cartes/special/barbe_noire.jpg

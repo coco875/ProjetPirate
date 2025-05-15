@@ -1,0 +1,4 @@
+titre: Soin d'Anne Bonny
+type: soin
+description: Cette carte permet à Anne Bonny de regagner 3 points de vie.
+vie_gagnee: 3
