@@ -41,11 +41,14 @@ public class PanelPirate extends javax.swing.JPanel {
             System.out.println("Erreur lors du chargement de l'image " + image_path + ": " + io.getMessage());
         }
         
+        
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 if(!estClique){
                     setBorder(new LineBorder(Color.ORANGE, 10));
+                    
+                
                 }
                  
                 repaint();
@@ -73,7 +76,6 @@ public class PanelPirate extends javax.swing.JPanel {
                     }
                     selectedRight = PanelPirate.this;
                 }
-
                 setSelection();
                 updateDescriptionLabels();
                 notifySelectionState();
@@ -84,6 +86,7 @@ public class PanelPirate extends javax.swing.JPanel {
         });
     }
     
+   
     public static void setupLabelsDescription(JLabel leftLabel, JLabel rightLabel) {
         leftDescriptionLabel = leftLabel;
         rightDescriptionLabel = rightLabel;
@@ -96,10 +99,10 @@ public class PanelPirate extends javax.swing.JPanel {
     private static void updateDescriptionLabels() {
         SwingUtilities.invokeLater(() -> {
             if (selectedLeft != null && leftDescriptionLabel != null) {
-                leftDescriptionLabel.setText("<html>" + selectedLeft.getDescription() + "</html>");
+                leftDescriptionLabel.setText("<html>" + selectedLeft.getDescription().replace("\r\n", "<br>").replace("\n", "<br>") + "</html>");
             }
             if (selectedRight != null && rightDescriptionLabel != null) {
-                rightDescriptionLabel.setText("<html>" + selectedRight.getDescription() + "</html>");
+                rightDescriptionLabel.setText("<html>" + selectedRight.getDescription().replace("\r\n", "<br>").replace("\n", "<br>") + "</html>");
             }
         });
     }

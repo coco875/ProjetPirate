@@ -38,6 +38,7 @@ public class PanelImage extends javax.swing.JPanel {
     }
     public void setGrise(boolean grise){
         this.grise = grise;
+        repaint();
     }
     /*
     @Override
