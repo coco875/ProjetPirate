@@ -266,7 +266,7 @@ public class BoundaryJeu {
 		System.out.println("\n=== Fin de la partie ===");
 		
 		if (vainqueur != null) {
-			System.out.println("Le vainqueur est : " + vainqueur.getNom() + " (" + vainqueur.getPersonnage().getNom() + ")");
+			System.out.println("Le vainqueur est : " + vainqueur.getNom() + " (" + vainqueur.getNom() + ")");
 		} else {
 			System.out.println("Match nul !");
 		}
@@ -274,7 +274,7 @@ public class BoundaryJeu {
 		// Afficher les statistiques des joueurs
 		for (int i = 0; i < 2; i++) {
 			Joueur j = controlJeu.getJoueur(i).getJoueur();
-			System.out.println(j.getNom() + " (" + j.getPersonnage().getNom() + "):");
+			System.out.println(j.getNom() + " (" + j.getNom() + "):");
 			System.out.println("  Vie: " + j.getPointsDeVie() + "/5");
 			System.out.println("  Popularité: " + j.getPopularite() + "/5");
 			System.out.println("  Or: " + j.getOr());

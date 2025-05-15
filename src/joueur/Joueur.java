@@ -136,12 +136,6 @@ public class Joueur {
 		this.or += montant;
 	}
 	
-	/**
-	 * Méthode pour accéder au personnage (pour compatibilité)
-	 */
-	public Pirate getPersonnage() {
-		return this.pirate;
-	}
 	
 	// Méthodes de gestion de la main
 	
