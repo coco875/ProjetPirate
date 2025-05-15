@@ -1,0 +1,328 @@
+@startuml ProjetPirate
+!pragma layout smetana
+
+' Déclaration des classes
+class Jeu {
+    - pioche : Pioche
+    - zonesOffensives : List<ZoneOffensive>
+    - zonesStrategiques : List<ZoneStrategique>
+    + demarrerJeu() : void
+    + terminerJeu() : void
+}
+
+class Pioche {
+    - cartes : List<Carte>
+    + piocher() : Carte
+    + melanger() : void
+}
+
+class ZoneOffensive {
+    - cartes : List<Carte>
+    + ajouterCarte(carte : Carte) : void
+    + retirerCarte(carte : Carte) : void
+}
+
+class ZoneStrategique {
+    - cartes : List<Carte>
+    + ajouterCarte(carte : Carte) : void
+    + retirerCarte(carte : Carte) : void
+}
+
+class Joueur {
+    - nom : String
+    - score : int
+    + jouerCarte(carte : Carte) : void
+    + passerTour() : void
+}
+
+class Pirate {
+    - nom : String
+    - force : int
+    + attaquer() : void
+    + defendre() : void
+}
+
+abstract class Carte {
+    - type : TypeCarte
+    - nomCarte : String
+    - description : String
+    - cout : int
+    --
+    + Carte(type : TypeCarte, nomCarte : String, description : String, cout : int)
+    + Carte(type : TypeCarte, nomCarte : String, description : String)
+    + getNomCarte() : String
+    + setNomCarte(nomCarte : String) : void
+    + getDescription() : String
+    + setDescription(description : String) : void
+    + getCout() : int
+    + setCout(cout : int) : void
+    + getType() : TypeCarte
+    + effetCarte() : EffetCarte {abstract}
+    + toString() : String
+    + getDegatsInfliges() : int
+    + getDegatsSubis() : int
+    + getPopulariteGagnee() : int
+    + getVieGagne() : int
+    + getOrGagne() : int
+    + getCheminImage() : String {abstract}
+}
+
+' Classe abstraite CarteOffensive
+abstract class CarteOffensive extends Carte {
+    - typeOffensif : TypeOffensif
+    --
+    + CarteOffensive(nomCarte : String, description : String, typeOffensif : TypeOffensif, cout : int)
+    + CarteOffensive(nomCarte : String, description : String, typeOffensif : TypeOffensif)
+    + getTypeOffensif() : TypeOffensif
+    + setTypeOffensif(typeOffensif : TypeOffensif) : void
+    + estTresorOffensif() : boolean
+}
+
+' Classe CarteAttaque
+class CarteAttaque extends CarteOffensive {
+    - degatsInfliges : int
+    - degatsSubis : int
+    --
+    + CarteAttaque(nomCarte : String, description : String, cout : int, degatsInfliges : int, degatsSubis : int)
+    + CarteAttaque(nomCarte : String, description : String, degatsInfliges : int, degatsSubis : int)
+    + effetCarte() : EffetCarte
+    + getCheminImage() : String
+}
+
+' Classe CarteSoin
+class CarteSoin extends CarteOffensive {
+    - vieGagne : int
+    --
+    + CarteSoin(nomCarte : String, description : String, cout : int, pointsDeSoin : int)
+    + CarteSoin(nomCarte : String, description : String, pointsDeSoin : int)
+    + effetCarte() : EffetCarte
+    + getCheminImage() : String
+}
+
+' Classe abstraite CarteStrategique
+abstract class CarteStrategique extends Carte {
+    - typeStrategique : TypeStrategique
+    --
+    + CarteStrategique(nomCarte : String, description : String, typeStrategique : TypeStrategique, cout : int)
+    + CarteStrategique(nomCarte : String, description : String, typeStrategique : TypeStrategique)
+    + getTypeStrategique() : TypeStrategique
+    + setTypeStrategique(typeStrategique : TypeStrategique) : void
+    + estPopularite() : boolean
+    + estTresor() : boolean
+}
+
+' Classe CartePopularite
+class CartePopularite extends CarteStrategique {
+    - populariteGagnee : int
+    - degatsSubis : int
+    --
+    + CartePopularite(nomCarte : String, description : String, cout : int, populariteGagnee : int, degatsSubis : int)
+    + CartePopularite(nomCarte : String, description : String, populariteGagnee : int, degatsSubis : int)
+    + effetCarte() : EffetCarte
+    + getCheminImage() : String
+}
+
+' Classe CarteTresor
+class CarteTresor extends CarteStrategique {
+    - orGagne : int
+    --
+    + CarteTresor(nomCarte : String, description : String, cout : int, orGagne : int)
+    + CarteTresor(nomCarte : String, description : String, orGagne : int)
+    + effetCarte() : EffetCarte
+    + getCheminImage() : String
+}
+
+' Classe Marche
+class Marche {
+    - cartesDisponibles : List<Carte>
+    --
+    + Marche()
+    + ajouterCarte(carte : Carte) : void
+    + getCartesDisponibles() : List<Carte>
+    + afficherMarche() : void
+}
+
+
+' Enum TypeCarte
+enum TypeCarte {
+    OFFENSIVE
+    STRATEGIQUE
+}
+
+' Enum TypeOffensif
+enum TypeOffensif {
+    ATTAQUE
+    SOIN
+}
+
+' Enum TypeStrategique
+enum TypeStrategique {
+    POPULARITE
+    TRESOR
+}
+
+' Classe ControlJeu
+class ControlJeu {
+    - jeu : Jeu
+    - controlPioche : ControlPioche
+    - controlCartePlateau : ControlCartePlateau
+    - controlMarche : ControlMarche
+    - controlJoueurs : ControlJoueur[2]
+    - joueurActif : int
+    - controlZoneJoueur1 : ControlZoneJoueur
+    - controlZoneJoueur2 : ControlZoneJoueur
+    --
+    + ControlJeu()
+    + initialiserJeu(pirate1 : Pirate, pirate2 : Pirate) : void
+    + distribuerCartesInitiales() : void
+    + appliquerEffetsCartes() : void
+    + defausserCartesPlateau() : void
+    + verifierFinPartie() : boolean
+    + determinerVainqueur() : Joueur
+    + passerAuJoueurSuivant() : void
+    + setJoueurActif(index : int) : void
+    + getJoueurActif() : int
+    + piocherCarte() : Carte
+    + jouerCarte(carte : Carte) : boolean
+    + defausserCarte(indexCarte : int) : boolean
+    + getControlCartePlateau() : ControlCartePlateau
+    + getControlMarche() : ControlMarche
+    + getControlPioche() : ControlPioche
+    + getJoueur(index : int) : ControlJoueur
+}
+
+' Classe ControlJoueur
+class ControlJoueur {
+    - joueur : Joueur
+    - controlPioche : ControlPioche
+    - controlZoneJoueur : ControlZoneJoueur
+    --
+    + ControlJoueur(joueur : Joueur, controlPioche : ControlPioche, controlZoneJoueur : ControlZoneJoueur)
+    + initialiserMain() : void
+    + piocher() : Carte
+    + jouerCarte(indexCarte : int) : boolean
+    + jouerCarte(carte : Carte) : boolean
+    + defausserCarte(indexCarte : int) : boolean
+    + perdrePointsDeVie(points : int) : void
+    + gagnerPointsDeVie(points : int) : void
+    + perdrePopularite(points : int) : void
+    + gagnerPopularite(points : int) : void
+    + perdreOr(montant : int) : boolean
+    + gagnerOr(montant : int) : void
+    + getMain() : List<Carte>
+    + getJoueur() : Joueur
+}
+
+' Classe ControlCartePlateau
+class ControlCartePlateau {
+    - zoneJoueur1 : ControlZoneJoueur
+    - zoneJoueur2 : ControlZoneJoueur
+    - controlJoueur1 : ControlJoueur
+    - controlJoueur2 : ControlJoueur
+    --
+    + ControlCartePlateau(controlJoueur1 : ControlJoueur, controlJoueur2 : ControlJoueur, zoneJoueur1 : ControlZoneJoueur, zoneJoueur2 : ControlZoneJoueur)
+    + setJoueurs(controlJoueur1 : ControlJoueur, controlJoueur2 : ControlJoueur) : void
+    + appliquerEffetCarte() : void
+    + defausserCartesPlateau() : void
+}
+
+' Classe ControlMarche
+class ControlMarche {
+    - marche : Marche
+    - controlJoueur1 : ControlJoueur
+    - controlJoueur2 : ControlJoueur
+    - controlPioche : ControlPioche
+    - controlJeu : ControlJeu
+    --
+    + ControlMarche(controlJoueur1 : ControlJoueur, controlJoueur2 : ControlJoueur, controlPioche : ControlPioche, controlJeu : ControlJeu)
+    + rafraichirMarche() : void
+    + getCartesDisponibles() : List<Carte>
+    + acheterCarte(indexCarte : int) : boolean
+}
+
+' Classe ControlPioche
+class ControlPioche {
+    - pioche : Pioche
+    --
+    + ControlPioche()
+    + initialiserPioche() : void
+    + piocher() : Carte
+    + estVide() : boolean
+}
+
+' Classe ControlZoneJoueur
+class ControlZoneJoueur {
+    - zoneOffensive : ZoneOffensive
+    - zoneStrategique : ZoneStrategique
+    --
+    + ControlZoneJoueur(zoneOffensive : ZoneOffensive, zoneStrategique : ZoneStrategique)
+    + ajouterCarteOffensive(carte : CarteOffensive) : void
+    + ajouterCarteStrategique(carte : CarteStrategique) : void
+    + viderZone() : void
+    + getZoneOffensive() : ZoneOffensive
+    + getZoneStrategique() : ZoneStrategique
+}
+
+class BoundaryJeu {
+    - controlJeu : ControlJeu
+    - scan : Scanner
+    - controlMarche : ControlMarche
+    --
+    + BoundaryJeu(controlJeu : ControlJeu, controlMarche : ControlMarche)
+    + afficherMessage() : void
+    + lancerJeu() : void
+    + afficherRegles() : void
+    + demarrerJeu() : void
+    + jouerPartie() : void
+    + fermer() : void
+    --
+    # demanderPirate(numeroJoueur : int) : Pirate
+    + static getPiratesDisponibles() : List<Pirate>
+    --
+    - demanderContinuerIteration() : boolean
+    - jouerCarte(carte : Carte) : void
+    - afficherResultatFinal() : void
+}
+
+Jeu "1" *-- "1" Pioche
+Jeu "1" *-- "0..*" ZoneOffensive
+Jeu "1" *-- "0..*" ZoneStrategique
+
+ControlJeu "1" *-- "1" Jeu
+ControlJeu "1" *-- "1" ControlPioche
+ControlJeu "1" *-- "1" ControlCartePlateau
+ControlJeu "1" *-- "1" ControlMarche
+ControlJeu "1" *-- "2" ControlJoueur
+ControlJeu "1" *-- "1" ControlZoneJoueur
+
+ControlJoueur "1" *-- "1" Joueur
+ControlJoueur "1" *-- "1" ControlPioche
+ControlJoueur "1" *-- "1" ControlZoneJoueur
+
+ControlCartePlateau "1" *-- "1" ControlZoneJoueur
+ControlCartePlateau "1" *-- "2" ControlJoueur
+
+ControlMarche "1" *-- "1" Marche
+ControlMarche "1" *-- "2" ControlJoueur
+ControlMarche "1" *-- "1" ControlPioche
+ControlMarche "1" *-- "1" ControlJeu
+
+ControlPioche "1" *-- "1" Pioche
+
+ControlZoneJoueur "1" *-- "1" ZoneOffensive
+ControlZoneJoueur "1" *-- "1" ZoneStrategique
+
+BoundaryJeu "1" *-- "1" ControlJeu
+BoundaryJeu "1" *-- "1" ControlMarche
+
+Carte <|-- CarteOffensive
+Carte <|-- CarteStrategique
+CarteOffensive <|-- CarteAttaque
+CarteOffensive <|-- CarteSoin
+CarteStrategique <|-- CartePopularite
+CarteStrategique <|-- CarteTresor
+
+Marche "1" *-- "0..*" Carte
+
+
+@enduml
