@@ -10,6 +10,7 @@ import carte.CarteStrategique;
 import controllers.ControlJeu;
 import controllers.ControlJoueur;
 import controllers.ControlMarche;
+import controllers.ControlPioche;
 import joueur.Joueur;
 import joueur.Pirate;
 import joueur.ParserPirate;
@@ -170,8 +171,11 @@ public class BoundaryJeu {
 			// Appliquer les effets des cartes sur le plateau
 			controlJeu.appliquerEffetsCartes();
 			
+			
+			
 			// Vérifier si la partie est terminée
 			finPartie = controlJeu.verifierFinPartie();
+			
 			
 			// Défausser les cartes du plateau à la fin du tour
 			controlJeu.defausserCartesPlateau();
@@ -179,6 +183,9 @@ public class BoundaryJeu {
 			// Passer au joueur suivant
 			tourJoueur++;
 			controlJeu.passerAuJoueurSuivant();
+			
+			// Remplir la pioche si elle est vide
+			controlJeu.verifierPiocheNonVide();
 			
 			// Si ce n'est pas la fin de partie, demander si on continue l'itération
 			if (!finPartie && (tourJoueur % 2 == 0)) { // À chaque fin d'itération (après que les deux joueurs ont joué)

@@ -127,8 +127,7 @@ public class ControlJeu {
             }
         }
         
-        // Vérifier si la pioche est vide
-        return controlPioche.estVide();
+        return false;
     }
     
     /**
@@ -286,5 +285,19 @@ public class ControlJeu {
             return controlJoueurs[joueurActif].defausserCarte(indexCarte);
         }
         return false;
+    }
+    
+    public boolean estPiocheVide() {
+    	return controlPioche.estVide();
+    }
+    
+    public void reinitialiserPioche() {
+    	controlPioche.initialiserPioche();
+    }
+    
+    public void verifierPiocheNonVide() {
+    	if (estPiocheVide()) {
+    		reinitialiserPioche();
+    	}
     }
 }
