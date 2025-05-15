@@ -107,8 +107,9 @@ public class TestPioche {
         cartes.add(new CartePopularite("Chanson", "Une chanson populaire", 10, 2, 0));
         cartes.add(new CarteTresor("Coffre", "Un coffre d'or", 10, 5));
         
-        Pioche piocheTest = new Pioche(cartes);
-        ControlPioche controlPiocheTest = new ControlPioche(piocheTest);
+        
+        ControlPioche controlPiocheTest = new ControlPioche();
+        controlPiocheTest.initialiserPioche();
         
         // Nombre initial de cartes
         int nombreCartesInitial = controlPiocheTest.getNombreCartes();
@@ -131,9 +132,14 @@ public class TestPioche {
     @DisplayName("Test d'initialisation de la main d'un joueur")
     public void testInitialiserMain() {
         // S'assurer que la pioche est initialisée
+    	controlJeu = new ControlJeu();
+    	Pirate pirate1 = new Pirate("AnneBonny");
+    	Pirate pirate2 = new Pirate("BarbeNoire");
+    	controlJeu.initialiserJeu(pirate1, pirate2);
         controlPioche = controlJeu.getControlPioche();
         controlPioche.initialiserPioche();
         
+        controlJoueur1 = controlJeu.getJoueur(0);
         // Initialiser la main du joueur 1
         controlJoueur1.initialiserMain();
         

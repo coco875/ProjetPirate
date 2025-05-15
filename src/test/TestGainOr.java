@@ -36,8 +36,8 @@ public class TestGainOr {
         
         // Récupérer les contrôleurs
         controlCartePlateau = controlJeu.getControlCartePlateau();
-        zoneJoueur1 = controlJeu.getControlZoneJoueur1();
-        zoneJoueur2 = controlJeu.getControlZoneJoueur2();
+        zoneJoueur1 = controlCartePlateau.getZoneJoueur1();
+        zoneJoueur2 = controlCartePlateau.getZoneJoueur2();
         
         // Initialiser les valeurs d'or des joueurs
         joueur1.setOr(5);

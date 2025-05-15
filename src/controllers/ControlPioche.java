@@ -121,4 +121,8 @@ public class ControlPioche {
 	public Carte piocher() {
 		return pioche.estVide() ? null : pioche.piocher();
 	}
+	
+	public int getNombreCartes() {
+		return pioche.getNombreCartes();
+	}
 }
