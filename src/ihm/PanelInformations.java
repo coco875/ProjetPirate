@@ -6,8 +6,11 @@ package ihm;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.io.File;
@@ -62,31 +65,45 @@ public class PanelInformations extends javax.swing.JPanel {
 
         Graphics2D g2 = (Graphics2D) g.create();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        //Points de vie (ligne 1)
-        for (int i = 0; i < joueur.getPointsDeVie(); i++) {
-            g2.drawImage(imageVie, 
-                i * (TAILLE_ICONE + ESPACE_HORIZONTAL), 
-                0, 
-                TAILLE_ICONE, TAILLE_ICONE, this);
+        
+        try{
+            Font customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/ressources/fonts/Pieces_of_Eight.ttf")).deriveFont(25f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+            
+            g2.setFont(customFont.deriveFont(25f));
+        }catch (FontFormatException | IOException e) {
+            e.printStackTrace(); 
         }
+        
 
-        //Popularité (ligne 2)
-        for (int i = 0; i < joueur.getPopularite(); i++) {
-            g2.drawImage(imagePopularite, 
-                i * (TAILLE_ICONE + ESPACE_HORIZONTAL), 
-                ESPACE_VERTICAL, 
-                TAILLE_ICONE, TAILLE_ICONE, this);
-        }
+        //Points de vie
+        dessinerStat(g2, joueur.getPointsDeVie(), imageVie, 0);
 
-        //Or (ligne 3)
-        for (int i = 0; i < joueur.getOr(); i++) {
-            g2.drawImage(imageOr, 
-                i * (TAILLE_ICONE + ESPACE_HORIZONTAL), 
-                ESPACE_VERTICAL * 2, 
-                TAILLE_ICONE, TAILLE_ICONE, this);
-        }
+        //Popularité 
+        dessinerStat(g2, joueur.getPopularite(), imagePopularite, ESPACE_VERTICAL);
+
+        //Or 
+        dessinerStat(g2, joueur.getOr(), imageOr, ESPACE_VERTICAL * 2);
 
         g2.dispose();
+    }
+
+    private void dessinerStat(Graphics2D g2, int valeur, Image icone, int y) {
+        if (valeur <= 5) {
+            for (int i = 0; i < valeur; i++) {
+                g2.drawImage(icone, 
+                    i * (TAILLE_ICONE + ESPACE_HORIZONTAL), 
+                    y, 
+                    TAILLE_ICONE, TAILLE_ICONE, null);
+            }
+        } else {
+            //Affichage condensé (une icône + nombre)
+            g2.drawImage(icone, 0, y, TAILLE_ICONE, TAILLE_ICONE, null);
+            g2.setColor(Color.BLACK);
+            g2.drawString(String.valueOf(valeur), TAILLE_ICONE + 5, y + TAILLE_ICONE - 5);
+            
+        }
     }
 
 

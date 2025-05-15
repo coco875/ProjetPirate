@@ -80,7 +80,7 @@ public class ParserPirate {
         }
         
         description = descBuilder.toString().trim();
-        
+        description = description.substring(1);
         // Création du pirate avec le constructeur disponible
         Pirate pirate = new Pirate(nom, description, popularite, carteCoupSpeciale.orElseThrow(),0 );
         
