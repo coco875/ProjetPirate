@@ -3,9 +3,18 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package ihm;
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.Shape;
+import java.awt.color.ColorSpace;
+import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorConvertOp;
 import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
@@ -14,7 +23,7 @@ import javax.imageio.ImageIO;
  * @author Fonteyne
  */
 public class PanelImage extends javax.swing.JPanel {
-
+    private boolean grise = false;
     private Image image;
     
     public PanelImage(String chemin) {
@@ -25,13 +34,85 @@ public class PanelImage extends javax.swing.JPanel {
         } catch (IOException io) {
             System.out.println("Error");
         }
+        setOpaque(false);
     }
-    
+    public void setGrise(boolean grise){
+        this.grise = grise;
+    }
+    /*
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+        Graphics2D g2 = (Graphics2D) g.create();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        Shape clip = new RoundRectangle2D.Float(10, 10, getWidth() - 20, getHeight() - 20, 20, 20);
+        g2.setClip(clip);
+        g2.setColor(Color.RED);
+        g2.fillRect(0, 0, getWidth(), getHeight());
+
+        if (image != null) {
+            g2.drawImage(image, 5, 5, getWidth() - 10, getHeight() - 10, this);
+        }
+
+        g2.setClip(null);
+        g2.setStroke(new BasicStroke(3));
+        g2.setColor(Color.WHITE);
+        g2.drawRoundRect(10, 10, getWidth() - 21, getHeight() - 21, 20, 20);
+
+        g2.setStroke(new BasicStroke(1));
+        g2.setColor(Color.LIGHT_GRAY);
+        g2.drawRoundRect(13, 13, getWidth() - 27, getHeight() - 27, 16, 16);
+
+       
+        g2.dispose();
+    }*/
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g.create();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        // Clip arrondi
+        Shape clip = new RoundRectangle2D.Float(10, 10, getWidth() - 20, getHeight() - 20, 20, 20);
+        g2.setClip(clip);
+        g2.setColor(Color.RED);
+        g2.fillRect(0, 0, getWidth(), getHeight());
+
+        // Affichage de l'image (normale ou grisée)
+        if (image != null) {
+            if (grise) {
+                BufferedImage imageBuffered = new BufferedImage(
+                    image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+                Graphics2D gImg = imageBuffered.createGraphics();
+                gImg.drawImage(image, 0, 0, null);
+                gImg.dispose();
+
+                ColorConvertOp op = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);
+                op.filter(imageBuffered, imageBuffered);
+
+                g2.drawImage(imageBuffered, 5, 5, getWidth() - 10, getHeight() - 10, this);
+            } else {
+                g2.drawImage(image, 5, 5, getWidth() - 10, getHeight() - 10, this);
+            }
+        }
+
+        // Bordures
+        g2.setClip(null);
+        g2.setStroke(new BasicStroke(3));
+        g2.setColor(grise ? Color.DARK_GRAY : Color.WHITE);
+        g2.drawRoundRect(10, 10, getWidth() - 21, getHeight() - 21, 20, 20);
+
+        g2.setStroke(new BasicStroke(1));
+        g2.setColor(grise ? Color.GRAY : Color.LIGHT_GRAY);
+        g2.drawRoundRect(13, 13, getWidth() - 27, getHeight() - 27, 16, 16);
+
+        g2.dispose();
     }
+
+    
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.

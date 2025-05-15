@@ -10,11 +10,12 @@ import javax.swing.ImageIcon;
 import java.net.URL;
 import javax.imageio.ImageIO;
 import java.io.*;
+import javax.swing.JLayeredPane;
 /**
  *
  * @author FNX4294A
  */
-public class PanelPlateau extends javax.swing.JPanel {
+public class PanelPlateau extends javax.swing.JLayeredPane {
 
     private Image image;
     
@@ -26,6 +27,14 @@ public class PanelPlateau extends javax.swing.JPanel {
         } catch (IOException io) {
             System.out.println("Error");
         }
+        setLayout(null);
+    }
+    
+    public void addCarte(PanelCarte carte) {
+        // On peut ajouter la carte en haut de l'arrière-plan pour qu'elle soit visible
+        add(carte, JLayeredPane.POPUP_LAYER);  // "DRAG_LAYER" ou "POPUP_LAYER" selon la priorité
+        revalidate();
+        repaint();
     }
     
     @Override

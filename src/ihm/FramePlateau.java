@@ -12,39 +12,47 @@ import boundary.*;
 import carte.Carte;
 import java.util.*;
 import controllers.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.miginfocom.swing.MigLayout;
 
 /**
  *
  * @author FNX4294A
  */
-public class FramePlateau extends javax.swing.JFrame {
+public class FramePlateau extends javax.swing.JFrame implements CarteListener {
     private Pirate pirateJoueur1;
     private Pirate pirateJoueur2;
     private ControlJeu controlJeu;
+    private boolean joueurActif = true; //true = joueur1, false = joueur2
+    private boolean aPioche = false;
     java.util.List<Carte> listeCartesJoueur1;
     java.util.List<Carte> listeCartesJoueur2;
     /**
      * Creates new form FramePlateau
      */
     public FramePlateau() {
-    initComponents();
-    PanelPirate.setSelectionCallback(selected -> {
-        boutonValider.setEnabled(selected);
-    });
-    
-    PanelPirate.setupLabelsDescription(labelDescriptionPirateGauche, labelDescriptionPirateDroite);
-    
-    setupFrame();
-    setupPanelsTransparents();
-    setupPanelPositions();
-    setupFonts();
-    setupPlateauChoix();
-    setupPanelsPirate();
-    setupBoutonValider();
-    setupDescriptionLabels();
-    refresh();
-    
-}
+        initComponents();
+        PanelPirate.setSelectionCallback(selected -> {
+            boutonValider.setEnabled(selected);
+        });
+
+        PanelPirate.setupLabelsDescription(labelDescriptionPirateGauche, labelDescriptionPirateDroite);
+
+        setupFrame();
+        setupPanelsTransparents();
+        setupPanelPositions();
+        setupFonts();
+        setupPlateauChoix();
+        setupPanelsPirate();
+        setupBoutonValider();
+        setupDescriptionLabels();
+        refresh();
+
+    }
     
     private void setupFrame() {
         setSize(1920, 1080);
@@ -178,16 +186,18 @@ public class FramePlateau extends javax.swing.JFrame {
         panelImagePirate1 = new PanelImage(pirateJoueur1.getCheminImage());
         panelImagePirate2 = new PanelImage(pirateJoueur2.getCheminImage());
 
-        Dimension size = new Dimension(75, 75);
+        Dimension size = new Dimension(100, 100);
         panelImagePirate1.setPreferredSize(size); 
         panelImagePirate2.setPreferredSize(size);
         panelImagePirate1.setSize(size); 
         panelImagePirate2.setSize(size);
         
+        ((PanelImage) panelImagePirate2).setGrise(true); 
+        
         panelJeu.setLayout(null);
         
-        panelImagePirate1.setBounds(915, 755, size.width, size.height);
-        panelImagePirate2.setBounds(915, 250, size.width, size.height);
+        panelImagePirate1.setBounds(903, 730, size.width, size.height);
+        panelImagePirate2.setBounds(903, 210, size.width, size.height);
         
         panelJeu.add(panelImagePirate1);
         panelJeu.add(panelImagePirate2);
@@ -199,36 +209,76 @@ public class FramePlateau extends javax.swing.JFrame {
         
     }
     
-    private void setupMain(){
-        Dimension sizeMain = new Dimension(1000, 200);
-        panelMainJoueur1.setBounds(460, 830, sizeMain.width, sizeMain.height);
-        panelMainJoueur2.setBounds(460, 0, sizeMain.width, sizeMain.height);
+    private void setupPioche(){
+        panelPioche = new PanelImage("src/ressources/cartes/pioche/pioche.png");
+        panelPioche.setBounds(1550, getHeight() / 2 - 105, 149, 190);
+
         
-        panelMainJoueur1.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        panelMainJoueur2.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        
+        panelPioche.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                panelPiocheMouseClicked(e);
+            }
+
+            
+        });
+
+       
+        panelJeu.add(panelPioche, JLayeredPane.PALETTE_LAYER);
+        panelJeu.moveToFront(panelPioche);
+        panelPioche.revalidate();
+        panelPioche.repaint();
+
+      
+    }
+    
+    public static void bloquerCartes(JPanel panelMain) {
+        for (Component comp : panelMain.getComponents()) {
+            if (comp instanceof PanelCarte) { 
+                ((PanelCarte) comp).setBloque(true);
+            }
+        }
+    }
+    
+    public static void debloquerCartes(JPanel panelMain) {
+        for (Component comp : panelMain.getComponents()) {
+            if (comp instanceof PanelCarte) { 
+                ((PanelCarte) comp).setBloque(false);
+            }
+        }
+    }
+    private void setupMain() {
+        Dimension sizeMain = new Dimension(getWidth(), 200);
+
+        panelMainJoueur1.setBounds(0, 830, sizeMain.width, sizeMain.height);
+        panelMainJoueur2.setBounds(0, 0, sizeMain.width, sizeMain.height);
+
+        panelMainJoueur1.setLayout(new WrapLayout(FlowLayout.CENTER, 10, 10));
+        panelMainJoueur2.setLayout(new WrapLayout(FlowLayout.CENTER, 10, 10));
+
         panelMainJoueur1.setOpaque(false);
         panelMainJoueur2.setOpaque(false);
-        
+
         panelJeu.add(panelMainJoueur1);
         panelJeu.add(panelMainJoueur2);
+
+        setupCartesMain();
         
-        setupCartesMain(panelMainJoueur1, panelMainJoueur2);
+        bloquerCartes(panelMainJoueur2); //le joueur 1 commence
         
         panelJeu.revalidate();
         panelJeu.repaint();
-        
     }
     
-    private void setupCartesMain(JPanel main1, JPanel main2){   
+    private void setupCartesMain(){   
         
         
         for(Carte carte : listeCartesJoueur1){
-            panelMainJoueur1.add(new PanelCarte(carte));
+            panelMainJoueur1.add(new PanelCarte(carte, panelZoneStrategiqueJoueur1, panelZoneOffensiveJoueur1, panelJeu, panelMainJoueur1, 1));
         }
         
         for(Carte carte : listeCartesJoueur2){
-            panelMainJoueur2.add(new PanelCarte(carte));
+            panelMainJoueur2.add(new PanelCarte(carte, panelZoneStrategiqueJoueur2, panelZoneOffensiveJoueur2, panelJeu, panelMainJoueur2, 2));
         }
        
         
@@ -237,27 +287,107 @@ public class FramePlateau extends javax.swing.JFrame {
     
     }
     
+    @Override
+    public void onCarteJouee(Carte carte) {
+        aPioche = false;
+        controlJeu.jouerCarte(carte);
+        controlJeu.appliquerEffetsCartes();
+        controlJeu.defausserCartesPlateau();
+        if(controlJeu.verifierFinPartie()){
+            setupPlateauFin();
+            return;
+        }
+        controlJeu.passerAuJoueurSuivant();
+        if(controlJeu.getJoueurActif() == 0){
+            debloquerCartes(panelMainJoueur1);
+            bloquerCartes(panelMainJoueur2);
+            ((PanelImage) panelImagePirate1).setGrise(false);
+            ((PanelImage) panelImagePirate2).setGrise(true);
+        }else{
+            debloquerCartes(panelMainJoueur2);
+            bloquerCartes(panelMainJoueur1);
+            ((PanelImage) panelImagePirate1).setGrise(true);
+            ((PanelImage) panelImagePirate2).setGrise(false);
+        }
+        panelInformationsJoueur1.repaint();
+        panelInformationsJoueur2.repaint();
+    } 
+    
     private void setupZones(){
-        Dimension size = new Dimension(200,150);
+        JPanel panelZones = new JPanel();
+        panelZones.setLayout(new GridLayout(2,2));
+        panelZones.setBounds(getWidth() / 2 - 518, getHeight() / 2 - 230, 1014, 420);
+        panelZones.setOpaque(false);
+        Dimension tailleZone = new Dimension(150,110);
         
-        panelZoneStrategiqueJoueur1.setBounds(740, 370, size.width, size.height);
-        panelZoneStrategiqueJoueur2.setBounds(980, 560, size.width, size.height);
         
-        panelZoneOffensiveJoueur1.setBounds(980, 370, size.width, size.height);
-        panelZoneOffensiveJoueur2.setBounds(740, 560, size.width, size.height);
         
-        panelJeu.add(panelZoneStrategiqueJoueur1);
-        panelJeu.add(panelZoneStrategiqueJoueur2);
-        panelJeu.add(panelZoneOffensiveJoueur1);
-        panelJeu.add(panelZoneOffensiveJoueur2);
+        panelZoneStrategiqueJoueur1 = new PanelZoneCarte("Zone Strategique de " + pirateJoueur1.getNom(), this, true);
+        panelZoneStrategiqueJoueur2 = new PanelZoneCarte("Zone Strategique de " + pirateJoueur2.getNom(), this, true);
+        
+        panelZoneOffensiveJoueur1 = new PanelZoneCarte("Zone Offensive de " + pirateJoueur1.getNom(), this, false);
+        panelZoneOffensiveJoueur2 = new PanelZoneCarte("Zone Offensive de " + pirateJoueur2.getNom(), this, false);
+        
+        panelZoneStrategiqueJoueur1.setSize(tailleZone.width, tailleZone.height);
+        panelZoneStrategiqueJoueur2.setSize(tailleZone.width, tailleZone.height);
+        
+        panelZoneOffensiveJoueur1.setSize(tailleZone.width, tailleZone.height);
+        panelZoneOffensiveJoueur2.setSize(tailleZone.width, tailleZone.height);
+        
+        
+        panelZones.add(panelZoneStrategiqueJoueur2);
+        panelZones.add(panelZoneOffensiveJoueur2);
+        panelZones.add(panelZoneStrategiqueJoueur1);
+        panelZones.add(panelZoneOffensiveJoueur1);
+        
+        
+        panelJeu.add(panelZones);
         
         panelJeu.revalidate();
         panelJeu.repaint();
     }
     
+    private void setupLabels(){
+        JLabel labelZoneStrategique = new JLabel("Zone Strategique");
+        JLabel labelZoneOffensive = new JLabel("Zone Offensive");
+        JLabel labelPioche = new JLabel("Pioche");
+        labelZoneStrategique.setBounds(getWidth() / 2 - 170, getHeight() / 2 - 36, 200, 30);
+        labelZoneOffensive.setBounds(getWidth() / 2 + 15, getHeight() / 2 - 36, 200, 30);
+        labelPioche.setBounds(1595, getHeight() / 2 - 120, 100, 20);
+        
+        labelZoneStrategique.setVisible(true);
+        labelZoneOffensive.setVisible(true);
+        labelPioche.setVisible(true);
+        
+        Font customFont;
+        try {
+            customFont = Font.createFont(Font.TRUETYPE_FONT, new File("src/ressources/fonts/xbones.ttf")).deriveFont(15f);
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(customFont);
+            labelZoneStrategique.setFont(customFont.deriveFont(15f));
+            labelZoneOffensive.setFont(customFont.deriveFont(15f));
+            labelPioche.setFont(customFont.deriveFont(15f));
+        } catch (FontFormatException ex) {
+            Logger.getLogger(PanelZoneCarte.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(PanelZoneCarte.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        panelJeu.add(labelZoneStrategique);
+        panelJeu.add(labelZoneOffensive);
+        panelJeu.add(labelPioche);
+    }
     
-    
-    
+    private void setupInformations(){
+        panelInformationsJoueur1 = new PanelInformations(controlJeu.getJoueur(0).getJoueur());
+        panelInformationsJoueur2 = new PanelInformations(controlJeu.getJoueur(1).getJoueur());
+        
+        panelInformationsJoueur1.setBounds(1010, 735, 400, 100);
+        panelInformationsJoueur2.setBounds(1010, 215, 400, 100);
+        
+        panelJeu.add(panelInformationsJoueur1);
+        panelJeu.add(panelInformationsJoueur2);
+    }
     
     
     private void setupPlateauJeu(){
@@ -267,6 +397,16 @@ public class FramePlateau extends javax.swing.JFrame {
         panelConteneur.add(panelJeu, "panelJeu");
         CardLayout c1 = (CardLayout) panelConteneur.getLayout();
         c1.show(panelConteneur, "panelJeu");
+        panelJeu.revalidate();
+        panelJeu.repaint();
+    }
+    
+    private void setupPlateauFin(){
+        panelFin = new PanelImage("src/ressources/image_plateau/plateau.jpg");
+        panelFin.setOpaque(true);
+        panelConteneur.add(panelFin, "panelFin");
+        CardLayout c1 = (CardLayout) panelConteneur.getLayout();
+        c1.show(panelConteneur, "panelFin");
         panelJeu.revalidate();
         panelJeu.repaint();
     }
@@ -301,7 +441,7 @@ public class FramePlateau extends javax.swing.JFrame {
         jPanel14 = new javax.swing.JPanel();
         labelDescriptionPirateDroite = new javax.swing.JLabel();
         labelDescriptionPirateGauche = new javax.swing.JLabel();
-        panelJeu = new javax.swing.JPanel();
+        panelJeu = new javax.swing.JLayeredPane();
         panelImagePirate1 = new javax.swing.JPanel();
         panelImagePirate2 = new javax.swing.JPanel();
         panelMainJoueur2 = new javax.swing.JPanel();
@@ -310,6 +450,10 @@ public class FramePlateau extends javax.swing.JFrame {
         panelZoneOffensiveJoueur1 = new javax.swing.JPanel();
         panelZoneStrategiqueJoueur2 = new javax.swing.JPanel();
         panelZoneOffensiveJoueur2 = new javax.swing.JPanel();
+        panelPioche = new javax.swing.JPanel();
+        panelInformationsJoueur1 = new javax.swing.JPanel();
+        panelInformationsJoueur2 = new javax.swing.JPanel();
+        panelFin = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -408,7 +552,7 @@ public class FramePlateau extends javax.swing.JFrame {
         panelChoixDesPiratesLayout.setHorizontalGroup(
             panelChoixDesPiratesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelChoixDesPiratesLayout.createSequentialGroup()
-                .addContainerGap(119, Short.MAX_VALUE)
+                .addContainerGap(222, Short.MAX_VALUE)
                 .addComponent(labelChoixDesPirates)
                 .addGap(146, 146, 146))
         );
@@ -621,7 +765,7 @@ public class FramePlateau extends javax.swing.JFrame {
         panelImagePirate2.setLayout(panelImagePirate2Layout);
         panelImagePirate2Layout.setHorizontalGroup(
             panelImagePirate2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 86, Short.MAX_VALUE)
+            .addGap(0, 136, Short.MAX_VALUE)
         );
         panelImagePirate2Layout.setVerticalGroup(
             panelImagePirate2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -708,66 +852,150 @@ public class FramePlateau extends javax.swing.JFrame {
             .addGap(0, 0, Short.MAX_VALUE)
         );
 
+        panelPioche.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                panelPiocheMouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout panelPiocheLayout = new javax.swing.GroupLayout(panelPioche);
+        panelPioche.setLayout(panelPiocheLayout);
+        panelPiocheLayout.setHorizontalGroup(
+            panelPiocheLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 90, Short.MAX_VALUE)
+        );
+        panelPiocheLayout.setVerticalGroup(
+            panelPiocheLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout panelInformationsJoueur1Layout = new javax.swing.GroupLayout(panelInformationsJoueur1);
+        panelInformationsJoueur1.setLayout(panelInformationsJoueur1Layout);
+        panelInformationsJoueur1Layout.setHorizontalGroup(
+            panelInformationsJoueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 51, Short.MAX_VALUE)
+        );
+        panelInformationsJoueur1Layout.setVerticalGroup(
+            panelInformationsJoueur1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 46, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout panelInformationsJoueur2Layout = new javax.swing.GroupLayout(panelInformationsJoueur2);
+        panelInformationsJoueur2.setLayout(panelInformationsJoueur2Layout);
+        panelInformationsJoueur2Layout.setHorizontalGroup(
+            panelInformationsJoueur2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 68, Short.MAX_VALUE)
+        );
+        panelInformationsJoueur2Layout.setVerticalGroup(
+            panelInformationsJoueur2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 62, Short.MAX_VALUE)
+        );
+
+        panelJeu.setLayer(panelImagePirate1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        panelJeu.setLayer(panelImagePirate2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        panelJeu.setLayer(panelMainJoueur2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        panelJeu.setLayer(panelMainJoueur1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        panelJeu.setLayer(panelZoneStrategiqueJoueur1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        panelJeu.setLayer(panelZoneOffensiveJoueur1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        panelJeu.setLayer(panelZoneStrategiqueJoueur2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        panelJeu.setLayer(panelZoneOffensiveJoueur2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        panelJeu.setLayer(panelPioche, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        panelJeu.setLayer(panelInformationsJoueur1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        panelJeu.setLayer(panelInformationsJoueur2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         javax.swing.GroupLayout panelJeuLayout = new javax.swing.GroupLayout(panelJeu);
         panelJeu.setLayout(panelJeuLayout);
         panelJeuLayout.setHorizontalGroup(
             panelJeuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(panelJeuLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelJeuLayout.createSequentialGroup()
+                .addContainerGap(64, Short.MAX_VALUE)
                 .addGroup(panelJeuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panelZoneOffensiveJoueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelJeuLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(panelMainJoueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(103, 103, 103))
                     .addGroup(panelJeuLayout.createSequentialGroup()
-                        .addGap(7, 7, 7)
-                        .addComponent(panelZoneStrategiqueJoueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(panelJeuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(panelJeuLayout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(panelZoneStrategiqueJoueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(panelZoneOffensiveJoueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(panelJeuLayout.createSequentialGroup()
-                .addGap(154, 154, 154)
-                .addComponent(panelImagePirate2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(panelJeuLayout.createSequentialGroup()
-                .addGap(168, 168, 168)
-                .addComponent(panelImagePirate1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelJeuLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(panelMainJoueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(103, 103, 103))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelJeuLayout.createSequentialGroup()
-                .addContainerGap(68, Short.MAX_VALUE)
-                .addComponent(panelMainJoueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(63, 63, 63))
+                                .addComponent(panelMainJoueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(panelPioche, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panelJeuLayout.createSequentialGroup()
+                                .addGroup(panelJeuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(panelZoneOffensiveJoueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(panelJeuLayout.createSequentialGroup()
+                                        .addGap(7, 7, 7)
+                                        .addComponent(panelZoneStrategiqueJoueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(panelJeuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(panelJeuLayout.createSequentialGroup()
+                                                .addGap(6, 6, 6)
+                                                .addComponent(panelZoneStrategiqueJoueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(panelZoneOffensiveJoueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(panelJeuLayout.createSequentialGroup()
+                                        .addGap(87, 87, 87)
+                                        .addComponent(panelImagePirate2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(panelJeuLayout.createSequentialGroup()
+                                        .addGap(162, 162, 162)
+                                        .addComponent(panelImagePirate1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(panelJeuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(panelJeuLayout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
+                                        .addComponent(panelInformationsJoueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(154, 154, 154))
+                                    .addGroup(panelJeuLayout.createSequentialGroup()
+                                        .addGap(129, 129, 129)
+                                        .addComponent(panelInformationsJoueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE)))))
+                        .addContainerGap(36, Short.MAX_VALUE))))
         );
         panelJeuLayout.setVerticalGroup(
             panelJeuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(panelJeuLayout.createSequentialGroup()
                 .addGap(7, 7, 7)
                 .addComponent(panelMainJoueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(panelImagePirate1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(panelJeuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(panelJeuLayout.createSequentialGroup()
-                        .addComponent(panelZoneOffensiveJoueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(panelZoneStrategiqueJoueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(panelImagePirate1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(panelJeuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(panelJeuLayout.createSequentialGroup()
+                                .addComponent(panelZoneOffensiveJoueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(panelZoneStrategiqueJoueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(panelJeuLayout.createSequentialGroup()
+                                .addComponent(panelZoneStrategiqueJoueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(panelZoneOffensiveJoueur2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(panelJeuLayout.createSequentialGroup()
-                        .addComponent(panelZoneStrategiqueJoueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(55, 55, 55)
+                        .addComponent(panelInformationsJoueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(panelZoneOffensiveJoueur2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(panelPioche, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(25, 25, 25)
-                .addComponent(panelImagePirate2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(panelJeuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(panelImagePirate2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(panelInformationsJoueur1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(panelMainJoueur2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(112, 112, 112))
         );
 
-        panelConteneur.add(panelJeu, "panelJeu");
+        panelConteneur.add(panelJeu, "card4");
+
+        javax.swing.GroupLayout panelFinLayout = new javax.swing.GroupLayout(panelFin);
+        panelFin.setLayout(panelFinLayout);
+        panelFinLayout.setHorizontalGroup(
+            panelFinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 579, Short.MAX_VALUE)
+        );
+        panelFinLayout.setVerticalGroup(
+            panelFinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 626, Short.MAX_VALUE)
+        );
+
+        panelConteneur.add(panelFin, "card4");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -794,11 +1022,38 @@ public class FramePlateau extends javax.swing.JFrame {
         ControlJoueur controlJoueur2 = controlJeu.getJoueur(1);
         listeCartesJoueur2 = controlJoueur2.getMain();
         
+        
         setupPlateauJeu();
+        setupLabels();
+        setupZones();
         setupImagesPirates();
         setupMain();
-        setupZones();
+        setupPioche();
+        setupInformations();
+        
     }//GEN-LAST:event_boutonValiderActionPerformed
+
+    private void panelPiocheMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelPiocheMouseClicked
+        if(aPioche) return;
+        Carte carte = controlJeu.piocherCarte();
+        if (carte != null) { 
+            if (controlJeu.getJoueurActif() == 0) {
+                listeCartesJoueur1.add(carte);
+                PanelCarte panelCarte = new PanelCarte(carte, panelZoneStrategiqueJoueur1, panelZoneOffensiveJoueur1, panelJeu, panelMainJoueur1, 1);
+                panelMainJoueur1.add(panelCarte);
+                
+            } else {
+                listeCartesJoueur2.add(carte);
+                PanelCarte panelCarte = new PanelCarte(carte, panelZoneStrategiqueJoueur2, panelZoneOffensiveJoueur2, panelJeu, panelMainJoueur2, 2);
+                panelMainJoueur2.add(panelCarte);
+            }
+            aPioche = true;
+            panelMainJoueur1.revalidate();
+            panelMainJoueur1.repaint();
+            panelMainJoueur2.revalidate();
+            panelMainJoueur2.repaint();
+}
+    }//GEN-LAST:event_panelPiocheMouseClicked
 
     /**
      * @param args the command line arguments
@@ -853,13 +1108,17 @@ public class FramePlateau extends javax.swing.JFrame {
     private javax.swing.JPanel panelChoix;
     private javax.swing.JPanel panelChoixDesPirates;
     private javax.swing.JPanel panelConteneur;
+    private javax.swing.JPanel panelFin;
     private javax.swing.JPanel panelImagePirate1;
     private javax.swing.JPanel panelImagePirate2;
-    private javax.swing.JPanel panelJeu;
+    private javax.swing.JPanel panelInformationsJoueur1;
+    private javax.swing.JPanel panelInformationsJoueur2;
+    private javax.swing.JLayeredPane panelJeu;
     private javax.swing.JPanel panelJoueur1;
     private javax.swing.JPanel panelJoueur2;
     private javax.swing.JPanel panelMainJoueur1;
     private javax.swing.JPanel panelMainJoueur2;
+    private javax.swing.JPanel panelPioche;
     private javax.swing.JPanel panelPiratesJoueur1;
     private javax.swing.JPanel panelPiratesJoueur2;
     private javax.swing.JPanel panelZoneOffensiveJoueur1;
