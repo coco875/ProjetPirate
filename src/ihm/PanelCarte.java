@@ -215,7 +215,11 @@ public class PanelCarte extends JPanel {
 
         g2.setClip(null);
         g2.setStroke(new BasicStroke(3));
-        g2.setColor(Color.WHITE);
+        if(carte.getVieGagne() >= 3 || carte.getDegatsInfliges() >= 3 || carte.getPopulariteGagnee() >= 3 || carte.getOrGagne() >= 10){
+            g2.setColor(new Color(255, 215, 0)); 
+        }else{
+            g2.setColor(Color.WHITE); 
+        }
         g2.drawRoundRect(10, 10, getWidth() - 21, getHeight() - 21, 20, 20);
 
         g2.setStroke(new BasicStroke(1));

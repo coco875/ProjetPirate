@@ -1,5 +1,5 @@
 ﻿Le plus redoutable pirate des Caraïbes, connu pour sa barbe sombre et son tempérament féroce.
 popularite: 0
-vie: 6
+vie: 5
 image: src/ressources/image_pirate/BlackBeard.jpg
 carte: src/ressources/cartes/special/barbe_noire.txt

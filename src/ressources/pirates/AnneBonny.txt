@@ -1,5 +1,5 @@
 ﻿Femme pirate irlandaise redoutable, maîtrisant l'épée aussi bien que la stratégie.
 popularite: 0
-vie: 6
+vie: 5
 image: src/ressources/image_pirate/AnneBonny.jpg
 carte: src/ressources/cartes/special/anne_bonny.txt
