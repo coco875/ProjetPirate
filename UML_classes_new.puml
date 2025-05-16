@@ -7,8 +7,10 @@ class Jeu {
     + initialiserJeu()
 }
 Jeu --> "1" Pioche : -pioche
-Jeu --> "2" ZoneOffensive : -zoneOffensiveJoueur1, -zoneOffensiveJoueur2
-Jeu --> "2" ZoneStrategique : -zoneStrategiqueJoueur1, -zoneStrategiqueJoueur2
+Jeu --> "1" ZoneOffensive : -zoneOffensiveJoueur1
+Jeu --> "1" ZoneOffensive : -zoneOffensiveJoueur2
+Jeu --> "1" ZoneStrategique : -zoneStrategiqueJoueur1
+Jeu --> "1" ZoneStrategique : -zoneStrategiqueJoueur2
 
 class Pioche {
     --
@@ -21,6 +23,25 @@ class Pioche {
 
 Pioche --> "{ordered} *" Carte : -cartes
 
+class ParserPirate {
+    --
+    {static} + chargerPirate(fichier: File): Optional<Pirate>
+    {static} + chargerPirates(repertoire: File): List<Pirate>
+}
+
+class ParserCarte {
+    --
+    {static} + initialiserRegistry()
+    {static} + creerCarte(type: String, nom: String, desc: String, cout: int, properties: Map<String,String>): Carte
+    {static} + lireCarte(filePath: String): Optional<Carte>
+}
+
+interface FabriqueCarte {
+    + creer(nomCarte: String, description: String, cout: int, properties: Map<String,String>): Carte
+}
+
+ParserCarte -->"1" FabriqueCarte : -registryCartes
+note on link: nomType : String
 
 class ZoneOffensive {
     --
@@ -71,7 +92,7 @@ class Joueur {
     
 }
 Joueur --> "1" Pirate : -pirate
-Joueur --> "{ordered} 4" Carte : -main
+Joueur --> "{ordered} *" Carte : -main
 
 class Pirate {
     - nom : String
@@ -79,7 +100,6 @@ class Pirate {
     - popularite : Integer
     - description : String
     - cheminImage : String
-    - carteCoupSpecial : Carte
     --
     + Pirate(nom : String, vie : Integer, popularite : Integer, description : String, carteCoupSpecial : Carte)
     + Pirate(nom : String)
@@ -93,6 +113,8 @@ class Pirate {
     + getCheminImage() : String
     + setCheminImage(cheminImage : String)
 }
+
+Pirate --> "1" Carte : -carteCoupSpecial
 
 abstract class "<<abstract>> Carte" as Carte {
     - nomCarte : String
@@ -117,19 +139,17 @@ abstract class "<<abstract>> Carte" as Carte {
     + getOrGagne() : Integer
     + <<abstract>> getCheminImage() : String {abstract}
 }
-Carte "1" *-- "1" "<<enumeration>> TypeCarte" : -type
+Carte "1" *--> "1" "<<enumeration>> TypeCarte" : -type
 
 ' Classe abstraite CarteOffensive
 abstract class "<<abstract>> CarteOffensive" as CarteOffensive extends Carte {
-    - typeOffensif : TypeOffensif
-    --
     + CarteOffensive(nomCarte : String, description : String, typeOffensif : TypeOffensif, cout : Integer)
     + CarteOffensive(nomCarte : String, description : String, typeOffensif : TypeOffensif)
     + getTypeOffensif() : TypeOffensif
 }
 
 
-CarteOffensive *-- "1" "<<enumeration>> TypeOffensif" : -typeOffensif
+CarteOffensive *--> "1" "<<enumeration>> TypeOffensif" : -typeOffensif
 
 ' Classe CarteAttaque
 class CarteAttaque extends CarteOffensive {
@@ -154,8 +174,6 @@ class CarteSoin extends CarteOffensive {
 
 ' Classe abstraite CarteStrategique
 abstract class "<<abstract>> CarteStrategique" as CarteStrategique extends Carte {
-    - typeStrategique : TypeStrategique
-    --
     + CarteStrategique(nomCarte : String, description : String, typeStrategique : TypeStrategique, cout : Integer)
     + CarteStrategique(nomCarte : String, description : String, typeStrategique : TypeStrategique)
     + getTypeStrategique() : TypeStrategique
@@ -164,7 +182,7 @@ abstract class "<<abstract>> CarteStrategique" as CarteStrategique extends Carte
 }
 
 
-CarteStrategique  *-- "1" "<<enumeration>> TypeStrategique" : -typeStrategique
+CarteStrategique  *--> "1" "<<enumeration>> TypeStrategique" : -typeStrategique
 
 ' Classe CartePopularite
 class CartePopularite extends CarteStrategique {
@@ -231,8 +249,9 @@ class ControlJeu {
 ControlJeu --> "1" Jeu : -jeu
 ControlJeu --> "1" ControlPioche : -controlPioche
 ControlJeu --> "1" ControlCartePlateau : -controlCartePlateau
-ControlJeu --> "2" ControlJoueur : -controlJoueurs
-ControlJeu --> "2" ControlZoneJoueur : -controlZoneJoueur1, -controlZoneJoueur2 
+ControlJeu -> "2..2" ControlJoueur : -controlJoueurs
+ControlJeu --> "1" ControlZoneJoueur : -controlZoneJoueur1
+ControlJeu --> "1" ControlZoneJoueur : -controlZoneJoueur2 
 
 ' Classe ControlJoueur
 class ControlJoueur {
@@ -266,8 +285,10 @@ class ControlCartePlateau {
     + appliquerEffetCarte()  
     + defausserCartesPlateau()  
 }
-ControlCartePlateau --> "2" ControlJoueur : -controlJoueur1, -controlJoueur2
-ControlCartePlateau --> "2" ControlZoneJoueur : -zoneJoueur1, zoneJoueur2
+ControlCartePlateau --> "1" ControlJoueur : -controlJoueur1
+ControlCartePlateau --> "1" ControlJoueur : -controlJoueur2
+ControlCartePlateau --> "1" ControlZoneJoueur : -zoneJoueur1
+ControlCartePlateau --> "1" ControlZoneJoueur : -zoneJoueur2
 
 ' Classe ControlPioche
 class ControlPioche {
@@ -295,7 +316,7 @@ ControlZoneJoueur --> "1" ZoneOffensive : -zoneOffensive
 ControlZoneJoueur --> "1" ZoneStrategique : -zoneStrategique
 
 class BoundaryJeu {
-    - scan : Scanner
+    # scan : Scanner
     --
     + BoundaryJeu(controlJeu : ControlJeu)
     + afficherMessage()  
@@ -303,14 +324,12 @@ class BoundaryJeu {
     + afficherRegles()  
     + demarrerJeu()  
     + jouerPartie()  
-    + fermer()  
-    --
+    + fermer()
     # demanderPirate(numeroJoueur : Integer) : Pirate
-    + static getPiratesDisponibles() : List<Pirate>
-    --
+    {static} + getPiratesDisponibles() : List<Pirate>
     - demanderContinuerIteration() : Boolean
     - jouerCarte(carte : Carte)  
     - afficherResultatFinal()  
 }
-BoundaryJeu --> "1" ControlJeu : -controlJeu
+BoundaryJeu --> "1" ControlJeu : #controlJeu
 @enduml
