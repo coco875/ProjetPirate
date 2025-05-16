@@ -30,10 +30,6 @@ public abstract class CarteStrategique extends Carte {
 		return typeStrategique;
 	}
 	
-	public void setTypeStrategique(TypeStrategique typeStrategique) {
-		this.typeStrategique = typeStrategique;
-	}
-	
 	// Méthodes spécifiques
 	
 	// Méthodes de vérification du type

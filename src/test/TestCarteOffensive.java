@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 
 import carte.Carte;
 import carte.CarteAttaque;
+import carte.CarteOffensive;
 import carte.CarteOffensive.TypeOffensif;
 import carte.CarteSoin;
 import carte.TypeCarte;
@@ -28,6 +29,27 @@ public class TestCarteOffensive {
         assertEquals(TypeOffensif.ATTAQUE, carte.getTypeOffensif());
         assertEquals(3, carte.effetCarte().degatsInfliges);
         assertEquals(1, carte.effetCarte().degatsSubis);
+    }
+
+    @Test
+    @DisplayName("Test de la création d'une carte avec l'autre constructeur")
+    public void testCreationCarteAutreConstructeur() {
+        CarteOffensive carte = new CarteOffensive("Épée", "Une épée tranchante", TypeOffensif.ATTAQUE) {
+            @Override
+            public EffetCarte effetCarte() {
+                return new EffetCarte();
+            }
+
+            @Override
+            public String getCheminImage() {
+                return "chemin/image.png";
+            }
+        };
+        
+        assertEquals("Épée", carte.getNomCarte());
+        assertEquals("Une épée tranchante", carte.getDescription());
+        assertEquals(TypeCarte.OFFENSIVE, carte.getType());
+        assertEquals(TypeOffensif.ATTAQUE, carte.getTypeOffensif());
     }
     
     @Test

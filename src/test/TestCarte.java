@@ -122,4 +122,39 @@ public class TestCarte {
         // Vérifier que ce sont des instances différentes
         assertNotSame(carte1, carte2);
     }
+
+    @Test
+    @DisplayName("Test des getters et setters de base")
+    public void testGettersSettersBase() {
+        Carte carte = new Carte(TypeCarte.OFFENSIVE, "Carte de test", "Description de test") {
+            @Override
+            public EffetCarte effetCarte() {
+                return new EffetCarte() {
+                    {
+                        this.degatsInfliges = 5;
+                        this.degatsSubis = 2;
+                        this.populariteGagnee = 0;
+                        this.vieGagne = 0;
+                        this.orGagne = 0;
+                    }
+                };
+            }
+
+            @Override
+            public String getCheminImage() {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'getCheminImage'");
+            }
+        };
+
+        // Test des getters
+        assertEquals("Carte de test", carte.getNomCarte());
+        assertEquals("Description de test", carte.getDescription());
+        assertEquals(TypeCarte.OFFENSIVE, carte.getType());
+        assertEquals(5, carte.getDegatsInfliges());
+        assertEquals(2, carte.getDegatsSubis());
+        assertEquals(0, carte.getPopulariteGagnee());
+        assertEquals(0, carte.getVieGagne());
+        assertEquals(0, carte.getOrGagne());
+    }
 }

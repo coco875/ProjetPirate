@@ -1,5 +1,5 @@
 ﻿Capitaine excentrique du Black Pearl, connu pour sa chance insolente et son intelligence rusée.
 popularite: 0
-vie: 5
+vie: 6
 image: src/ressources/image_pirate/JackSparrow.jpg
 carte: src/ressources/cartes/special/jack_sparrow.txt

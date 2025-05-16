@@ -41,10 +41,6 @@ public class Pirate {
 		return description;
 	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
 	public String getNom() {
 		return nom;
 	}

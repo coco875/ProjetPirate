@@ -85,7 +85,6 @@ class Pirate {
     + Pirate(nom : String)
     + getNom() : String
     + getDescription() : String
-    + setDescription(description : String)
     + getCarteSpecial() : Carte
     + getPopularite() : Integer
     + setPopularite(popularite : Integer)
@@ -127,8 +126,6 @@ abstract class "<<abstract>> CarteOffensive" as CarteOffensive extends Carte {
     + CarteOffensive(nomCarte : String, description : String, typeOffensif : TypeOffensif, cout : Integer)
     + CarteOffensive(nomCarte : String, description : String, typeOffensif : TypeOffensif)
     + getTypeOffensif() : TypeOffensif
-    + setTypeOffensif(typeOffensif : TypeOffensif)  
-    + estTresorOffensif() : Boolean
 }
 
 
@@ -162,7 +159,6 @@ abstract class "<<abstract>> CarteStrategique" as CarteStrategique extends Carte
     + CarteStrategique(nomCarte : String, description : String, typeStrategique : TypeStrategique, cout : Integer)
     + CarteStrategique(nomCarte : String, description : String, typeStrategique : TypeStrategique)
     + getTypeStrategique() : TypeStrategique
-    + setTypeStrategique(typeStrategique : TypeStrategique)  
     + estPopularite() : Boolean
     + estTresor() : Boolean
 }

@@ -1,5 +1,5 @@
 ﻿Pirate anglais connu pour son pavillon noir à tête de mort et pour avoir eu dans son équipage Anne Bonny.
-popularite: 0
-vie: 5
+popularite: 1
+vie: 6
 image: src/ressources/image_pirate/CalicoJack.jpg
 carte: src/ressources/cartes/special/calico_jack.txt

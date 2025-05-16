@@ -6,8 +6,10 @@ import org.junit.jupiter.api.DisplayName;
 
 import carte.Carte;
 import carte.CartePopularite;
+import carte.CarteStrategique;
 import carte.CarteTresor;
 import carte.TypeCarte;
+import carte.CarteStrategique.TypeStrategique;
 
 /**
  * Tests pour les classes dérivées de CarteStrategique (CarteTresor, CartePopularite)
@@ -29,6 +31,28 @@ public class TestCartesStrategiques {
         assertEquals(1, carte.effetCarte().degatsSubis);
         assertTrue(carte.estPopularite());
         assertFalse(carte.estTresor());
+    }
+
+    @Test
+    @DisplayName("Test de la création d'une carte de popularité avec l'autre constructeur")
+    public void testCreationCartePopulariteConstructeurAutre() {
+        CarteStrategique carte = new CarteStrategique("Chanson", "Une chanson entrainante", TypeStrategique.POPULARITE) {
+            @Override
+            public EffetCarte effetCarte() {
+                return new EffetCarte();
+            }
+
+            @Override
+            public String getCheminImage() {
+                // TODO Auto-generated method stub
+                throw new UnsupportedOperationException("Unimplemented method 'getCheminImage'");
+            }
+        };
+        
+        assertEquals("Chanson", carte.getNomCarte());
+        assertEquals("Une chanson entrainante", carte.getDescription());
+        assertEquals(TypeCarte.STRATEGIQUE, carte.getType());
+        assertEquals(TypeStrategique.POPULARITE, carte.getTypeStrategique());
     }
     
     @Test
