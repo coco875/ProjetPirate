@@ -1,4 +1,4 @@
-@startuml
+@startuml Classes
 !pragma layout smetana
 
 ' Déclaration des classes
@@ -40,7 +40,7 @@ interface FabriqueCarte {
     + creer(nomCarte: String, description: String, cout: int, properties: Map<String,String>): Carte
 }
 
-ParserCarte -->"1" FabriqueCarte : -registryCartes
+ParserCarte *--"1" FabriqueCarte : -registryCartes
 note on link: nomType : String
 
 class ZoneOffensive {
@@ -139,9 +139,17 @@ abstract class "<<abstract>> Carte" as Carte {
     + getOrGagne() : Integer
     + <<abstract>> getCheminImage() : String {abstract}
 }
-Carte "1" *--> "1" "<<enumeration>> TypeCarte" : -type
+Carte *--> "<<enumeration>> TypeCarte" : -type
 
-' Classe abstraite CarteOffensive
+class "<<static>> EffetCarte" as EffetCarte {
+    + degatsInfliges : Integer
+    + degatsSubis : Integer
+    + populariteGagnee : Integer
+    + vieGagne : Integer
+    + orGagne : Integer
+}
+Carte +-- EffetCarte
+
 abstract class "<<abstract>> CarteOffensive" as CarteOffensive extends Carte {
     + CarteOffensive(nomCarte : String, description : String, typeOffensif : TypeOffensif, cout : Integer)
     + CarteOffensive(nomCarte : String, description : String, typeOffensif : TypeOffensif)
@@ -151,7 +159,7 @@ abstract class "<<abstract>> CarteOffensive" as CarteOffensive extends Carte {
 
 CarteOffensive *--> "1" "<<enumeration>> TypeOffensif" : -typeOffensif
 
-' Classe CarteAttaque
+
 class CarteAttaque extends CarteOffensive {
     - degatsInfliges : Integer
     - degatsSubis : Integer
@@ -162,7 +170,7 @@ class CarteAttaque extends CarteOffensive {
     + getCheminImage() : String
 }
 
-' Classe CarteSoin
+
 class CarteSoin extends CarteOffensive {
     - vieGagne : Integer
     --
@@ -172,7 +180,7 @@ class CarteSoin extends CarteOffensive {
     + getCheminImage() : String
 }
 
-' Classe abstraite CarteStrategique
+
 abstract class "<<abstract>> CarteStrategique" as CarteStrategique extends Carte {
     + CarteStrategique(nomCarte : String, description : String, typeStrategique : TypeStrategique, cout : Integer)
     + CarteStrategique(nomCarte : String, description : String, typeStrategique : TypeStrategique)
@@ -184,7 +192,7 @@ abstract class "<<abstract>> CarteStrategique" as CarteStrategique extends Carte
 
 CarteStrategique  *--> "1" "<<enumeration>> TypeStrategique" : -typeStrategique
 
-' Classe CartePopularite
+
 class CartePopularite extends CarteStrategique {
     - populariteGagnee : Integer
     - degatsSubis : Integer
@@ -195,7 +203,7 @@ class CartePopularite extends CarteStrategique {
     + getCheminImage() : String
 }
 
-' Classe CarteTresor
+
 class CarteTresor extends CarteStrategique {
     - orGagne : Integer
     --
@@ -205,25 +213,25 @@ class CarteTresor extends CarteStrategique {
     + getCheminImage() : String
 }
 
-' Enum TypeCarte
+
 enum "<<enumeration>> TypeCarte" {
     OFFENSIVE
     STRATEGIQUE
 }
 
-' Enum TypeOffensif
+
 enum "<<enumeration>> TypeOffensif" {
     ATTAQUE
     SOIN
 }
 
-' Enum TypeStrategique
+
 enum "<<enumeration>> TypeStrategique" {
     POPULARITE
     TRESOR
 }
 
-' Classe ControlJeu
+
 class ControlJeu {
     - joueurActif : Integer
     
@@ -253,7 +261,7 @@ ControlJeu -> "2..2" ControlJoueur : -controlJoueurs
 ControlJeu --> "1" ControlZoneJoueur : -controlZoneJoueur1
 ControlJeu --> "1" ControlZoneJoueur : -controlZoneJoueur2 
 
-' Classe ControlJoueur
+
 class ControlJoueur {
     
     --
@@ -276,7 +284,7 @@ ControlJoueur --> "1" Joueur : -joueur
 ControlJoueur --> "1" ControlPioche : -controlPioche
 ControlJoueur --> "1" ControlZoneJoueur : -controlZoneJoueur
 
-' Classe ControlCartePlateau
+
 class ControlCartePlateau {
     
     --
@@ -290,7 +298,7 @@ ControlCartePlateau --> "1" ControlJoueur : -controlJoueur2
 ControlCartePlateau --> "1" ControlZoneJoueur : -zoneJoueur1
 ControlCartePlateau --> "1" ControlZoneJoueur : -zoneJoueur2
 
-' Classe ControlPioche
+
 class ControlPioche {
     --
     + ControlPioche()
@@ -301,7 +309,7 @@ class ControlPioche {
 }
 ControlPioche --> "1" Pioche : -pioche
 
-' Classe ControlZoneJoueur
+
 class ControlZoneJoueur {
 
     --
