@@ -1,157 +1,168 @@
+
 package ihm;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 import javax.swing.*;
 import javax.imageio.ImageIO;
-import java.io.*;
 import javax.swing.border.LineBorder;
-import java.util.*;
-import java.util.function.*;
 import joueur.Pirate;
 /**
  *
- * @author FNX4294A
+ * @author Fonteyne
  */
-public class PanelPirate extends javax.swing.JPanel {
-    Image image;
-    boolean estClique = false;
+public class PanelPirate extends JPanel {
+    // === PARTIE PRÉSENTATION ===
+    private Image image;
+    private boolean estClique = false;
+    private final String nomPirate;
+    private final Pirate pirate;
+
+    // === PARTIE DIALOGUE ===
+    private final boolean isLeftGroup;
     private static PanelPirate selectedLeft = null;
     private static PanelPirate selectedRight = null;
     private static final List<Consumer<Boolean>> listeners = new ArrayList<>();
-    private final boolean isLeftGroup;
-    private String nomPirate;
-    private static final List<Consumer<Boolean>> callbacks = new ArrayList<>();
+    private static Consumer<Boolean> callback = null; 
     private static JLabel leftDescriptionLabel;
     private static JLabel rightDescriptionLabel;
-    private Pirate pirate;
-    
+
     public PanelPirate(Pirate pirate, boolean isLeftGroup) {
         this.pirate = pirate;
         this.nomPirate = pirate.getNom();
         this.isLeftGroup = isLeftGroup;
-        String local_path = System.getProperty("user.dir");
-        File image_path = new File(local_path + "/" + pirate.getCheminImage());
-        try {
-            image = ImageIO.read(image_path);
-        } catch (IOException io) {
-            System.out.println("Erreur lors du chargement de l'image " + image_path + ": " + io.getMessage());
-        }
-        
+
+       
+        chargerImage();
+        setOpaque(false);
+
         
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                if(!estClique){
-                    setBorder(new LineBorder(Color.ORANGE, 10));
-                    
-                
-                }
-                 
-                repaint();
+                mouseEnteredActionPerformed(e);
             }
-            
+
             @Override
             public void mouseExited(MouseEvent e) {
-                if(!estClique){
-                    setBorder(null); 
-                }
-                repaint();
+                mouseExitedActionPerformed(e);
             }
-            
+
             @Override
-            
-            public void mouseClicked(MouseEvent e){
-                if (isLeftGroup) {
-                    if (selectedLeft != null) {
-                        selectedLeft.resetSelection();
-                    }
-                    selectedLeft = PanelPirate.this;
-                } else {
-                    if (selectedRight != null) {
-                        selectedRight.resetSelection();
-                    }
-                    selectedRight = PanelPirate.this;
-                }
-                setSelection();
-                updateDescriptionLabels();
-                notifySelectionState();
-                
+            public void mouseClicked(MouseEvent e) {
+                gererClic();
             }
-            
-            
         });
     }
-    
-   
+
+    private void mouseEnteredActionPerformed(MouseEvent e) {
+        if (!estClique) {
+            setBorder(new LineBorder(Color.ORANGE, 10));
+            repaint();
+        }
+    }
+
+    private void mouseExitedActionPerformed(MouseEvent e) {
+        if (!estClique) {
+            setBorder(null);
+            repaint();
+        }
+    }
+
+    // === MÉTHODES DE PRÉSENTATION ===
+    private void chargerImage() {
+        try {
+            String path = System.getProperty("user.dir") + "/" + pirate.getCheminImage();
+            image = ImageIO.read(new File(path));
+        } catch (IOException e) {
+            System.err.println("Erreur chargement image: " + e.getMessage());
+        }
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (image != null) {
+            g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
+
+    private void afficherSelection() {
+        setBorder(BorderFactory.createLineBorder(Color.GREEN, 10));
+        estClique = true;
+        repaint();
+    }
+
+    private void reinitialiserSelection() {
+        setBorder(null);
+        estClique = false;
+        repaint();
+    }
+
+    // === MÉTHODES DE DIALOGUE ===
+    private void gererClic() {
+        //Gestion de la sélection
+        if (isLeftGroup) {
+            if (selectedLeft != null) {
+                selectedLeft.reinitialiserSelection();
+            }
+            selectedLeft = this;
+        } else {
+            if (selectedRight != null) {
+                selectedRight.reinitialiserSelection();
+            }
+            selectedRight = this;
+        }
+
+        afficherSelection();
+        mettreAJourDescription();
+        notifierSelection();
+    }
+
+    private static void mettreAJourDescription() {
+        SwingUtilities.invokeLater(() -> {
+            if (selectedLeft != null && leftDescriptionLabel != null) {
+                leftDescriptionLabel.setText(formatHtml(selectedLeft.getDescription()));
+            }
+            if (selectedRight != null && rightDescriptionLabel != null) {
+                rightDescriptionLabel.setText(formatHtml(selectedRight.getDescription()));
+            }
+        });
+    }
+
+    private static String formatHtml(String text) {
+        return "<html>" + text.replace("\r\n", "<br>").replace("\n", "<br>") + "</html>";
+    }
+
+    private static void notifierSelection() {
+        boolean deuxSelectionnes = (selectedLeft != null && selectedRight != null);
+        for (Consumer<Boolean> listener : listeners) {
+            listener.accept(deuxSelectionnes);
+        }
+        if (callback != null) {
+            callback.accept(deuxSelectionnes);
+        }
+    }
+
+    // === MÉTHODES PUBLIQUES ===
     public static void setupLabelsDescription(JLabel leftLabel, JLabel rightLabel) {
         leftDescriptionLabel = leftLabel;
         rightDescriptionLabel = rightLabel;
     }
-    
-    public Pirate getPirate(){
-        return this.pirate;
+
+    public Pirate getPirate() {
+        return pirate;
     }
 
-    private static void updateDescriptionLabels() {
-        SwingUtilities.invokeLater(() -> {
-            if (selectedLeft != null && leftDescriptionLabel != null) {
-                leftDescriptionLabel.setText("<html>" + selectedLeft.getDescription().replace("\r\n", "<br>").replace("\n", "<br>") + "</html>");
-            }
-            if (selectedRight != null && rightDescriptionLabel != null) {
-                rightDescriptionLabel.setText("<html>" + selectedRight.getDescription().replace("\r\n", "<br>").replace("\n", "<br>") + "</html>");
-            }
-        });
-    }
-    
-    private void resetSelection() {
-        setBorder(null);
-        estClique = false;
-    }
-    private void setSelection() {
-        setBorder(BorderFactory.createLineBorder(Color.GREEN, 10));
-        estClique = true;
-    }
-    
-    
-    public static void notifySelectionState() {
-        boolean bothSelected = (selectedLeft != null && selectedRight != null);
-        
-        
-        for (Consumer<Boolean> callback : callbacks) {
-            try {
-                callback.accept(bothSelected);
-            } catch (Exception e) {
-                System.err.println("Erreur dans callback: " + e.getMessage());
-            }
-        }
-    }
-    
-    public static synchronized void setSelectionCallback(Consumer<Boolean> callback) {
-        callbacks.clear();
-        callbacks.add(callback);
-    }
-    
-    public static void addSelectionListener(Consumer<Boolean> listener) {
-        listeners.add(listener);
-    }
-    
-    public void setEstClique(boolean etat) {
-        this.estClique = etat;
-    }
-    public void setClique(){
-        estClique = true;
-    }
-    public boolean estClique(){
-        return estClique;
-    }
-    
     public String getDescription() {
         return pirate.getNom() + " - " + pirate.getDescription();
     }
+
     public static PanelPirate getSelectedLeft() {
         return selectedLeft;
     }
@@ -159,12 +170,25 @@ public class PanelPirate extends javax.swing.JPanel {
     public static PanelPirate getSelectedRight() {
         return selectedRight;
     }
-    
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        g.drawImage(image, 0, 0, getWidth(), getHeight(), this);
+
+    public static void setSelectionCallback(Consumer<Boolean> callback) {
+        PanelPirate.callback = callback; 
     }
+
+    public static void addSelectionListener(Consumer<Boolean> listener) {
+        listeners.add(listener);
+    }
+
+    public void setEstClique(boolean etat) {
+        this.estClique = etat;
+    }
+
+    public boolean estClique() {
+        return estClique;
+    }
+
+
+
 
     /**
      * This method is called from within the constructor to initialize the form.

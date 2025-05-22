@@ -1,5 +1,3 @@
-
-
 package ihm;
 
 import java.awt.*;
@@ -9,195 +7,58 @@ import java.io.File;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.*;
-
 import carte.*;
-
+/**
+ *
+ * @author Fonteyne
+ */
 public class PanelCarte extends JPanel {
+    // === MODÈLE (Données) ===
+    private final Carte carte;
+    private boolean bloque = false;
+
+    // === PRÉSENTATION (UI) ===
+    private Image image;
+    private final Point pointDessin = new Point(0, 0);
     private boolean etaitDansZoneStrategique = false;
     private boolean etaitDansZoneOffensive = false;
-    
-    private Image image;
-    private Point pointDessin = new Point(0, 0);
-    private Carte carte;
 
-    private int xSouris, ySouris;
-    private JPanel zoneStrategique, zoneOffensive;
-    private JLayeredPane zoneJeu;
-    private JPanel zoneMain;
+    // === DIALOGUE (Contrôle) ===
+    private final JPanel zoneStrategique, zoneOffensive, zoneMain;
+    private final JLayeredPane zoneJeu;
     private Point decalageSouris;
     private boolean enDeplacement = false;
-
-    private Rectangle rectangleStrategique;
-    private Rectangle rectangleOffensive;
-    
-    private boolean bloque;
+    private Rectangle rectangleStrategique, rectangleOffensive;
 
     public PanelCarte(Carte carte, JPanel zoneStrategique, JPanel zoneOffensive, JLayeredPane zoneJeu, JPanel zoneMain, int numeroJoueur) {
-        initComponents();
         this.carte = carte;
         this.zoneStrategique = zoneStrategique;
         this.zoneOffensive = zoneOffensive;
         this.zoneJeu = zoneJeu;
         this.zoneMain = zoneMain;
 
-        try {
-            Point posStrategique = zoneStrategique.getLocationOnScreen();
-            Point posOffensive = zoneOffensive.getLocationOnScreen();
+        initUI();          //Initialisation de la présentation
+        chargerImage();    //Chargement des ressources visuelles
+        initZones();       //Configuration des zones interactives
+        initInteractions(); //Configuration des gestionnaires d'événements
+    }
 
-            rectangleStrategique = new Rectangle(posStrategique.x, posStrategique.y, zoneStrategique.getWidth(), zoneStrategique.getHeight());
-            rectangleOffensive = new Rectangle(posOffensive.x, posOffensive.y, zoneOffensive.getWidth(), zoneOffensive.getHeight());
-        } catch (IllegalComponentStateException e) {}
+    // === PRÉSENTATION ===
+    private void initUI() {
+        setOpaque(false);
+        setPreferredSize(new Dimension(149, 190));
+        setToolTipText("<html>" + carte.toString().replace("\n", "<br>") + "</html>");
+    }
 
+    private void chargerImage() {
         try {
             String cheminImage = System.getProperty("user.dir") + "/" + carte.getCheminImage();
             image = ImageIO.read(new File(cheminImage));
         } catch (IOException e) {
-            System.out.println("Erreur lors du chargement de l'image " + carte.getCheminImage() + ": " + e.getMessage());
+            System.out.println("Erreur lors du chargement de l'image: " + e.getMessage());
         }
-
-        setOpaque(false);
-        setPreferredSize(new Dimension(149, 190));
-        setVisible(true);
-        setToolTipText("<html>" + carte.toString().replace("\n", "<br>") + "</html>");
-        repaint();
-
-        ajouterListeners();
     }
 
-    public Carte getCarte() {
-        return this.carte;
-    }
-
-    private void ajouterListeners() {
-        addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                if(bloque) return;
-                xSouris = e.getX();
-                ySouris = e.getY();
-                decalageSouris = new Point(xSouris, ySouris);
-                if (getParent() instanceof JLayeredPane) {
-                    ((JLayeredPane) getParent()).moveToFront(PanelCarte.this);
-                }
-                Point posZoneStrategique = zoneStrategique.getLocationOnScreen();
-                Dimension dimZoneStrategique = ((PanelZoneCarte) zoneStrategique).getRectangleZone();
-                rectangleStrategique = new Rectangle(posZoneStrategique.x + zoneStrategique.getWidth() - dimZoneStrategique.width, posZoneStrategique.y, dimZoneStrategique.width, dimZoneStrategique.height);
-                Point posZoneOffensive = zoneOffensive.getLocationOnScreen();
-                Dimension dimZoneOffensive = ((PanelZoneCarte) zoneOffensive).getRectangleZone();
-                rectangleOffensive = new Rectangle(posZoneOffensive.x, posZoneOffensive.y, dimZoneOffensive.width, dimZoneOffensive.height);
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                if (!enDeplacement || bloque) return;
-
-                enDeplacement = false;
-
-                Point positionCarte = getLocationOnScreen();
-                Point centreCarte = new Point(positionCarte.x + getWidth() / 2, positionCarte.y + getHeight() / 2);
-
-                boolean dansZoneStrategique = rectangleStrategique.contains(centreCarte);
-                boolean dansZoneOffensive = rectangleOffensive.contains(centreCarte);
-
-                boolean carteStrategique = carte.getType() == TypeCarte.STRATEGIQUE;
-                boolean carteOffensive = carte.getType() == TypeCarte.OFFENSIVE;
-
-             
-                Container parent = getParent();
-                if (parent != null) {
-                    parent.remove(PanelCarte.this);
-                    parent.revalidate();
-                    parent.repaint();
-                }
-
-              
-                if (dansZoneStrategique && carteStrategique) {
-                    setBounds(0, 0, getWidth(), getHeight());
-                    setBloque(true);
-                    zoneStrategique.add(PanelCarte.this);
-                    PanelZoneCarte zoneCarte = (PanelZoneCarte) zoneStrategique;
-                    zoneCarte.setGrise(false);
-                    zoneStrategique.revalidate();
-                    zoneStrategique.repaint();
-                } else if (dansZoneOffensive && carteOffensive) {
-                    setBounds(0, 0, getWidth(), getHeight());
-                    setBloque(true);
-                    zoneOffensive.add(PanelCarte.this);
-                    PanelZoneCarte zoneCarte = (PanelZoneCarte) zoneOffensive;
-                    zoneCarte.setGrise(false);
-                    zoneOffensive.revalidate();
-                    zoneOffensive.repaint();
-                } else {
-                    setBounds(0, 0, getWidth(), getHeight());
-                    zoneMain.add(PanelCarte.this);
-                    zoneMain.revalidate();
-                    zoneMain.repaint();
-                }
-
-                
-                zoneJeu.revalidate();
-                zoneJeu.repaint();
-            }
-        });
-
-        addMouseMotionListener(new MouseMotionAdapter() {
-            
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                if (bloque) return;
-
-                Component racine = SwingUtilities.getRoot(PanelCarte.this);
-                if (!(racine instanceof Container)) return;
-
-                int dx = e.getX() - xSouris;
-                int dy = e.getY() - ySouris;
-
-                if (!enDeplacement && getParent() == zoneMain) {
-                    // Première fois qu'on commence à drag
-                    Point ecran = getLocation();
-                    SwingUtilities.convertPointToScreen(ecran, zoneMain);
-                    SwingUtilities.convertPointFromScreen(ecran, zoneJeu);
-
-                    zoneMain.remove(PanelCarte.this);
-                    setBounds(ecran.x, ecran.y, getWidth(), getHeight());
-                    zoneJeu.add(PanelCarte.this, JLayeredPane.DRAG_LAYER);
-                    zoneJeu.moveToFront(PanelCarte.this);
-                    zoneJeu.revalidate();
-                    zoneJeu.repaint();
-
-                    enDeplacement = true;
-                }
-
-                if (getParent() == zoneJeu) {
-                    setLocation(getX() + dx, getY() + dy);
-                }
-
-                // MàJ surlignage des zones (à garder si indispensable visuellement)
-                Point pos = getLocationOnScreen();
-                Point centre = new Point(pos.x + getWidth() / 2, pos.y + getHeight() / 2);
-
-                boolean dansZoneStrat = rectangleStrategique.contains(centre);
-                boolean dansZoneOff = rectangleOffensive.contains(centre);
-
-                if (carte.getType() == TypeCarte.STRATEGIQUE) {
-                    if (dansZoneStrat != etaitDansZoneStrategique && zoneStrategique instanceof PanelZoneCarte) {
-                        ((PanelZoneCarte) zoneStrategique).setGrise(dansZoneStrat);
-                        etaitDansZoneStrategique = dansZoneStrat;
-                    }
-                } else if (carte.getType() == TypeCarte.OFFENSIVE) {
-                    if (dansZoneOff != etaitDansZoneOffensive && zoneOffensive instanceof PanelZoneCarte) {
-                        ((PanelZoneCarte) zoneOffensive).setGrise(dansZoneOff);
-                        etaitDansZoneOffensive = dansZoneOff;
-                    }
-                }
-            }
-
-        });
-    }
-    public void setBloque(Boolean bloque){
-        this.bloque = bloque;
-    }
-    
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -259,7 +120,160 @@ public class PanelCarte extends JPanel {
             pointDessin.x += taille + 5;
         } catch (IOException e) {}
     }
+
+    // === DIALOGUE ===
+    private void initZones() {
+        try {
+            Point posStrategique = zoneStrategique.getLocationOnScreen();
+            Point posOffensive = zoneOffensive.getLocationOnScreen();
+            rectangleStrategique = new Rectangle(posStrategique.x, posStrategique.y, zoneStrategique.getWidth(), zoneStrategique.getHeight());
+            rectangleOffensive = new Rectangle(posOffensive.x, posOffensive.y, zoneOffensive.getWidth(), zoneOffensive.getHeight());
+        } catch (IllegalComponentStateException ignored) {}
+    }
+
+    private void initInteractions() {
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                mousePressedActionPerformed(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                mouseReleasedActionPerformed(e);
+            }
+        });
+
+        addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                mouseDraggedActionPerformed(e);
+            }
+        });
+    }
     
+    public void mousePressedActionPerformed(MouseEvent e){
+        if (bloque) return;
+        decalageSouris = new Point(e.getX(), e.getY());
+        if (getParent() instanceof JLayeredPane) {
+            ((JLayeredPane) getParent()).moveToFront(PanelCarte.this);
+        }
+        recalculerZones();
+    }
+    
+    public void mouseReleasedActionPerformed(MouseEvent e){
+        if (bloque || !enDeplacement) return;
+        enDeplacement = false;
+        gererDepotCarte();
+    }
+    
+    public void mouseDraggedActionPerformed(MouseEvent e){
+        if (bloque) return;
+        deplacerCarte(e);
+        verifierZones();
+    }
+
+    private void recalculerZones() {
+        Point posZoneStrategique = zoneStrategique.getLocationOnScreen();
+        Dimension dimZoneStrategique = ((PanelZoneCarte) zoneStrategique).getRectangleZone();
+        rectangleStrategique = new Rectangle(
+            posZoneStrategique.x + zoneStrategique.getWidth() - dimZoneStrategique.width, 
+            posZoneStrategique.y, 
+            dimZoneStrategique.width, 
+            dimZoneStrategique.height
+        );
+
+        Point posZoneOffensive = zoneOffensive.getLocationOnScreen();
+        Dimension dimZoneOffensive = ((PanelZoneCarte) zoneOffensive).getRectangleZone();
+        rectangleOffensive = new Rectangle(
+            posZoneOffensive.x, 
+            posZoneOffensive.y, 
+            dimZoneOffensive.width, 
+            dimZoneOffensive.height
+        );
+    }
+
+    private void deplacerCarte(MouseEvent e) {
+        if (!enDeplacement && getParent() == zoneMain) {
+            demarrerDeplacement();
+        }
+
+        if (getParent() == zoneJeu) {
+            setLocation(getX() + e.getX() - decalageSouris.x, getY() + e.getY() - decalageSouris.y);
+        }
+    }
+
+    private void demarrerDeplacement() {
+        Point ecran = getLocation();
+        SwingUtilities.convertPointToScreen(ecran, zoneMain);
+        SwingUtilities.convertPointFromScreen(ecran, zoneJeu);
+
+        zoneMain.remove(this);
+        setBounds(ecran.x, ecran.y, getWidth(), getHeight());
+        zoneJeu.add(this, JLayeredPane.DRAG_LAYER);
+        zoneJeu.moveToFront(this);
+        enDeplacement = true;
+    }
+
+    private void verifierZones() {
+        Point pos = getLocationOnScreen();
+        Point centre = new Point(pos.x + getWidth() / 2, pos.y + getHeight() / 2);
+
+        boolean dansZoneStrat = rectangleStrategique.contains(centre);
+        boolean dansZoneOff = rectangleOffensive.contains(centre);
+
+        if (carte.getType() == TypeCarte.STRATEGIQUE) {
+            if (dansZoneStrat != etaitDansZoneStrategique) {
+                ((PanelZoneCarte) zoneStrategique).setGrise(dansZoneStrat);
+                etaitDansZoneStrategique = dansZoneStrat;
+            }
+        } else if (carte.getType() == TypeCarte.OFFENSIVE) {
+            if (dansZoneOff != etaitDansZoneOffensive) {
+                ((PanelZoneCarte) zoneOffensive).setGrise(dansZoneOff);
+                etaitDansZoneOffensive = dansZoneOff;
+            }
+        }
+    }
+
+    private void gererDepotCarte() {
+        Point positionCarte = getLocationOnScreen();
+        Point centreCarte = new Point(positionCarte.x + getWidth() / 2, positionCarte.y + getHeight() / 2);
+
+        boolean dansZoneStrategique = rectangleStrategique.contains(centreCarte);
+        boolean dansZoneOffensive = rectangleOffensive.contains(centreCarte);
+
+        Container parent = getParent();
+        if (parent != null) parent.remove(this);
+
+        if (dansZoneStrategique && carte.getType() == TypeCarte.STRATEGIQUE) {
+            placerDansZone(zoneStrategique);
+        } else if (dansZoneOffensive && carte.getType() == TypeCarte.OFFENSIVE) {
+            placerDansZone(zoneOffensive);
+        } else {
+            placerDansZone(zoneMain);
+        }
+
+        zoneJeu.revalidate();
+        zoneJeu.repaint();
+    }
+
+    private void placerDansZone(JPanel zone) {
+        setBounds(0, 0, getWidth(), getHeight());
+        zone.add(this);
+        if (zone instanceof PanelZoneCarte) ((PanelZoneCarte) zone).setGrise(false);
+        zone.revalidate();
+        zone.repaint();
+        if (zone != zoneMain) setBloque(true);
+    }
+
+    // === GETTERS/SETTERS ===
+    public Carte getCarte() {
+        return carte;
+    }
+
+    public void setBloque(boolean bloque) {
+        this.bloque = bloque;
+    }
 
                        
 

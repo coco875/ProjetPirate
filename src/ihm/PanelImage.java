@@ -40,34 +40,7 @@ public class PanelImage extends javax.swing.JPanel {
         this.grise = grise;
         repaint();
     }
-    /*
-    @Override
-    protected void paintComponent(Graphics g) {
-        super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g.create();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        Shape clip = new RoundRectangle2D.Float(10, 10, getWidth() - 20, getHeight() - 20, 20, 20);
-        g2.setClip(clip);
-        g2.setColor(Color.RED);
-        g2.fillRect(0, 0, getWidth(), getHeight());
-
-        if (image != null) {
-            g2.drawImage(image, 5, 5, getWidth() - 10, getHeight() - 10, this);
-        }
-
-        g2.setClip(null);
-        g2.setStroke(new BasicStroke(3));
-        g2.setColor(Color.WHITE);
-        g2.drawRoundRect(10, 10, getWidth() - 21, getHeight() - 21, 20, 20);
-
-        g2.setStroke(new BasicStroke(1));
-        g2.setColor(Color.LIGHT_GRAY);
-        g2.drawRoundRect(13, 13, getWidth() - 27, getHeight() - 27, 16, 16);
-
-       
-        g2.dispose();
-    }*/
+    
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);

@@ -17,10 +17,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.Timer;
 
 /**
  *
- * @author FNX4294A
+ * @author Fonteyne
  */
 public class FramePlateau extends javax.swing.JFrame implements CarteListener {
     private Pirate pirateJoueur1;
@@ -30,9 +31,8 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
     private boolean aPioche = false;
     java.util.List<Carte> listeCartesJoueur1;
     java.util.List<Carte> listeCartesJoueur2;
-    /**
-     * Creates new form FramePlateau
-     */
+    
+    
     public FramePlateau() {
         initComponents();
         PanelPirate.setSelectionCallback(selected -> {
@@ -53,9 +53,18 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
 
     }
     
+    /*
     private void setupFrame() {
         setSize(1920, 1080);
         setResizable(false);
+        setLocationRelativeTo(null);
+    }*/
+    private void setupFrame() {
+        //Récupère la taille de l'écran
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        setSize(screenSize.width, screenSize.height);
+        setExtendedState(JFrame.MAXIMIZED_BOTH); //Plein écran
+        setResizable(false); 
         setLocationRelativeTo(null);
     }
     
@@ -303,7 +312,13 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
         controlJeu.appliquerEffetsCartes();
         controlJeu.defausserCartesPlateau();
         if(controlJeu.verifierFinPartie()){
-            setupPlateauFin();
+            //delai de 3 secondes avant d'afficher l'écran de fin
+            Timer timer = new Timer(3000, e -> {
+                setupPlateauFin();
+                ((Timer)e.getSource()).stop(); //Arrete le timer après exécution
+            });
+            timer.setRepeats(false); //ne pas repeter
+            timer.start();
             return;
         }
         controlJeu.passerAuJoueurSuivant();
@@ -1147,7 +1162,7 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
             panelMainJoueur1.repaint();
             panelMainJoueur2.revalidate();
             panelMainJoueur2.repaint();
-}
+        }
     }//GEN-LAST:event_panelPiocheMouseClicked
 
     /**

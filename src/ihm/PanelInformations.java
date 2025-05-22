@@ -92,10 +92,7 @@ public class PanelInformations extends javax.swing.JPanel {
     private void dessinerStat(Graphics2D g2, int valeur, Image icone, int y) {
         if (valeur <= 5) {
             for (int i = 0; i < valeur; i++) {
-                g2.drawImage(icone, 
-                    i * (TAILLE_ICONE + ESPACE_HORIZONTAL), 
-                    y, 
-                    TAILLE_ICONE, TAILLE_ICONE, null);
+                g2.drawImage(icone, i * (TAILLE_ICONE + ESPACE_HORIZONTAL), y, TAILLE_ICONE, TAILLE_ICONE, null);
             }
         } else {
             //Affichage condensé (une icône + nombre)

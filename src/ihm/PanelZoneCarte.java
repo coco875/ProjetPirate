@@ -1,55 +1,82 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package ihm;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.GraphicsEnvironment;
-import java.awt.RenderingHints;
-import java.awt.Shape;
-import java.awt.geom.RoundRectangle2D;
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JFrame;
-
+import java.awt.*;
+import java.util.*;
+import javax.swing.*;
+import carte.*;
 /**
  *
  * @author Fonteyne
  */
-public class PanelZoneCarte extends javax.swing.JPanel {
-    private String nomPirate;
-    private boolean grise = false;
-    private CarteListener listener;
+public class PanelZoneCarte extends JPanel {
+    // === MODÈLE ===
+    private final String nomPirate;
     private int nbCartes = 0;
-    private boolean sens; //false = droite, true = gauche
+    private final boolean sens; // false = droite, true = gauche
+    
+    // === PRÉSENTATION ===
+    private boolean grise = false;
+    private static final Color COULEUR_NORMALE = Color.WHITE;
+    private static final Color COULEUR_GRISEE = Color.LIGHT_GRAY;
+    
+    // === DIALOGUE ===
+    private final CarteListener listener;
+
     public PanelZoneCarte(String nomPirate, CarteListener listener, boolean sens) {
-        initComponents();
         this.nomPirate = nomPirate;
         this.listener = listener;
         this.sens = sens;
+        
+        initUI();
+    }
+
+    // ===== PRÉSENTATION =====
+    private void initUI() {
         setOpaque(false);
-        if(!sens){
-            setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
-        }else{
-            setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 10));  
-        }
+        setLayout(new FlowLayout(sens ? FlowLayout.RIGHT : FlowLayout.LEFT, 10, 10));
     }
 
     @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g.create();
+        
+        dessinerContour(g2);
+        dessinerSousContour(g2);
+        
+        g2.dispose();
+    }
+
+    private void dessinerContour(Graphics2D g2) {
+        g2.setStroke(new BasicStroke(3));
+        g2.setColor(grise ? COULEUR_GRISEE : COULEUR_NORMALE);
+        
+        Dimension zone = getRectangleZone();
+        int x = sens ? getWidth() - zone.width - 10 : 10;
+        
+        g2.drawRoundRect(x, 10, zone.width, zone.height, 20, 20);
+    }
+
+    private void dessinerSousContour(Graphics2D g2) {
+        g2.setStroke(new BasicStroke(1));
+        g2.setColor(Color.LIGHT_GRAY);
+        
+        Dimension zone = getRectangleZone();
+        int x = sens ? getWidth() - zone.width - 10 : 10;
+        
+        g2.drawRoundRect(x + 3, 13, zone.width - 6, zone.height - 6, 16, 16);
+    }
+
+    // ===== DIALOGUE =====
+    @Override
     public Component add(Component comp) {
         nbCartes ++;
-        super.add(comp); //Appel à la méthode add de JPanel
+        if(nbCartes <= 3){
+            super.add(comp); //Appel à la méthode add de JPanel
+        }else{
+            nbCartes--;
+        }
+         
         repaint();
         PanelCarte panelCarte = (PanelCarte) comp;
         if (listener != null) {
@@ -59,67 +86,18 @@ public class PanelZoneCarte extends javax.swing.JPanel {
         }
         return comp;
     }
- /*
-    public void addCarte(PanelCarte carte) {
-        int index = getComponentCount();
-        int x = 10 + index * 30;
-        int y = 10;
-        carte.setBounds(x, y, carte.getPreferredSize().width, carte.getPreferredSize().height);
-        if (listener != null) {
-            listener.onCarteJouee(carte.getCarte());
-        } else {
-            System.err.println("Aucun listener défini !");
-        }
-        add(carte);  // Ajout de la carte dans le panel
-        repaint();
-    }*/
-    
-    public void setGrise(Boolean grise){
+
+    // ===== API PUBLIQUE =====
+    public void setGrise(boolean grise) {
         this.grise = grise;
         repaint();
     }
-    
+
     public Dimension getRectangleZone() {
-        int cardCount = Math.max(1, nbCartes); //minimum 1
-        int rectWidth = cardCount * 169 - 21;
-        int rectHeight = getHeight() - 21;
-        return new Dimension(rectWidth, rectHeight);
+        int cardCount = Math.max(1, nbCartes);
+        return new Dimension(cardCount * 169 - 21, getHeight() - 21);
     }
-    
-    
-    @Override
-    protected void paintComponent(Graphics g) {
-        
-        super.paintComponent(g);
-        Graphics2D g2 = (Graphics2D) g.create();
 
-        g2.setStroke(new BasicStroke(3));
-        g2.setColor(grise ? Color.LIGHT_GRAY : Color.WHITE);
-        
-        Dimension zone = getRectangleZone();
-        int rectWidth = zone.width;
-        int rectHeight = zone.height;
-        int xStart;
-        
-        if(sens){
-            xStart = getWidth() - rectWidth - 10;
-        }else{
-            xStart = 10;
-        }
-        int yStart = 10;
-
-        g2.drawRoundRect(xStart, yStart, rectWidth, rectHeight, 20, 20);
-
-        g2.setStroke(new BasicStroke(1));
-        g2.setColor(Color.LIGHT_GRAY);
-        g2.drawRoundRect(xStart + 3, yStart + 3, rectWidth - 6, rectHeight - 6, 16, 16);
-        
-        
-        
-
-        g2.dispose();
-        
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
