@@ -34,7 +34,7 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
     java.util.List<Carte> listeCartesJoueur2;
     
     Timer timerTour;
-    int tempsRestantTour;
+    int tempsRestantTour = 30;
     JLabel labelTempsTour;
     
     
@@ -330,10 +330,6 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
         changerTour();
     } 
     
-    private void FinTimerTour(ActionEvent e) {
-        timerTour.stop();
-        changerTour();
-    }
     
     private void JouerCarteAléatoire(int JoueurActif) {
         
@@ -341,6 +337,7 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
     
     private void changerTour() {
         tempsRestantTour = 30;
+        labelTempsTour.setText("" + tempsRestantTour);
         timerTour.restart();
         
         controlJeu.passerAuJoueurSuivant();
@@ -366,8 +363,9 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
         tempsRestantTour--;
         if (tempsRestantTour <= 0) {
             changerTour();
+        } else {
+            labelTempsTour.setText("" + tempsRestantTour);
         }
-        labelTempsTour.setText("" + tempsRestantTour);
     }
     
     private void setupZones(){
@@ -413,7 +411,7 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
         labelPioche.setBounds(1595, getHeight() / 2 - 120, 100, 20);
         
         labelTempsTour = new JLabel("30");
-        labelTempsTour.setBounds(50, 30, 100, 100);
+        labelTempsTour.setBounds(70, 50, 100, 100);
         
         labelZoneStrategique.setVisible(true);
         labelZoneOffensive.setVisible(true);
@@ -428,7 +426,7 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
             labelZoneStrategique.setFont(customFont.deriveFont(25f));
             labelZoneOffensive.setFont(customFont.deriveFont(25f));
             labelPioche.setFont(customFont.deriveFont(25f));
-            labelTempsTour.setFont(customFont.deriveFont(50f));
+            labelTempsTour.setFont(customFont.deriveFont(70f));
         } catch (FontFormatException ex) {
             Logger.getLogger(PanelZoneCarte.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -440,7 +438,7 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
         panelJeu.add(labelPioche);
         panelJeu.add(labelTempsTour);
         timerTour = new Timer(1000, (e) -> updateTempsTour(e));
-        timerTour.addActionListener(this::updateTempsTour);
+        //timerTour.addActionListener(this::updateTempsTour);
         timerTour.start();
     }
     
