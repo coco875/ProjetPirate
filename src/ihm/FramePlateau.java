@@ -1184,6 +1184,7 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
 
     private void panelPiocheMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelPiocheMouseClicked
         if(aPioche) return;
+        if (controlJeu.estPiocheVide()) controlJeu.reinitialiserPioche();
         Carte carte = controlJeu.piocherCarte();
         if (carte != null) { 
             if (controlJeu.getJoueurActif() == 0) {
@@ -1202,6 +1203,7 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
             panelMainJoueur2.revalidate();
             panelMainJoueur2.repaint();
         }
+            
     }//GEN-LAST:event_panelPiocheMouseClicked
 
     /**
