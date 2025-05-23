@@ -335,7 +335,9 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
         
     }
     
+     
     private void changerTour() {
+        //Timer: Aymeric Frances
         tempsRestantTour = 30;
         labelTempsTour.setText("" + tempsRestantTour);
         timerTour.restart();
@@ -359,6 +361,7 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
         
     }
     
+    //Aymeric Frances
     private void updateTempsTour(ActionEvent e) {
         tempsRestantTour--;
         if (tempsRestantTour <= 0) {
@@ -436,6 +439,7 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
         panelJeu.add(labelZoneStrategique);
         panelJeu.add(labelZoneOffensive);
         panelJeu.add(labelPioche);
+        //Aymeric 
         panelJeu.add(labelTempsTour);
         timerTour = new Timer(1000, (e) -> updateTempsTour(e));
         //timerTour.addActionListener(this::updateTempsTour);
