@@ -13,6 +13,7 @@ import carte.Carte;
 import java.util.*;
 import controllers.*;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.logging.Level;
@@ -31,6 +32,10 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
     private boolean aPioche = false;
     java.util.List<Carte> listeCartesJoueur1;
     java.util.List<Carte> listeCartesJoueur2;
+    
+    Timer timerTour;
+    int tempsRestantTour;
+    JLabel labelTempsTour;
     
     
     public FramePlateau() {
@@ -321,6 +326,23 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
             timer.start();
             return;
         }
+        
+        changerTour();
+    } 
+    
+    private void FinTimerTour(ActionEvent e) {
+        timerTour.stop();
+        changerTour();
+    }
+    
+    private void JouerCarteAléatoire(int JoueurActif) {
+        
+    }
+    
+    private void changerTour() {
+        tempsRestantTour = 30;
+        timerTour.restart();
+        
         controlJeu.passerAuJoueurSuivant();
         if(controlJeu.getJoueurActif() == 0){
             debloquerCartes(panelMainJoueur1);
@@ -336,7 +358,17 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
         panelInformationsJoueur1.repaint();
         panelInformationsJoueur2.repaint();
         
-    } 
+        
+        
+    }
+    
+    private void updateTempsTour(ActionEvent e) {
+        tempsRestantTour--;
+        if (tempsRestantTour <= 0) {
+            changerTour();
+        }
+        labelTempsTour.setText("" + tempsRestantTour);
+    }
     
     private void setupZones(){
         JPanel panelZones = new JPanel();
@@ -380,9 +412,13 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
         labelZoneOffensive.setBounds(getWidth() / 2 + 15, getHeight() / 2 - 36, 200, 30);
         labelPioche.setBounds(1595, getHeight() / 2 - 120, 100, 20);
         
+        labelTempsTour = new JLabel("30");
+        labelTempsTour.setBounds(50, 30, 100, 100);
+        
         labelZoneStrategique.setVisible(true);
         labelZoneOffensive.setVisible(true);
         labelPioche.setVisible(true);
+        labelTempsTour.setVisible(true);
         
         Font customFont;
         try {
@@ -392,6 +428,7 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
             labelZoneStrategique.setFont(customFont.deriveFont(25f));
             labelZoneOffensive.setFont(customFont.deriveFont(25f));
             labelPioche.setFont(customFont.deriveFont(25f));
+            labelTempsTour.setFont(customFont.deriveFont(50f));
         } catch (FontFormatException ex) {
             Logger.getLogger(PanelZoneCarte.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
@@ -401,6 +438,10 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
         panelJeu.add(labelZoneStrategique);
         panelJeu.add(labelZoneOffensive);
         panelJeu.add(labelPioche);
+        panelJeu.add(labelTempsTour);
+        timerTour = new Timer(1000, (e) -> updateTempsTour(e));
+        timerTour.addActionListener(this::updateTempsTour);
+        timerTour.start();
     }
     
     private void setupRecapitulatif() {
@@ -1071,10 +1112,6 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
         panelFinLayout.setHorizontalGroup(
             panelFinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFinLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(labelGagnant)
-                .addGap(258, 258, 258))
-            .addGroup(panelFinLayout.createSequentialGroup()
                 .addGap(32, 32, 32)
                 .addComponent(labelNomPirate1)
                 .addGap(29, 29, 29)
@@ -1086,6 +1123,10 @@ public class FramePlateau extends javax.swing.JFrame implements CarteListener {
                 .addGap(62, 62, 62)
                 .addComponent(labelNomPirate2)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, panelFinLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(labelGagnant)
+                .addGap(258, 258, 258))
         );
         panelFinLayout.setVerticalGroup(
             panelFinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
